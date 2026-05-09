@@ -10,7 +10,7 @@ export default function LavaFooter() {
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 40, marginBottom: 40 }}>
         <div>
-          <LavaWordmark size={32} style={{ marginBottom: 16 }} />
+          <LavaWordmark size={32} dark={true} style={{ marginBottom: 16 }} />
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, maxWidth: 260 }}>
             Drop 04 · Solar Bloom. A diffusion line by Solo Sarto.<br />For the fearless ✦
           </p>
