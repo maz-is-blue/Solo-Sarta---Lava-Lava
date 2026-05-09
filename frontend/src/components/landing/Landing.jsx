@@ -66,7 +66,7 @@ export default function Landing() {
         onMouseEnter={() => setSoloHover(true)}
         onMouseLeave={() => setSoloHover(false)}
         style={{
-          width: '50%', background: '#FAF8F5', cursor: 'pointer', position: 'relative', overflow: 'hidden',
+          width: '50%', background: '#FFFFFF', cursor: 'pointer', position: 'relative', overflow: 'hidden',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           transition: 'transform 0.5s ease',
           transform: soloHover ? 'scale(1.02)' : 'scale(1)',
@@ -102,7 +102,7 @@ export default function Landing() {
           <img
             src={`${import.meta.env.BASE_URL}assets/solo-logo-white.jpg`}
             alt="Solo Sarto"
-            style={{ maxHeight: '100%', width: 'auto', maxWidth: 300, mixBlendMode: 'multiply' }}
+            style={{ maxHeight: '100%', width: 'auto', maxWidth: 300 }}
           />
         </div>
 
@@ -128,7 +128,7 @@ export default function Landing() {
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.6s'
         }}>
           <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.8)', fontFamily: 'DM Sans', marginBottom: 4 }}>ATELIER · EST. 2018</div>
-          <div style={{ fontSize: 14, letterSpacing: 1.5, color: 'rgba(26,26,26,0.4)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic' }}>Bespoke / Couture</div>
+          <div style={{ fontSize: 14, letterSpacing: 1.5, color: 'rgba(26,26,26,0.35)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic' }}>Bespoke / Couture</div>
         </div>
       </div>
 
