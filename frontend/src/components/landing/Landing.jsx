@@ -66,44 +66,43 @@ export default function Landing() {
         onMouseEnter={() => setSoloHover(true)}
         onMouseLeave={() => setSoloHover(false)}
         style={{
-          width: '50%', background: '#1A1A1A', cursor: 'pointer', position: 'relative', overflow: 'hidden',
+          width: '50%', background: '#FAF8F5', cursor: 'pointer', position: 'relative', overflow: 'hidden',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           transition: 'transform 0.5s ease',
           transform: soloHover ? 'scale(1.02)' : 'scale(1)',
         }}
       >
-        {/* Grain texture */}
+        {/* Subtle paper texture */}
         <div style={{
-          position: 'absolute', inset: 0, opacity: 0.04, pointerEvents: 'none',
+          position: 'absolute', inset: 0, opacity: 0.03, pointerEvents: 'none',
           backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")',
           backgroundSize: 'cover'
         }} />
         {/* Gold tint on hover */}
         <div style={{
-          position: 'absolute', inset: 0, background: 'rgba(201,169,110,0.04)',
+          position: 'absolute', inset: 0, background: 'rgba(201,169,110,0.06)',
           opacity: soloHover ? 1 : 0, transition: 'opacity 0.4s ease', pointerEvents: 'none'
         }} />
 
         {/* Eyebrow */}
         <div style={{
           position: 'absolute', top: 48,
-          fontSize: 10, letterSpacing: 4, color: 'rgba(201,169,110,0.6)', fontFamily: 'DM Sans',
+          fontSize: 10, letterSpacing: 4, color: 'rgba(201,169,110,0.8)', fontFamily: 'DM Sans',
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
         }}>
           THE ATELIER
         </div>
 
-        {/* Logo image — screen blend removes white bg on dark background */}
+        {/* Logo — white bg blends into white page with multiply */}
         <img
-          src={`${import.meta.env.BASE_URL}assets/solo-logo.jpg`}
+          src={`${import.meta.env.BASE_URL}assets/solo-logo-white.jpg`}
           alt="Solo Sarto"
           style={{
-            width: 220, height: 'auto', zIndex: 1,
-            mixBlendMode: 'screen',
+            width: 240, height: 'auto', zIndex: 1,
+            mixBlendMode: 'multiply',
             marginBottom: 32,
             opacity: mounted ? 1 : 0,
             transition: 'opacity 0.8s ease 1.2s',
-            filter: 'drop-shadow(0 0 18px rgba(201,169,110,0.25))'
           }}
         />
 
@@ -112,9 +111,9 @@ export default function Landing() {
           onClick={e => { e.stopPropagation(); navigate('/solo') }}
           style={{
             padding: '13px 36px', borderRadius: 999, cursor: 'pointer',
-            border: `1px solid ${soloHover ? '#C9A96E' : 'rgba(250,248,245,0.4)'}`,
+            border: `1px solid ${soloHover ? '#C9A96E' : 'rgba(26,26,26,0.3)'}`,
             background: soloHover ? '#C9A96E' : 'transparent',
-            color: soloHover ? '#1A1A1A' : '#FAF8F5',
+            color: soloHover ? '#FAF8F5' : '#1A1A1A',
             fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
             transition: 'all 0.3s ease',
             opacity: mounted ? 1 : 0,
@@ -128,8 +127,8 @@ export default function Landing() {
           position: 'absolute', bottom: 40, left: 40,
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.6s'
         }}>
-          <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 4 }}>ATELIER · EST. 2018</div>
-          <div style={{ fontSize: 14, letterSpacing: 1.5, color: 'rgba(250,248,245,0.3)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic' }}>Bespoke / Couture</div>
+          <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.8)', fontFamily: 'DM Sans', marginBottom: 4 }}>ATELIER · EST. 2018</div>
+          <div style={{ fontSize: 14, letterSpacing: 1.5, color: 'rgba(26,26,26,0.4)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic' }}>Bespoke / Couture</div>
         </div>
       </div>
 

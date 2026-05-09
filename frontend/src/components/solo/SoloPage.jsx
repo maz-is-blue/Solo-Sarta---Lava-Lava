@@ -161,12 +161,12 @@ export default function SoloPage() {
           ← BACK
         </button>
         <img
-          src={`${import.meta.env.BASE_URL}assets/solo-logo.jpg`}
+          src={`${import.meta.env.BASE_URL}assets/solo-logo-dark.jpg`}
           alt="Solo Sarto"
           style={{
-            height: 44, width: 'auto',
+            height: 48, width: 'auto',
             mixBlendMode: 'screen',
-            filter: 'drop-shadow(0 0 10px rgba(201,169,110,0.2))'
+            filter: 'drop-shadow(0 0 12px rgba(201,169,110,0.3))'
           }}
         />
         <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
