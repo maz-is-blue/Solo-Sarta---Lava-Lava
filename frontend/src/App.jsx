@@ -2,6 +2,10 @@ import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { CartProvider } from './context/CartContext'
 import Landing from './components/landing/Landing'
 import SoloPage from './components/solo/SoloPage'
+import SoloCollection from './components/solo/SoloCollection'
+import SoloPiece from './components/solo/SoloPiece'
+import SoloStory from './components/solo/SoloStory'
+import SoloContact from './components/solo/SoloContact'
 import LavaHome from './components/lava/LavaHome'
 import LavaCollection from './components/lava/LavaCollection'
 import LavaProduct from './components/lava/LavaProduct'
@@ -15,6 +19,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/solo" element={<SoloPage />} />
+          <Route path="/solo/collection" element={<SoloCollection />} />
+          <Route path="/solo/piece/:slug" element={<SoloPiece />} />
+          <Route path="/solo/story" element={<SoloStory />} />
+          <Route path="/solo/contact" element={<SoloContact />} />
           <Route path="/lava" element={<LavaHome />} />
           <Route path="/lava/collection" element={<LavaCollection />} />
           <Route path="/lava/product/:slug" element={<LavaProduct />} />

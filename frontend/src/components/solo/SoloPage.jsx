@@ -2,15 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useCart } from '../../context/CartContext'
+import SoloNav from './SoloNav'
 
-const SOLO_PRODUCTS = [
-  { id: 1, name: 'Ivory Drape Gown', price: 285000, code: 'HC-01', cat: 'Gown', silhouette: 'maxi' },
-  { id: 2, name: 'Bias Silk Slip', price: 142000, code: 'EE-02', cat: 'Slip', silhouette: 'slip' },
-  { id: 3, name: 'Hand-Embroidered Bodice', price: 198000, code: 'HC-03', cat: 'Bodice', silhouette: 'crop' },
-  { id: 4, name: 'Tailored Tuxedo', price: 168000, code: 'MC-04', cat: 'Suit', silhouette: 'blazer' },
-  { id: 5, name: 'Charcoal Sheath', price: 125000, code: 'EE-05', cat: 'Dress', silhouette: 'bodysuit' },
-  { id: 6, name: 'Saffron Sari Drape', price: 210000, code: 'HC-06', cat: 'Sari', silhouette: 'longcoat' },
-]
+import { SOLO_PRODUCTS } from '../../data/soloProducts'
 
 function GownSilhouette({ color1 = '#C9A96E', color2 = '#E8D5A3' }) {
   return (
@@ -69,9 +63,11 @@ function SoloProductCard({ product }) {
   const [hovered, setHovered] = useState(false)
   const { addItem } = useCart()
   const [added, setAdded] = useState(false)
+  const navigate = useNavigate()
 
   return (
     <div
+      onClick={() => navigate(`/solo/piece/${product.slug}`)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -141,45 +137,7 @@ export default function SoloPage() {
         backgroundSize: 'cover'
       }} />
 
-      {/* Nav */}
-      <nav style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        padding: '20px 48px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: 'rgba(26,26,26,0.85)',
-        backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(201,169,110,0.12)'
-      }}>
-        <button
-          onClick={() => navigate('/')}
-          style={{
-            background: 'none', border: '1px solid rgba(201,169,110,0.3)', color: '#C9A96E',
-            borderRadius: 2, padding: '6px 18px', cursor: 'pointer',
-            fontSize: 11, fontFamily: 'DM Sans', letterSpacing: 1.5
-          }}
-        >
-          ← BACK
-        </button>
-        <img
-          src={`${import.meta.env.BASE_URL}assets/solo-logo-dark.jpg`}
-          alt="Solo Sarto"
-          style={{
-            height: 48, width: 'auto',
-            mixBlendMode: 'screen',
-            filter: 'drop-shadow(0 0 12px rgba(201,169,110,0.3))'
-          }}
-        />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-          {['Atelier', 'Collection', 'Story'].map(label => (
-            <span key={label}
-              style={{ fontSize: 12, letterSpacing: 1.5, color: 'rgba(250,248,245,0.6)', fontFamily: 'DM Sans', cursor: 'pointer' }}
-              onMouseEnter={e => e.currentTarget.style.color = '#C9A96E'}
-              onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,248,245,0.6)'}
-            >{label.toUpperCase()}</span>
-          ))}
-          <div style={{ position: 'relative', cursor: 'pointer', fontSize: 18 }}>🛍</div>
-        </div>
-      </nav>
+      <SoloNav />
 
       {/* Hero */}
       <section style={{ paddingTop: 100, minHeight: '100vh', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, position: 'relative', zIndex: 1 }}>
@@ -203,19 +161,23 @@ export default function SoloPage() {
             A private atelier of 11 master tailors. Bespoke couture since 2018.
           </p>
           <div style={{ display: 'flex', gap: 16, marginBottom: 56 }}>
-            <button style={{
-              padding: '13px 32px', borderRadius: 2, border: 'none', cursor: 'pointer',
-              background: '#C9A96E', color: '#1A1A1A',
-              fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2
-            }}>
+            <button
+              onClick={() => navigate('/solo/collection')}
+              style={{
+                padding: '13px 32px', borderRadius: 2, border: 'none', cursor: 'pointer',
+                background: '#C9A96E', color: '#1A1A1A',
+                fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2
+              }}>
               EXPLORE COLLECTION
             </button>
-            <button style={{
-              padding: '13px 32px', borderRadius: 2, border: '1px solid rgba(201,169,110,0.4)', cursor: 'pointer',
-              background: 'transparent', color: '#C9A96E',
-              fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
-              transition: 'all 0.2s ease'
-            }}
+            <button
+              onClick={() => navigate('/solo/contact')}
+              style={{
+                padding: '13px 32px', borderRadius: 2, border: '1px solid rgba(201,169,110,0.4)', cursor: 'pointer',
+                background: 'transparent', color: '#C9A96E',
+                fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
+                transition: 'all 0.2s ease'
+              }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,169,110,0.1)'; e.currentTarget.style.borderColor = '#C9A96E' }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(201,169,110,0.4)' }}
             >
@@ -314,11 +276,13 @@ export default function SoloPage() {
             We have never made two identical pieces. We never will.
           </p>
           <div style={{ marginTop: 32, display: 'flex', gap: 24 }}>
-            <button style={{
-              padding: '11px 28px', borderRadius: 2, border: '1px solid #C9A96E', cursor: 'pointer',
-              background: 'transparent', color: '#C9A96E', fontSize: 11, fontFamily: 'DM Sans', letterSpacing: 1.5
-            }}>
-              THE ATELIER
+            <button
+              onClick={() => navigate('/solo/story')}
+              style={{
+                padding: '11px 28px', borderRadius: 2, border: '1px solid #C9A96E', cursor: 'pointer',
+                background: 'transparent', color: '#C9A96E', fontSize: 11, fontFamily: 'DM Sans', letterSpacing: 1.5
+              }}>
+              OUR STORY
             </button>
           </div>
         </motion.div>
