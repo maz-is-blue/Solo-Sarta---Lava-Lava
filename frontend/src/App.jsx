@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { CartProvider } from './context/CartContext'
 import Landing from './components/landing/Landing'
 import SoloPage from './components/solo/SoloPage'
@@ -10,7 +10,7 @@ import LavaContact from './components/lava/LavaContact'
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <CartProvider>
         <Routes>
           <Route path="/" element={<Landing />} />
@@ -23,6 +23,6 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </CartProvider>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
