@@ -93,28 +93,28 @@ export default function Landing() {
           THE ATELIER
         </div>
 
-        {/* Logo — white bg blends into white page with multiply */}
-        <img
-          src={`${import.meta.env.BASE_URL}assets/solo-logo-white.jpg`}
-          alt="Solo Sarto"
-          style={{
-            width: 240, height: 'auto', zIndex: 1,
-            mixBlendMode: 'multiply',
-            marginBottom: 32,
-            opacity: mounted ? 1 : 0,
-            transition: 'opacity 0.8s ease 1.2s',
-          }}
-        />
+        {/* Logo in fixed-height box so buttons align with Lava side */}
+        <div style={{
+          height: 220, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginBottom: 44, zIndex: 1,
+          opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
+        }}>
+          <img
+            src={`${import.meta.env.BASE_URL}assets/solo-logo-white.jpg`}
+            alt="Solo Sarto"
+            style={{ maxHeight: '100%', width: 'auto', maxWidth: 300, mixBlendMode: 'multiply' }}
+          />
+        </div>
 
         {/* CTA */}
         <button
           onClick={e => { e.stopPropagation(); navigate('/solo') }}
           style={{
-            padding: '13px 36px', borderRadius: 999, cursor: 'pointer',
+            padding: '16px 52px', borderRadius: 999, cursor: 'pointer', zIndex: 1,
             border: `1px solid ${soloHover ? '#C9A96E' : 'rgba(26,26,26,0.3)'}`,
             background: soloHover ? '#C9A96E' : 'transparent',
             color: soloHover ? '#FAF8F5' : '#1A1A1A',
-            fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
+            fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
             transition: 'all 0.3s ease',
             opacity: mounted ? 1 : 0,
           }}
@@ -199,29 +199,31 @@ export default function Landing() {
           DROP 04 · SOLAR BLOOM
         </div>
 
-        {/* Wordmark */}
-        <LavaWordmark size={42} animate={true} style={{
-          marginBottom: 8, zIndex: 1,
-          opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
-        }} />
+        {/* Wordmark + subtitle in fixed-height box matching Solo side */}
         <div style={{
-          fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.85)', fontFamily: 'DM Sans',
-          marginBottom: 40, zIndex: 1,
-          opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.4s'
+          height: 220, display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          marginBottom: 44, zIndex: 1,
+          opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
         }}>
-          THE DIFFUSION LINE
+          <LavaWordmark size={110} animate={true} style={{ marginBottom: 16 }} />
+          <div style={{
+            fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.85)', fontFamily: 'DM Sans',
+          }}>
+            THE DIFFUSION LINE
+          </div>
         </div>
 
         {/* CTA */}
         <button
           onClick={e => { e.stopPropagation(); navigate('/lava') }}
           style={{
-            padding: '13px 36px', borderRadius: 999, cursor: 'pointer', zIndex: 1,
+            padding: '16px 52px', borderRadius: 999, cursor: 'pointer', zIndex: 1,
             border: '1px solid rgba(255,255,255,0.6)',
             background: lavaHover ? '#fff' : 'rgba(255,255,255,0.15)',
             backdropFilter: 'blur(8px)',
             color: lavaHover ? '#7F58D4' : '#fff',
-            fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
+            fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
             transition: 'all 0.3s ease',
             opacity: mounted ? 1 : 0,
           }}
