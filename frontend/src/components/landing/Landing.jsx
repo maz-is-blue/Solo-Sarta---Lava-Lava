@@ -93,35 +93,19 @@ export default function Landing() {
           THE ATELIER
         </div>
 
-        {/* SVG sketch — absolutely positioned so it doesn't shift the logo out of center */}
-        <div style={{
-          position: 'absolute',
-          left: '50%', transform: 'translateX(-50%)',
-          bottom: 'calc(50% + 88px)',
-          pointerEvents: 'none', zIndex: 0
-        }}>
-          <div style={{
-            position: 'absolute', width: 200, height: 200, top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
-            background: 'radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%)',
-            filter: 'blur(30px)'
-          }} />
-          <SoloDressSketch />
-        </div>
-
-        {/* Wordmark */}
-        <div style={{
-          fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 42,
-          color: '#FAF8F5', letterSpacing: 2, marginBottom: 8, zIndex: 1,
-          opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
-        }}>
-          solo sarto
-        </div>
-        <div style={{
-          fontSize: 11, letterSpacing: 3, color: 'rgba(201,169,110,0.6)', fontFamily: 'DM Sans',
-          opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.4s', marginBottom: 40, zIndex: 1
-        }}>
-          BESPOKE / COUTURE
-        </div>
+        {/* Logo image — screen blend removes white bg on dark background */}
+        <img
+          src={`${import.meta.env.BASE_URL}assets/solo-logo.jpg`}
+          alt="Solo Sarto"
+          style={{
+            width: 220, height: 'auto', zIndex: 1,
+            mixBlendMode: 'screen',
+            marginBottom: 32,
+            opacity: mounted ? 1 : 0,
+            transition: 'opacity 0.8s ease 1.2s',
+            filter: 'drop-shadow(0 0 18px rgba(201,169,110,0.25))'
+          }}
+        />
 
         {/* CTA */}
         <button

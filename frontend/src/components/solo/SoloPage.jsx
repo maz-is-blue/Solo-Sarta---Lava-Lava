@@ -160,12 +160,15 @@ export default function SoloPage() {
         >
           ← BACK
         </button>
-        <span style={{
-          fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 26,
-          letterSpacing: 2, color: '#FAF8F5'
-        }}>
-          solo sarto
-        </span>
+        <img
+          src={`${import.meta.env.BASE_URL}assets/solo-logo.jpg`}
+          alt="Solo Sarto"
+          style={{
+            height: 44, width: 'auto',
+            mixBlendMode: 'screen',
+            filter: 'drop-shadow(0 0 10px rgba(201,169,110,0.2))'
+          }}
+        />
         <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
           {['Atelier', 'Collection', 'Story'].map(label => (
             <span key={label}
