@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="48" viewBox="0 0 160 48">
+  <defs>
+    <linearGradient id="lavaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF5A2C"/>
+      <stop offset="50%" stop-color="#EFA0BA"/>
+      <stop offset="100%" stop-color="#D7A8E8"/>
+    </linearGradient>
+  </defs>
+  <text x="8" y="36" font-family="Georgia, serif" font-style="italic" font-size="28" font-weight="400" fill="url(#lavaGrad)" letter-spacing="2">lava lava</text>
+</svg>

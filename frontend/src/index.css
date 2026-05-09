@@ -1,0 +1,57 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fff; overflow-x: hidden; }
+:root {
+  --solo-ivory: #FAF8F5;
+  --solo-charcoal: #1A1A1A;
+  --solo-gold: #C9A96E;
+  --solo-orange: #E8722A;
+  --lava-orange: #FF5A2C;
+  --lava-coral: #F08A8B;
+  --lava-pink: #EFA0BA;
+  --lava-purple: #D7A8E8;
+  --lava-lilac: #E8C0F0;
+}
+@keyframes gradient-shift {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity:0; } to { opacity:1; }
+}
+@keyframes float {
+  0%,100% { transform:translateY(0); }
+  50% { transform:translateY(-12px); }
+}
+@keyframes scaleY-in {
+  from { transform:scaleY(0); } to { transform:scaleY(1); }
+}
+@keyframes sparkle {
+  0%,100% { opacity:0; transform:scale(0.5); }
+  50% { opacity:1; transform:scale(1.2); }
+}
+@keyframes spin {
+  from { transform:rotate(0deg); } to { transform:rotate(360deg); }
+}
+@keyframes drawIn {
+  from { stroke-dashoffset: 800; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes aura1 {
+  0%,100% { transform:translate(0,0) scale(1); }
+  33% { transform:translate(60px,-40px) scale(1.2); }
+  66% { transform:translate(-40px,60px) scale(0.9); }
+}
+@keyframes aura2 {
+  0%,100% { transform:translate(0,0) scale(1); }
+  33% { transform:translate(-70px,50px) scale(1.1); }
+  66% { transform:translate(50px,-60px) scale(0.95); }
+}
+@keyframes marquee {
+  from { transform:translateX(0); }
+  to { transform:translateX(-50%); }
+}
