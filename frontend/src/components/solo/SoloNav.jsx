@@ -24,7 +24,7 @@ export default function SoloNav() {
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
       padding: mobile ? '14px 24px' : '18px 48px',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      background: 'rgba(26,26,26,0.92)',
+      background: 'rgba(42,36,32,0.92)',
       backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
       borderBottom: '1px solid rgba(201,169,110,0.12)'
     }}>

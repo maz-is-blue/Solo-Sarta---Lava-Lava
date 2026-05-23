@@ -72,7 +72,7 @@ function SoloProductCard({ product }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         position: 'relative', cursor: 'pointer', overflow: 'hidden', borderRadius: 4,
-        background: 'linear-gradient(135deg, #1e1e1e 0%, #141414 100%)',
+        background: 'linear-gradient(135deg, #2E2822 0%, #201C18 100%)',
         border: '1px solid rgba(201,169,110,0.12)',
         transition: 'transform 0.4s ease, box-shadow 0.4s ease',
         transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
@@ -101,7 +101,7 @@ function SoloProductCard({ product }) {
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
         padding: '20px 20px',
-        background: 'linear-gradient(0deg, rgba(10,10,10,0.98) 0%, rgba(10,10,10,0.7) 100%)',
+        background: 'linear-gradient(0deg, rgba(28,24,20,0.98) 0%, rgba(28,24,20,0.7) 100%)',
         transform: hovered ? 'translateY(0)' : 'translateY(100%)',
         transition: 'transform 0.35s ease'
       }}>
@@ -129,7 +129,7 @@ export default function SoloPage() {
   const [invited, setInvited] = useState(false)
 
   return (
-    <div style={{ background: '#1A1A1A', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
+    <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
       {/* Grain */}
       <div style={{
         position: 'fixed', inset: 0, opacity: 0.03, pointerEvents: 'none', zIndex: 0,
@@ -203,7 +203,7 @@ export default function SoloPage() {
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 80px 80px 40px', position: 'relative' }}
         >
           <div style={{
-            background: 'linear-gradient(135deg, #222222 0%, #141414 100%)',
+            background: 'linear-gradient(135deg, #302A24 0%, #201C18 100%)',
             border: '1px solid rgba(201,169,110,0.15)',
             borderRadius: 4, padding: '48px 40px', width: '100%', maxWidth: 440,
             position: 'relative', overflow: 'hidden'
@@ -247,7 +247,7 @@ export default function SoloPage() {
           transition={{ duration: 0.7 }}
         >
           <div style={{
-            background: 'linear-gradient(135deg, #1e1e1e, #151515)', border: '1px solid rgba(201,169,110,0.1)',
+            background: 'linear-gradient(135deg, #2E2822, #211D19)', border: '1px solid rgba(201,169,110,0.1)',
             borderRadius: 4, height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden'
           }}>
             <div style={{

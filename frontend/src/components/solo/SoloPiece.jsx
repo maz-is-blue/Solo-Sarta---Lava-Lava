@@ -58,7 +58,7 @@ export default function SoloPiece() {
 
   if (!product) {
     return (
-      <div style={{ background: '#1A1A1A', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 24 }}>
+      <div style={{ background: '#2A2420', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 24 }}>
         <SoloNav />
         <p style={{ color: 'rgba(250,248,245,0.5)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 22 }}>This piece has moved on.</p>
         <button onClick={() => navigate('/solo/collection')} style={{ background: 'none', border: '1px solid rgba(201,169,110,0.4)', color: '#C9A96E', padding: '10px 24px', cursor: 'pointer', fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2 }}>
@@ -71,7 +71,7 @@ export default function SoloPiece() {
   const otherPieces = SOLO_PRODUCTS.filter(p => p.slug !== slug).slice(0, 3)
 
   return (
-    <div style={{ background: '#1A1A1A', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
+    <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
       <div style={{ position: 'fixed', inset: 0, opacity: 0.03, pointerEvents: 'none', zIndex: 0, backgroundImage: GRAIN, backgroundSize: 'cover' }} />
       <SoloNav />
 
@@ -96,7 +96,7 @@ export default function SoloPiece() {
             style={{ display: 'flex', justifyContent: 'center', paddingRight: 40 }}
           >
             <div style={{
-              background: 'linear-gradient(135deg, #1e1e1e, #141414)',
+              background: 'linear-gradient(135deg, #2E2822, #201C18)',
               border: '1px solid rgba(201,169,110,0.15)',
               borderRadius: 4, padding: '64px 48px',
               display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -226,7 +226,7 @@ export default function SoloPiece() {
                   onClick={() => navigate(`/solo/piece/${p.slug}`)}
                   style={{
                     cursor: 'pointer', borderRadius: 3, overflow: 'hidden',
-                    background: 'linear-gradient(135deg, #1e1e1e, #141414)',
+                    background: 'linear-gradient(135deg, #2E2822, #201C18)',
                     border: '1px solid rgba(201,169,110,0.1)',
                     padding: '24px',
                     transition: 'border-color 0.2s ease'

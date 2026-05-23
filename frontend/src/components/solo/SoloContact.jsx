@@ -37,7 +37,7 @@ export default function SoloContact() {
   })
 
   return (
-    <div style={{ background: '#1A1A1A', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
+    <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
       <div style={{ position: 'fixed', inset: 0, opacity: 0.03, pointerEvents: 'none', zIndex: 0, backgroundImage: GRAIN, backgroundSize: 'cover' }} />
       <SoloNav />
 
@@ -68,7 +68,7 @@ export default function SoloContact() {
           >
             {submitted ? (
               <div style={{
-                background: 'linear-gradient(135deg, #1e1e1e, #141414)',
+                background: 'linear-gradient(135deg, #2E2822, #201C18)',
                 border: '1px solid rgba(201,169,110,0.2)',
                 borderRadius: 4, padding: '64px 48px', textAlign: 'center'
               }}>
@@ -113,7 +113,7 @@ export default function SoloContact() {
                     onFocus={() => setFocused('type')}
                     onBlur={() => setFocused(null)}
                   >
-                    {INQUIRY_TYPES.map(t => <option key={t} value={t} style={{ background: '#1A1A1A' }}>{t}</option>)}
+                    {INQUIRY_TYPES.map(t => <option key={t} value={t} style={{ background: '#2A2420' }}>{t}</option>)}
                   </select>
                 </div>
 
@@ -171,7 +171,7 @@ export default function SoloContact() {
 
             {/* Private circle */}
             <div style={{
-              background: 'linear-gradient(135deg, #1e1e1e, #141414)',
+              background: 'linear-gradient(135deg, #2E2822, #201C18)',
               border: '1px solid rgba(201,169,110,0.15)',
               borderRadius: 4, padding: '32px 28px'
             }}>

@@ -25,7 +25,7 @@ export default function SoloStory() {
   const navigate = useNavigate()
 
   return (
-    <div style={{ background: '#1A1A1A', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
+    <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
       <div style={{ position: 'fixed', inset: 0, opacity: 0.03, pointerEvents: 'none', zIndex: 0, backgroundImage: GRAIN, backgroundSize: 'cover' }} />
       <SoloNav />
 
@@ -75,7 +75,7 @@ export default function SoloStory() {
             transition={{ duration: 0.7, delay: 0.2 }}
           >
             <div style={{
-              background: 'linear-gradient(135deg, #1e1e1e, #141414)',
+              background: 'linear-gradient(135deg, #2E2822, #201C18)',
               border: '1px solid rgba(201,169,110,0.15)',
               borderRadius: 4, padding: '48px 40px', position: 'relative', overflow: 'hidden'
             }}>

@@ -43,7 +43,7 @@ function PieceCard({ product }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         position: 'relative', cursor: 'pointer', overflow: 'hidden', borderRadius: 3,
-        background: 'linear-gradient(135deg, #1e1e1e 0%, #141414 100%)',
+        background: 'linear-gradient(135deg, #2E2822 0%, #201C18 100%)',
         border: `1px solid ${hovered ? 'rgba(201,169,110,0.35)' : 'rgba(201,169,110,0.12)'}`,
         transition: 'transform 0.4s ease, box-shadow 0.4s ease, border-color 0.3s ease',
         transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
@@ -91,7 +91,7 @@ export default function SoloCollection() {
   const filtered = active === 'All' ? SOLO_PRODUCTS : SOLO_PRODUCTS.filter(p => p.cat === active)
 
   return (
-    <div style={{ background: '#1A1A1A', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
+    <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
       <div style={{ position: 'fixed', inset: 0, opacity: 0.03, pointerEvents: 'none', zIndex: 0, backgroundImage: GRAIN, backgroundSize: 'cover' }} />
       <SoloNav />
 
