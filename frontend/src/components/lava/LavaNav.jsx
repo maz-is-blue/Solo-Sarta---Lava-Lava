@@ -67,7 +67,7 @@ export default function LavaNav() {
           padding: '7px 18px', cursor: 'pointer',
           display: 'flex', alignItems: 'center', gap: 6,
           fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 1,
-          color: '#7F58D4', transition: 'background 0.2s ease'
+          color: '#8B6FB8', transition: 'background 0.2s ease'
         }}
           onMouseEnter={e => e.currentTarget.style.background = '#fff'}
           onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.9)'}

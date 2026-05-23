@@ -96,7 +96,7 @@ export default function LavaContact() {
               ].map(([label, em]) => (
                 <div key={label} style={{ marginBottom: 12 }}>
                   <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(255,255,255,0.35)', fontFamily: 'DM Sans', marginBottom: 2 }}>{label.toUpperCase()}</div>
-                  <a href={`mailto:${em}`} style={{ fontSize: 14, color: '#EFA0BA', fontFamily: 'DM Sans', textDecoration: 'none' }}>{em}</a>
+                  <a href={`mailto:${em}`} style={{ fontSize: 14, color: '#D99AB4', fontFamily: 'DM Sans', textDecoration: 'none' }}>{em}</a>
                 </div>
               ))}
             </div>
@@ -105,7 +105,7 @@ export default function LavaContact() {
               <div style={{ display: 'flex', gap: 16 }}>
                 {['Instagram', 'Pinterest', 'TikTok'].map(s => (
                   <span key={s} style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', cursor: 'pointer', fontFamily: 'DM Sans' }}
-                    onMouseEnter={e => e.currentTarget.style.color = '#EFA0BA'}
+                    onMouseEnter={e => e.currentTarget.style.color = '#D99AB4'}
                     onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.6)'}
                   >{s}</span>
                 ))}
@@ -169,19 +169,19 @@ export default function LavaContact() {
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                   <input
                     type="checkbox" name="privacy" checked={formData.privacy} onChange={handleChange}
-                    style={{ marginTop: 3, accentColor: '#EFA0BA', cursor: 'pointer' }}
+                    style={{ marginTop: 3, accentColor: '#D99AB4', cursor: 'pointer' }}
                   />
                   <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', fontFamily: 'DM Sans', cursor: 'pointer', lineHeight: 1.6 }}>
                     I agree to the privacy policy and consent to being contacted regarding my enquiry.
                   </label>
                 </div>
-                {error && <div style={{ fontSize: 13, color: '#F08A8B', fontFamily: 'DM Sans' }}>{error}</div>}
+                {error && <div style={{ fontSize: 13, color: '#D96A8A', fontFamily: 'DM Sans' }}>{error}</div>}
                 <button
                   type="submit"
                   disabled={loading}
                   style={{
                     padding: '15px', borderRadius: 12, border: 'none', cursor: loading ? 'not-allowed' : 'pointer',
-                    background: 'linear-gradient(90deg, #FF5A2C, #F08A8B, #EFA0BA)',
+                    background: 'linear-gradient(90deg, #E8906A, #D96A8A, #8B6FB8)',
                     color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 1.5,
                     opacity: loading ? 0.7 : 1, transition: 'opacity 0.2s'
                   }}

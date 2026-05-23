@@ -152,7 +152,7 @@ export default function Landing() {
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           transition: 'transform 0.5s ease',
           transform: lavaHover ? 'scale(1.02)' : 'scale(1)',
-          background: 'linear-gradient(135deg, #FF5A2C, #F08A8B, #EFA0BA, #D7A8E8, #E8C0F0)',
+          background: 'linear-gradient(135deg, #E8906A, #D96A8A, #8B6FB8)',
           backgroundSize: '400% 400%',
           animation: 'gradient-shift 12s ease infinite'
         }}
@@ -160,12 +160,12 @@ export default function Landing() {
         {/* Aura blobs */}
         <div style={{
           position: 'absolute', width: 500, height: 500, top: '-15%', left: '-10%', borderRadius: '50%', pointerEvents: 'none',
-          background: 'radial-gradient(circle, rgba(255,90,44,0.4) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(232,144,106,0.4) 0%, transparent 70%)',
           filter: 'blur(60px)', animation: 'aura1 14s ease-in-out infinite'
         }} />
         <div style={{
           position: 'absolute', width: 400, height: 400, bottom: '-10%', right: '-10%', borderRadius: '50%', pointerEvents: 'none',
-          background: 'radial-gradient(circle, rgba(215,168,232,0.5) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(139,111,184,0.5) 0%, transparent 70%)',
           filter: 'blur(50px)', animation: 'aura2 18s ease-in-out infinite'
         }} />
 
@@ -222,7 +222,7 @@ export default function Landing() {
             border: '1px solid rgba(255,255,255,0.6)',
             background: lavaHover ? '#fff' : 'rgba(255,255,255,0.15)',
             backdropFilter: 'blur(8px)',
-            color: lavaHover ? '#7F58D4' : '#fff',
+            color: lavaHover ? '#8B6FB8' : '#fff',
             fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
             transition: 'all 0.3s ease',
             opacity: mounted ? 1 : 0,

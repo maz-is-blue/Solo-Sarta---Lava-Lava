@@ -57,7 +57,7 @@ export default function LavaProduct() {
         <LavaNav />
         <div style={{ textAlign: 'center' }}>
           <h2 style={{ fontFamily: 'Cormorant Garamond', fontSize: 40, fontStyle: 'italic', marginBottom: 16 }}>Product not found</h2>
-          <Link to="/lava/collection" style={{ color: '#EFA0BA', fontFamily: 'DM Sans', fontSize: 14 }}>← Back to Collection</Link>
+          <Link to="/lava/collection" style={{ color: '#D99AB4', fontFamily: 'DM Sans', fontSize: 14 }}>← Back to Collection</Link>
         </div>
       </div>
     )

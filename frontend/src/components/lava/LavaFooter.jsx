@@ -49,7 +49,7 @@ export default function LavaFooter() {
             <span
               key={s}
               style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}
-              onMouseEnter={e => e.currentTarget.style.color = '#EFA0BA'}
+              onMouseEnter={e => e.currentTarget.style.color = '#D99AB4'}
               onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
             >
               {s}

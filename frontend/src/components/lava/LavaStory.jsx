@@ -31,7 +31,7 @@ export default function LavaStory() {
       <section style={{ paddingTop: 160, paddingBottom: 80, paddingLeft: 80, paddingRight: 80, position: 'relative', overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', width: 700, height: 500, top: 0, right: -100, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse, rgba(255,90,44,0.18) 0%, rgba(215,168,232,0.12) 50%, transparent 80%)',
+          background: 'radial-gradient(ellipse, rgba(232,144,106,0.18) 0%, rgba(139,111,184,0.12) 50%, transparent 80%)',
           filter: 'blur(80px)'
         }} />
         <motion.div {...fadeUp} style={{ maxWidth: 720, position: 'relative', zIndex: 1 }}>
@@ -52,10 +52,10 @@ export default function LavaStory() {
             <div style={{
               width: 240, height: 240, borderRadius: '50%', position: 'relative',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'linear-gradient(135deg, rgba(255,90,44,0.15), rgba(215,168,232,0.1))'
+              background: 'linear-gradient(135deg, rgba(232,144,106,0.15), rgba(139,111,184,0.1))'
             }}>
-              <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'radial-gradient(circle, rgba(239,160,186,0.3), transparent 70%)', filter: 'blur(20px)' }} />
-              <ProductSilhouette type="slip" palette={['#FF5A2C', '#EFA0BA', '#D7A8E8']} width={140} height={220} />
+              <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'radial-gradient(circle, rgba(217,154,180,0.3), transparent 70%)', filter: 'blur(20px)' }} />
+              <ProductSilhouette type="slip" palette={['#E8906A', '#D99AB4', '#8B6FB8']} width={140} height={220} />
             </div>
             <div style={{ marginTop: 24, textAlign: 'center' }}>
               <div style={{ fontSize: 11, letterSpacing: 2, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 8 }}>SOLAR BLOOM · DROP 04</div>
@@ -71,7 +71,7 @@ export default function LavaStory() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
             {PILLARS.map((p) => (
               <div key={p.title} style={{ display: 'flex', gap: 20 }}>
-                <div style={{ fontSize: 20, color: '#EFA0BA', flexShrink: 0, paddingTop: 2 }}>{p.icon}</div>
+                <div style={{ fontSize: 20, color: '#D99AB4', flexShrink: 0, paddingTop: 2 }}>{p.icon}</div>
                 <div>
                   <div style={{ fontSize: 16, fontWeight: 600, fontFamily: 'DM Sans', marginBottom: 6 }}>{p.title}</div>
                   <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans', lineHeight: 1.7 }}>{p.body}</p>
@@ -92,7 +92,7 @@ export default function LavaStory() {
           {/* Center line */}
           <div style={{
             position: 'absolute', left: '50%', top: 0, bottom: 0, width: 1,
-            background: 'linear-gradient(180deg, transparent, rgba(239,160,186,0.4) 20%, rgba(215,168,232,0.4) 80%, transparent)',
+            background: 'linear-gradient(180deg, transparent, rgba(217,154,180,0.4) 20%, rgba(139,111,184,0.4) 80%, transparent)',
             transform: 'translateX(-50%)'
           }} />
           {TIMELINE.map((item, i) => {
@@ -113,14 +113,14 @@ export default function LavaStory() {
                 <div style={{
                   position: 'absolute', left: '50%', top: 20, transform: 'translateX(-50%)',
                   width: 12, height: 12, borderRadius: '50%',
-                  background: `linear-gradient(135deg, #FF5A2C, #EFA0BA)`,
-                  boxShadow: '0 0 12px rgba(239,160,186,0.5)'
+                  background: `linear-gradient(135deg, #E8906A, #D99AB4)`,
+                  boxShadow: '0 0 12px rgba(217,154,180,0.5)'
                 }} />
                 <LavaGlass style={{
                   width: '44%', padding: '24px 28px',
                   marginLeft: isLeft ? 0 : 'auto', marginRight: isLeft ? 'auto' : 0
                 }}>
-                  <div style={{ fontSize: 24, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#EFA0BA', marginBottom: 6 }}>{item.year}</div>
+                  <div style={{ fontSize: 24, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#D99AB4', marginBottom: 6 }}>{item.year}</div>
                   <div style={{ fontSize: 15, fontWeight: 600, fontFamily: 'DM Sans', marginBottom: 8 }}>{item.title}</div>
                   <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans', lineHeight: 1.7 }}>{item.body}</p>
                 </LavaGlass>
@@ -133,12 +133,12 @@ export default function LavaStory() {
       {/* Closing CTA */}
       <section style={{
         padding: '80px 80px 100px', textAlign: 'center',
-        background: 'linear-gradient(135deg, rgba(255,90,44,0.08) 0%, rgba(215,168,232,0.1) 50%, transparent 100%)',
+        background: 'linear-gradient(135deg, rgba(232,144,106,0.08) 0%, rgba(139,111,184,0.1) 50%, transparent 100%)',
         position: 'relative', overflow: 'hidden'
       }}>
         <div style={{
           position: 'absolute', width: 600, height: 300, top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
-          background: 'radial-gradient(ellipse, rgba(239,160,186,0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(217,154,180,0.15) 0%, transparent 70%)',
           filter: 'blur(60px)', pointerEvents: 'none'
         }} />
         <motion.div {...fadeUp} style={{ position: 'relative', zIndex: 1 }}>
@@ -152,9 +152,9 @@ export default function LavaStory() {
             onClick={() => navigate('/lava/collection')}
             style={{
               padding: '16px 48px', borderRadius: 999, border: 'none', cursor: 'pointer',
-              background: 'linear-gradient(90deg, #FF5A2C, #F08A8B, #EFA0BA)',
+              background: 'linear-gradient(90deg, #E8906A, #D96A8A, #8B6FB8)',
               color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
-              boxShadow: '0 8px 32px rgba(255,90,44,0.4)', transition: 'transform 0.2s ease'
+              boxShadow: '0 8px 32px rgba(232,144,106,0.4)', transition: 'transform 0.2s ease'
             }}
             onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
             onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}

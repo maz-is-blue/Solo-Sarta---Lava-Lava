@@ -10,7 +10,7 @@ import { LAVA_PRODUCTS, LAVA_CATEGORIES } from '../../data/products'
 import { useCart } from '../../context/CartContext'
 import { subscribeNewsletter } from '../../services/api'
 
-const PAGE_BG = 'linear-gradient(160deg, #FF6040 0%, #F07878 18%, #EFA0BA 45%, #D7A8E8 72%, #C8B0F8 100%)'
+const PAGE_BG = 'linear-gradient(160deg, #E8906A 0%, #D96A8A 40%, #8B6FB8 100%)'
 const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.7 } }
 
 /* Light glass card for warm bg */
@@ -83,13 +83,13 @@ export default function LavaHome() {
         <div style={{
           position: 'absolute', width: 700, height: 700, borderRadius: '50%',
           top: '-20%', left: '-10%', pointerEvents: 'none',
-          background: 'radial-gradient(circle, rgba(255,120,60,0.35) 0%, transparent 65%)',
+          background: 'radial-gradient(circle, rgba(232,144,106,0.35) 0%, transparent 65%)',
           filter: 'blur(60px)', animation: 'aura1 16s ease-in-out infinite'
         }} />
         <div style={{
           position: 'absolute', width: 500, height: 500, borderRadius: '50%',
           bottom: '-10%', right: '-5%', pointerEvents: 'none',
-          background: 'radial-gradient(circle, rgba(200,176,248,0.4) 0%, transparent 65%)',
+          background: 'radial-gradient(circle, rgba(155,142,200,0.4) 0%, transparent 65%)',
           filter: 'blur(60px)', animation: 'aura2 20s ease-in-out infinite'
         }} />
 
@@ -105,8 +105,8 @@ export default function LavaHome() {
             letterSpacing: 1.5, color: '#fff'
           }}>
             <span style={{
-              width: 7, height: 7, borderRadius: '50%', background: '#FF3B1E',
-              boxShadow: '0 0 6px #FF3B1E', display: 'inline-block',
+              width: 7, height: 7, borderRadius: '50%', background: '#E8906A',
+              boxShadow: '0 0 6px #E8906A', display: 'inline-block',
               animation: 'sparkle 1.5s ease-in-out infinite'
             }} />
             DROP 04 — LIVE NOW
@@ -182,13 +182,13 @@ export default function LavaHome() {
             background: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
             borderRadius: 32, overflow: 'hidden',
-            boxShadow: '0 32px 80px rgba(127,88,212,0.2), 0 8px 32px rgba(0,0,0,0.12)',
+            boxShadow: '0 32px 80px rgba(139,111,184,0.2), 0 8px 32px rgba(0,0,0,0.12)',
             border: '1px solid rgba(255,255,255,0.9)'
           }}>
             {/* Badge */}
             <div style={{ padding: '18px 24px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{
-                background: 'rgba(127,88,212,0.12)', color: '#7F58D4',
+                background: 'rgba(139,111,184,0.12)', color: '#8B6FB8',
                 fontSize: 11, fontWeight: 700, letterSpacing: 1.5,
                 padding: '5px 12px', borderRadius: 999, fontFamily: 'DM Sans'
               }}>
@@ -337,7 +337,7 @@ export default function LavaHome() {
                   transition: 'all 0.2s ease',
                   background: activeFilter === cat ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.22)',
                   backdropFilter: 'blur(8px)',
-                  color: activeFilter === cat ? '#7F58D4' : 'rgba(255,255,255,0.9)',
+                  color: activeFilter === cat ? '#8B6FB8' : 'rgba(255,255,255,0.9)',
                   border: activeFilter === cat ? 'none' : '1px solid rgba(255,255,255,0.35)'
                 }}
               >
@@ -413,11 +413,11 @@ export default function LavaHome() {
         </motion.div>
         <motion.div {...fadeUp} style={{ display: 'flex', gap: 28, justifyContent: 'center', flexWrap: 'wrap' }}>
           {[
-            ['#FF5A2C', 'Solar'],
-            ['#F08A8B', 'Coral Daze'],
-            ['#EFA0BA', 'Sunset Rose'],
-            ['#D7A8E8', 'Lilac Pulse'],
-            ['#E8C0F0', 'Cosmic Plum'],
+            ['#E8906A', 'Solar'],
+            ['#D96A8A', 'Coral Daze'],
+            ['#D99AB4', 'Sunset Rose'],
+            ['#8B6FB8', 'Lilac Pulse'],
+            ['#A990CC', 'Cosmic Plum'],
           ].map(([color, name]) => (
             <div key={name} style={{ textAlign: 'center' }}>
               <div style={{
@@ -479,7 +479,7 @@ export default function LavaHome() {
                 />
                 <button type="submit" style={{
                   padding: '12px 28px', borderRadius: 999, border: 'none', cursor: 'pointer',
-                  background: 'linear-gradient(90deg, #FF5A2C, #EFA0BA)',
+                  background: 'linear-gradient(90deg, #E8906A, #D96A8A)',
                   color: '#fff', fontSize: 12, fontWeight: 700,
                   fontFamily: 'DM Sans', letterSpacing: 1, whiteSpace: 'nowrap'
                 }}>
@@ -528,7 +528,7 @@ function WarmCollectionCard({ product, onAdd, navigate }) {
       {product.tag && (
         <div style={{
           position: 'absolute', top: 12, left: 12, zIndex: 2,
-          background: 'rgba(255,255,255,0.9)', color: '#7F58D4',
+          background: 'rgba(255,255,255,0.9)', color: '#8B6FB8',
           fontSize: 10, fontWeight: 700, letterSpacing: 1,
           padding: '4px 12px', borderRadius: 999, fontFamily: 'DM Sans'
         }}>

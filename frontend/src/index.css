@@ -6,11 +6,11 @@ body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fff; overf
   --solo-charcoal: #1A1A1A;
   --solo-gold: #C9A96E;
   --solo-orange: #E8722A;
-  --lava-orange: #FF5A2C;
-  --lava-coral: #F08A8B;
-  --lava-pink: #EFA0BA;
-  --lava-purple: #D7A8E8;
-  --lava-lilac: #E8C0F0;
+  --lava-orange: #E8906A;
+  --lava-coral: #D96A8A;
+  --lava-pink: #D99AB4;
+  --lava-purple: #8B6FB8;
+  --lava-lilac: #A990CC;
 }
 @keyframes gradient-shift {
   0%,100% { background-position: 0% 50%; }

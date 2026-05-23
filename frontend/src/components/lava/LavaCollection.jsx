@@ -23,7 +23,7 @@ export default function LavaCollection() {
       <section style={{ paddingTop: 140, paddingBottom: 48, paddingLeft: 80, paddingRight: 80, position: 'relative', overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', width: 600, height: 400, top: 0, right: 0, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse, rgba(215,168,232,0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(139,111,184,0.15) 0%, transparent 70%)',
           filter: 'blur(60px)'
         }} />
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -51,10 +51,10 @@ export default function LavaCollection() {
                 fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 1,
                 transition: 'all 0.25s ease',
                 background: activeFilter === cat
-                  ? 'linear-gradient(90deg, #FF5A2C, #EFA0BA)'
+                  ? 'linear-gradient(90deg, #E8906A, #D96A8A)'
                   : 'rgba(255,255,255,0.08)',
                 color: activeFilter === cat ? '#fff' : 'rgba(255,255,255,0.6)',
-                boxShadow: activeFilter === cat ? '0 4px 20px rgba(255,90,44,0.35)' : 'none'
+                boxShadow: activeFilter === cat ? '0 4px 20px rgba(232,144,106,0.35)' : 'none'
               }}
             >
               {cat.toUpperCase()}
