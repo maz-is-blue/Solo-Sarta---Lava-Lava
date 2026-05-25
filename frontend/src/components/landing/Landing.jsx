@@ -81,7 +81,7 @@ export default function Landing() {
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
         }}>
           <img
-            src={`${import.meta.env.BASE_URL}assets/solo-logo-white.jpg`}
+            src={`${import.meta.env.BASE_URL}assets/solo-logo-landing.png`}
             alt="Solo Sarto"
             className="landing-logo-img"
           />

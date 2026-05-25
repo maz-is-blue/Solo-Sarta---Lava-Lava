@@ -59,9 +59,9 @@ export default function SoloNav() {
         {/* Logo + by Shiyam */}
         <div onClick={() => navigate('/solo')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', flexShrink: 0 }}>
           <img
-            src={`${import.meta.env.BASE_URL}assets/solo-logo-dark.jpg`}
+            src={`${import.meta.env.BASE_URL}assets/solo-logo-nav.png`}
             alt="Solo Sarto"
-            style={{ height: mobile ? 34 : 44, width: 'auto', mixBlendMode: 'screen', filter: 'drop-shadow(0 0 10px rgba(201,169,110,0.3))' }}
+            style={{ height: mobile ? 34 : 44, width: 'auto', objectFit: 'contain' }}
           />
           <span style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, fontSize: mobile ? 12 : 13, letterSpacing: 1, color: '#E8956D', whiteSpace: 'nowrap', lineHeight: 1 }}>
             by Shiyam
