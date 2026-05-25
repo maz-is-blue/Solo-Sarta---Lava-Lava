@@ -42,9 +42,13 @@ export default function Landing() {
   const [mounted, setMounted] = useState(false)
   const [soloHover, setSoloHover] = useState(false)
   const [lavaHover, setLavaHover] = useState(false)
+  const [mobile, setMobile] = useState(() => window.innerWidth < 768)
 
   useEffect(() => {
     setMounted(true)
+    const handler = () => setMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
   }, [])
 
   const SPARKLES = [
@@ -59,17 +63,24 @@ export default function Landing() {
   ]
 
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'relative' }}>
-      {/* Solo Sarto — Left half */}
+    <div style={{
+      display: 'flex',
+      flexDirection: mobile ? 'column' : 'row',
+      height: '100vh', overflow: 'hidden', position: 'relative'
+    }}>
+      {/* Solo Sarto — Top (mobile) / Left (desktop) */}
       <div
         onClick={() => navigate('/solo')}
         onMouseEnter={() => setSoloHover(true)}
         onMouseLeave={() => setSoloHover(false)}
         style={{
-          width: '50%', background: '#FFFFFF', cursor: 'pointer', position: 'relative', overflow: 'hidden',
+          width: mobile ? '100%' : '50%',
+          height: mobile ? '50vh' : '100vh',
+          background: '#FFFFFF', cursor: 'pointer', position: 'relative', overflow: 'hidden',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           transition: 'transform 0.5s ease',
           transform: soloHover ? 'scale(1.02)' : 'scale(1)',
+          flexShrink: 0,
         }}
       >
         {/* Subtle paper texture */}
@@ -86,23 +97,23 @@ export default function Landing() {
 
         {/* Eyebrow */}
         <div style={{
-          position: 'absolute', top: 48,
+          position: 'absolute', top: mobile ? 20 : 48,
           fontSize: 10, letterSpacing: 4, color: 'rgba(201,169,110,0.8)', fontFamily: 'DM Sans',
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
         }}>
           THE ATELIER
         </div>
 
-        {/* Logo in fixed-height box so buttons align with Lava side */}
+        {/* Logo */}
         <div style={{
-          height: 220, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginBottom: 44, zIndex: 1,
+          height: mobile ? 110 : 220, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginBottom: mobile ? 20 : 44, zIndex: 1,
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
         }}>
           <img
             src={`${import.meta.env.BASE_URL}assets/solo-logo-white.jpg`}
             alt="Solo Sarto"
-            style={{ maxHeight: '100%', width: 'auto', maxWidth: 300 }}
+            style={{ maxHeight: '100%', width: 'auto', maxWidth: mobile ? 180 : 300 }}
           />
         </div>
 
@@ -110,11 +121,11 @@ export default function Landing() {
         <button
           onClick={e => { e.stopPropagation(); navigate('/solo') }}
           style={{
-            padding: '16px 52px', borderRadius: 999, cursor: 'pointer', zIndex: 1,
+            padding: mobile ? '11px 32px' : '16px 52px', borderRadius: 999, cursor: 'pointer', zIndex: 1,
             border: `1px solid ${soloHover ? '#C9A96E' : 'rgba(26,26,26,0.3)'}`,
             background: soloHover ? '#C9A96E' : 'transparent',
             color: soloHover ? '#FAF8F5' : '#1A1A1A',
-            fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
+            fontSize: mobile ? 11 : 12, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
             transition: 'all 0.3s ease',
             opacity: mounted ? 1 : 0,
           }}
@@ -122,39 +133,46 @@ export default function Landing() {
           ENTER SOLO SARTO
         </button>
 
-        {/* Bottom label */}
-        <div style={{
-          position: 'absolute', bottom: 40, left: 40,
-          opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.6s'
-        }}>
-          <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.8)', fontFamily: 'DM Sans', marginBottom: 4 }}>ATELIER · EST. 2018</div>
-          <div style={{ fontSize: 14, letterSpacing: 1.5, color: 'rgba(26,26,26,0.35)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic' }}>Bespoke / Couture</div>
-        </div>
+        {/* Bottom label — desktop only */}
+        {!mobile && (
+          <div style={{
+            position: 'absolute', bottom: 40, left: 40,
+            opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.6s'
+          }}>
+            <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.8)', fontFamily: 'DM Sans', marginBottom: 4 }}>ATELIER · EST. 2018</div>
+            <div style={{ fontSize: 14, letterSpacing: 1.5, color: 'rgba(26,26,26,0.35)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic' }}>Bespoke / Couture</div>
+          </div>
+        )}
       </div>
 
-      {/* Center divider */}
+      {/* Divider — horizontal on mobile, vertical on desktop */}
       <div style={{
-        position: 'absolute', left: '50%', top: 0, bottom: 0, width: 1,
-        background: 'rgba(255,255,255,0.25)',
-        transformOrigin: 'top',
-        transform: mounted ? 'scaleY(1)' : 'scaleY(0)',
+        position: 'absolute',
+        ...(mobile
+          ? { left: 0, right: 0, top: '50%', height: 1, transformOrigin: 'left', transform: mounted ? 'scaleX(1)' : 'scaleX(0)' }
+          : { left: '50%', top: 0, bottom: 0, width: 1, transformOrigin: 'top', transform: mounted ? 'scaleY(1)' : 'scaleY(0)' }
+        ),
+        background: 'rgba(255,255,255,0.35)',
         transition: 'transform 0.6s ease 1.2s',
         zIndex: 10
       }} />
 
-      {/* Lava Lava — Right half */}
+      {/* Lava Lava — Bottom (mobile) / Right (desktop) */}
       <div
         onClick={() => navigate('/lava')}
         onMouseEnter={() => setLavaHover(true)}
         onMouseLeave={() => setLavaHover(false)}
         style={{
-          width: '50%', cursor: 'pointer', position: 'relative', overflow: 'hidden',
+          width: mobile ? '100%' : '50%',
+          height: mobile ? '50vh' : '100vh',
+          cursor: 'pointer', position: 'relative', overflow: 'hidden',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           transition: 'transform 0.5s ease',
           transform: lavaHover ? 'scale(1.02)' : 'scale(1)',
           background: 'linear-gradient(135deg, #E8906A, #D96A8A, #8B6FB8)',
           backgroundSize: '400% 400%',
-          animation: 'gradient-shift 12s ease infinite'
+          animation: 'gradient-shift 12s ease infinite',
+          flexShrink: 0,
         }}
       >
         {/* Aura blobs */}
@@ -192,23 +210,23 @@ export default function Landing() {
 
         {/* Eyebrow */}
         <div style={{
-          position: 'absolute', top: 48,
+          position: 'absolute', top: mobile ? 20 : 48,
           fontSize: 10, letterSpacing: 4, color: 'rgba(255,255,255,0.8)', fontFamily: 'DM Sans',
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
         }}>
           DROP 04 · SOLAR BLOOM
         </div>
 
-        {/* Wordmark + subtitle in fixed-height box matching Solo side */}
+        {/* Wordmark + subtitle */}
         <div style={{
-          height: 220, display: 'flex', flexDirection: 'column',
+          height: mobile ? 80 : 220, display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
-          marginBottom: 44, zIndex: 1,
+          marginBottom: mobile ? 20 : 44, zIndex: 1,
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
         }}>
-          <LavaWordmark size={110} animate={true} style={{ marginBottom: 16 }} />
+          <LavaWordmark size={mobile ? 64 : 110} animate={true} style={{ marginBottom: mobile ? 10 : 16 }} />
           <div style={{
-            fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.85)', fontFamily: 'DM Sans',
+            fontSize: mobile ? 10 : 11, letterSpacing: 3, color: 'rgba(255,255,255,0.85)', fontFamily: 'DM Sans',
           }}>
             THE DIFFUSION LINE
           </div>
@@ -218,12 +236,12 @@ export default function Landing() {
         <button
           onClick={e => { e.stopPropagation(); navigate('/lava') }}
           style={{
-            padding: '16px 52px', borderRadius: 999, cursor: 'pointer', zIndex: 1,
+            padding: mobile ? '11px 32px' : '16px 52px', borderRadius: 999, cursor: 'pointer', zIndex: 1,
             border: '1px solid rgba(255,255,255,0.6)',
             background: lavaHover ? '#fff' : 'rgba(255,255,255,0.15)',
             backdropFilter: 'blur(8px)',
             color: lavaHover ? '#8B6FB8' : '#fff',
-            fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
+            fontSize: mobile ? 11 : 12, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
             transition: 'all 0.3s ease',
             opacity: mounted ? 1 : 0,
           }}
@@ -231,14 +249,16 @@ export default function Landing() {
           ENTER LAVA LAVA
         </button>
 
-        {/* Bottom label */}
-        <div style={{
-          position: 'absolute', bottom: 40, right: 40, textAlign: 'right',
-          opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.6s', zIndex: 1
-        }}>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontFamily: 'DM Sans', marginBottom: 4 }}>READY-TO-WEAR</div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.9)', fontFamily: 'DM Sans' }}>For the fearless ✦</div>
-        </div>
+        {/* Bottom label — desktop only */}
+        {!mobile && (
+          <div style={{
+            position: 'absolute', bottom: 40, right: 40, textAlign: 'right',
+            opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.6s', zIndex: 1
+          }}>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontFamily: 'DM Sans', marginBottom: 4 }}>READY-TO-WEAR</div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.9)', fontFamily: 'DM Sans' }}>For the fearless ✦</div>
+          </div>
+        )}
       </div>
     </div>
   )
