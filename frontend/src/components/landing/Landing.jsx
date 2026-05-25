@@ -176,7 +176,7 @@ export default function Landing() {
         <div className="landing-wordmark-wrap" style={{
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
         }}>
-          <LavaWordmark size={mobile ? 64 : 110} animate={true} style={{ marginBottom: mobile ? 10 : 16 }} />
+          <LavaWordmark size={mobile ? 90 : 150} animate={true} style={{ marginBottom: mobile ? 10 : 16 }} />
           <div style={{ fontSize: mobile ? 10 : 11, letterSpacing: 3, color: 'rgba(255,255,255,0.85)', fontFamily: 'DM Sans' }}>
             THE DIFFUSION LINE
           </div>
