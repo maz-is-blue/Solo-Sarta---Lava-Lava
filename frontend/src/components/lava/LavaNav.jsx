@@ -48,40 +48,51 @@ export default function LavaNav() {
         transition: 'all 0.4s ease'
       }}>
 
-        {/* Left: back button */}
-        <button
-          onClick={() => navigate('/')}
-          style={{
-            background: 'none', border: 'none', color: 'rgba(255,255,255,0.9)',
-            cursor: 'pointer', fontSize: mobile ? 12 : 13, fontFamily: 'DM Sans', fontWeight: 500,
-            letterSpacing: 1, display: 'flex', alignItems: 'center', gap: 6, padding: 0, flexShrink: 0
-          }}
-        >
-          ← {!mobile && 'BACK'}
-        </button>
+        {/* LEFT: back + logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: mobile ? 10 : 20, flexShrink: 0 }}>
+          <button
+            onClick={() => navigate('/')}
+            style={{
+              background: 'none', border: 'none', color: 'rgba(255,255,255,0.85)',
+              cursor: 'pointer', fontSize: mobile ? 12 : 13, fontFamily: 'DM Sans', fontWeight: 500,
+              letterSpacing: 1, display: 'flex', alignItems: 'center', gap: 6, padding: 0, flexShrink: 0,
+              transition: 'color 0.2s ease'
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.85)'}
+          >
+            ← {!mobile && <span style={{ fontSize: 10, letterSpacing: 2 }}>HOME</span>}
+          </button>
 
-        {/* Center: wordmark */}
-        <LavaWordmark size={mobile ? 20 : 26} />
+          <div onClick={() => navigate('/lava')} style={{ cursor: 'pointer' }}>
+            <LavaWordmark size={mobile ? 20 : 32} />
+          </div>
+        </div>
 
-        {/* Right */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: mobile ? 16 : 28 }}>
+        {/* RIGHT: desktop links + bag / mobile controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: mobile ? 16 : 40 }}>
 
           {/* Desktop links */}
-          {!mobile && NAV_LINKS.map(({ label, path }) => (
-            <span
-              key={label}
-              onClick={() => navigate(path)}
-              style={{
-                color: 'rgba(255,255,255,0.9)', textDecoration: 'none',
-                fontSize: 12, fontFamily: 'DM Sans', fontWeight: 500, letterSpacing: 1.5,
-                textTransform: 'uppercase', transition: 'color 0.2s ease', cursor: 'pointer'
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-              onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.9)'}
-            >
-              {label}
-            </span>
-          ))}
+          {!mobile && NAV_LINKS.map(({ label, path }) => {
+            const active = pathname === path
+            return (
+              <span
+                key={label}
+                onClick={() => navigate(path)}
+                style={{
+                  color: active ? '#fff' : 'rgba(255,255,255,0.8)',
+                  fontSize: 13, fontFamily: 'DM Sans', fontWeight: 500, letterSpacing: 2,
+                  textTransform: 'uppercase', transition: 'color 0.2s ease', cursor: 'pointer',
+                  borderBottom: active ? '1px solid rgba(255,255,255,0.6)' : '1px solid transparent',
+                  paddingBottom: 2
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                onMouseLeave={e => e.currentTarget.style.color = active ? '#fff' : 'rgba(255,255,255,0.8)'}
+              >
+                {label}
+              </span>
+            )
+          })}
 
           {/* Desktop BAG icon */}
           {!mobile && (
