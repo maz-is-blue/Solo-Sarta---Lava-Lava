@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
 import { SOLO_PRODUCTS } from '../../data/soloProducts'
 import { useCart } from '../../context/CartContext'
+import { useMobile } from '../../hooks/useMobile'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
 
@@ -54,6 +55,7 @@ export default function SoloPiece() {
   const { addItem } = useCart()
   const [added, setAdded] = useState(false)
 
+  const mobile = useMobile()
   const product = SOLO_PRODUCTS.find(p => p.slug === slug)
 
   if (!product) {
@@ -87,7 +89,7 @@ export default function SoloPiece() {
         </div>
 
         {/* Hero — two column */}
-        <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, padding: '32px 80px 80px', alignItems: 'start' }}>
+        <section style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr', gap: 0, padding: mobile ? '24px 24px 48px' : '32px 80px 80px', alignItems: 'start' }}>
           {/* Left — visual */}
           <motion.div
             initial={{ opacity: 0, x: -24 }}
@@ -182,7 +184,7 @@ export default function SoloPiece() {
         </section>
 
         {/* Process */}
-        <section style={{ padding: '64px 80px', borderTop: '1px solid rgba(201,169,110,0.1)' }}>
+        <section style={{ padding: mobile ? '40px 24px' : '64px 80px', borderTop: '1px solid rgba(201,169,110,0.1)' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -194,7 +196,7 @@ export default function SoloPiece() {
               From first meeting to final fitting.
             </h2>
           </motion.div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: mobile ? 20 : 32 }}>
             {PROCESS_STEPS.map((step, i) => (
               <motion.div
                 key={step.n}
@@ -214,12 +216,12 @@ export default function SoloPiece() {
 
         {/* Other pieces */}
         {otherPieces.length > 0 && (
-          <section style={{ padding: '0 80px 80px', borderTop: '1px solid rgba(201,169,110,0.08)' }}>
+          <section style={{ padding: mobile ? '0 24px 56px' : '0 80px 80px', borderTop: '1px solid rgba(201,169,110,0.08)' }}>
             <div style={{ paddingTop: 48, marginBottom: 36 }}>
               <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 8 }}>FROM THE ATELIER</div>
               <h3 style={{ fontSize: 34, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300 }}>Other pieces you may consider</h3>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)', gap: mobile ? 12 : 24 }}>
               {otherPieces.map(p => (
                 <div
                   key={p.id}

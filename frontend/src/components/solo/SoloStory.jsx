@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
+import { useMobile } from '../../hooks/useMobile'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
 
@@ -23,6 +24,7 @@ function ThreadLine() {
 
 export default function SoloStory() {
   const navigate = useNavigate()
+  const mobile = useMobile()
 
   return (
     <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
@@ -35,7 +37,7 @@ export default function SoloStory() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
-          style={{ padding: '72px 80px 64px', borderBottom: '1px solid rgba(201,169,110,0.1)' }}
+          style={{ padding: mobile ? '40px 24px 40px' : '72px 80px 64px', borderBottom: '1px solid rgba(201,169,110,0.1)' }}
         >
           <div style={{ fontSize: 11, letterSpacing: 4, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 24 }}>OUR STORY</div>
           <h1 style={{
@@ -50,7 +52,7 @@ export default function SoloStory() {
         </motion.section>
 
         {/* Founding */}
-        <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, padding: '80px 80px', alignItems: 'center' }}>
+        <section style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr', gap: mobile ? 32 : 80, padding: mobile ? '40px 24px' : '80px 80px', alignItems: 'center' }}>
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -103,7 +105,7 @@ export default function SoloStory() {
         <ThreadLine />
 
         {/* Philosophy */}
-        <section style={{ padding: '0 80px 80px' }}>
+        <section style={{ padding: mobile ? '0 24px 48px' : '0 80px 80px' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -114,7 +116,7 @@ export default function SoloStory() {
             <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>OUR PHILOSOPHY</div>
             <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300 }}>Four things we believe in.</h2>
           </motion.div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 40 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: mobile ? 24 : 40 }}>
             {PILLARS.map((p, i) => (
               <motion.div
                 key={p.title}
@@ -148,7 +150,7 @@ export default function SoloStory() {
         </motion.section>
 
         {/* CTA band */}
-        <div style={{ background: '#FAF8F5', padding: '64px 80px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 24 }}>
+        <div style={{ background: '#FAF8F5', padding: mobile ? '40px 24px' : '64px 80px', display: 'flex', flexDirection: mobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: mobile ? 'flex-start' : 'center', flexWrap: 'wrap', gap: 24 }}>
           <div>
             <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(26,26,26,0.4)', fontFamily: 'DM Sans', marginBottom: 10 }}>READY TO BEGIN?</div>
             <h3 style={{ fontSize: 30, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#1A1A1A', fontWeight: 300 }}>

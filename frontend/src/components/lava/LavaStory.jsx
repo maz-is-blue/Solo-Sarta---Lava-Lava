@@ -4,6 +4,7 @@ import LavaNav from './LavaNav'
 import LavaFooter from './LavaFooter'
 import LavaGlass from '../shared/LavaGlass'
 import ProductSilhouette from '../shared/ProductSilhouette'
+import { useMobile } from '../../hooks/useMobile'
 
 const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.7 } }
 
@@ -22,13 +23,14 @@ const PILLARS = [
 
 export default function LavaStory() {
   const navigate = useNavigate()
+  const mobile = useMobile()
 
   return (
     <div style={{ background: 'linear-gradient(180deg, #0f0018 0%, #050010 100%)', minHeight: '100vh', color: '#fff' }}>
       <LavaNav />
 
       {/* Hero */}
-      <section style={{ paddingTop: 160, paddingBottom: 80, paddingLeft: 80, paddingRight: 80, position: 'relative', overflow: 'hidden' }}>
+      <section style={{ paddingTop: mobile ? 110 : 160, paddingBottom: mobile ? 48 : 80, paddingLeft: mobile ? 20 : 80, paddingRight: mobile ? 20 : 80, position: 'relative', overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', width: 700, height: 500, top: 0, right: -100, pointerEvents: 'none',
           background: 'radial-gradient(ellipse, rgba(232,144,106,0.18) 0%, rgba(139,111,184,0.12) 50%, transparent 80%)',
@@ -45,8 +47,8 @@ export default function LavaStory() {
         </motion.div>
       </section>
 
-      {/* About — 2 column */}
-      <section style={{ padding: '0 80px 80px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
+      {/* About */}
+      <section style={{ padding: mobile ? '0 20px 48px' : '0 80px 80px', display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr', gap: mobile ? 32 : 64, alignItems: 'center' }}>
         <motion.div {...fadeUp}>
           <LavaGlass style={{ padding: 48, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 400 }}>
             <div style={{
@@ -83,7 +85,7 @@ export default function LavaStory() {
       </section>
 
       {/* Timeline */}
-      <section style={{ padding: '80px 80px', position: 'relative' }}>
+      <section style={{ padding: mobile ? '48px 20px' : '80px 80px', position: 'relative' }}>
         <motion.div {...fadeUp} style={{ textAlign: 'center', marginBottom: 64 }}>
           <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>THE HISTORY</div>
           <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>How we got here</h2>
@@ -132,7 +134,7 @@ export default function LavaStory() {
 
       {/* Closing CTA */}
       <section style={{
-        padding: '80px 80px 100px', textAlign: 'center',
+        padding: mobile ? '56px 20px 72px' : '80px 80px 100px', textAlign: 'center',
         background: 'linear-gradient(135deg, rgba(232,144,106,0.08) 0%, rgba(139,111,184,0.1) 50%, transparent 100%)',
         position: 'relative', overflow: 'hidden'
       }}>

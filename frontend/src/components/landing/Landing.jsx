@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LavaWordmark from '../shared/LavaWordmark'
+import { useMobile } from '../../hooks/useMobile'
 
 function SoloDressSketch() {
   return (
@@ -42,13 +43,10 @@ export default function Landing() {
   const [mounted, setMounted] = useState(false)
   const [soloHover, setSoloHover] = useState(false)
   const [lavaHover, setLavaHover] = useState(false)
-  const [mobile, setMobile] = useState(() => window.innerWidth < 768)
+  const mobile = useMobile()
 
   useEffect(() => {
     setMounted(true)
-    const handler = () => setMobile(window.innerWidth < 768)
-    window.addEventListener('resize', handler)
-    return () => window.removeEventListener('resize', handler)
   }, [])
 
   const SPARKLES = [

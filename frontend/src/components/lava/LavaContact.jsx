@@ -4,6 +4,7 @@ import LavaNav from './LavaNav'
 import LavaFooter from './LavaFooter'
 import LavaGlass from '../shared/LavaGlass'
 import { submitContact } from '../../services/api'
+import { useMobile } from '../../hooks/useMobile'
 
 const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.7 } }
 
@@ -48,6 +49,7 @@ export default function LavaContact() {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const mobile = useMobile()
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -71,15 +73,15 @@ export default function LavaContact() {
       <LavaNav />
 
       {/* Header */}
-      <section style={{ paddingTop: 140, paddingBottom: 64, paddingLeft: 80, paddingRight: 80 }}>
+      <section style={{ paddingTop: mobile ? 100 : 140, paddingBottom: 40, paddingLeft: mobile ? 20 : 80, paddingRight: mobile ? 20 : 80 }}>
         <motion.div {...fadeUp}>
           <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>REACH OUT</div>
           <h1 style={{ fontSize: 60, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>Get in touch</h1>
         </motion.div>
       </section>
 
-      {/* 2-column */}
-      <section style={{ padding: '0 80px 80px', display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 48, alignItems: 'start' }}>
+      {/* layout */}
+      <section style={{ padding: mobile ? '0 20px 48px' : '0 80px 80px', display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1.6fr', gap: mobile ? 24 : 48, alignItems: 'start' }}>
         {/* Left info */}
         <motion.div {...fadeUp}>
           <LavaGlass style={{ padding: 40 }}>
@@ -195,7 +197,7 @@ export default function LavaContact() {
       </section>
 
       {/* FAQ */}
-      <section style={{ padding: '0 80px 80px' }}>
+      <section style={{ padding: mobile ? '0 20px 56px' : '0 80px 80px' }}>
         <motion.div {...fadeUp} style={{ marginBottom: 40 }}>
           <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>QUICK ANSWERS</div>
           <h2 style={{ fontSize: 40, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>FAQ</h2>

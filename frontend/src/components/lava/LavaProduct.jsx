@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useMobile } from '../../hooks/useMobile'
 import { motion } from 'framer-motion'
 import LavaNav from './LavaNav'
 import LavaFooter from './LavaFooter'
@@ -43,6 +44,7 @@ export default function LavaProduct() {
   const [selectedColor, setSelectedColor] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [added, setAdded] = useState(false)
+  const mobile = useMobile()
 
   const related = useMemo(() => {
     if (!product) return []
@@ -76,7 +78,7 @@ export default function LavaProduct() {
     <div style={{ background: 'linear-gradient(180deg, #0f0018 0%, #050010 100%)', minHeight: '100vh', color: '#fff' }}>
       <LavaNav />
 
-      <section style={{ paddingTop: 120, paddingLeft: 80, paddingRight: 80, paddingBottom: 80 }}>
+      <section style={{ paddingTop: mobile ? 90 : 120, paddingLeft: mobile ? 20 : 80, paddingRight: mobile ? 20 : 80, paddingBottom: mobile ? 48 : 80 }}>
         {/* Breadcrumb */}
         <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 32, letterSpacing: 0.5 }}>
           <Link to="/lava/collection" style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>Collection</Link>
@@ -86,8 +88,8 @@ export default function LavaProduct() {
           <span style={{ color: '#fff' }}>{product.name}</span>
         </div>
 
-        {/* 2-column layout */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'start' }}>
+        {/* layout */}
+        <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr', gap: mobile ? 32 : 64, alignItems: 'start' }}>
           {/* Left: Image */}
           <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }}>
             <LavaGlass style={{ overflow: 'hidden', marginBottom: 20 }}>
@@ -256,7 +258,7 @@ export default function LavaProduct() {
 
       {/* Related Products */}
       {related.length > 0 && (
-        <section style={{ paddingLeft: 80, paddingRight: 80, paddingBottom: 80 }}>
+        <section style={{ paddingLeft: mobile ? 20 : 80, paddingRight: mobile ? 20 : 80, paddingBottom: mobile ? 48 : 80 }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -267,7 +269,7 @@ export default function LavaProduct() {
             <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 8 }}>COMPLETE THE LOOK</div>
             <h2 style={{ fontSize: 36, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>You might also like</h2>
           </motion.div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 12 : 24 }}>
             {related.map(p => (
               <CollectionCard key={p.id} product={p} onAdd={prod => addItem('lava', prod, prod.sizes[1])} />
             ))}

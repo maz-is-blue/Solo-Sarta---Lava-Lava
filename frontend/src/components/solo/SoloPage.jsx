@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useCart } from '../../context/CartContext'
 import SoloNav from './SoloNav'
-
 import { SOLO_PRODUCTS } from '../../data/soloProducts'
+import { useMobile } from '../../hooks/useMobile'
 
 function GownSilhouette({ color1 = '#C9A96E', color2 = '#E8D5A3' }) {
   return (
@@ -127,6 +127,7 @@ export default function SoloPage() {
   const navigate = useNavigate()
   const [inviteEmail, setInviteEmail] = useState('')
   const [invited, setInvited] = useState(false)
+  const mobile = useMobile()
 
   return (
     <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
@@ -140,13 +141,13 @@ export default function SoloPage() {
       <SoloNav />
 
       {/* Hero */}
-      <section style={{ paddingTop: 100, minHeight: '100vh', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, position: 'relative', zIndex: 1 }}>
+      <section style={{ paddingTop: mobile ? 80 : 100, minHeight: mobile ? 'auto' : '100vh', display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr', gap: 0, position: 'relative', zIndex: 1 }}>
         {/* Left */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9 }}
-          style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px 64px 80px 80px' }}
+          style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: mobile ? '40px 24px 32px' : '80px 64px 80px 80px' }}
         >
           <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 24 }}>
             AUTUMN / WINTER '26
@@ -239,7 +240,7 @@ export default function SoloPage() {
       </section>
 
       {/* Story section */}
-      <section style={{ padding: '80px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+      <section style={{ padding: mobile ? '40px 24px' : '80px', display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr', gap: mobile ? 32 : 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -289,7 +290,7 @@ export default function SoloPage() {
       </section>
 
       {/* Collection grid */}
-      <section style={{ padding: '0 80px 80px', position: 'relative', zIndex: 1 }}>
+      <section style={{ padding: mobile ? '0 24px 48px' : '0 80px 80px', position: 'relative', zIndex: 1 }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -300,7 +301,7 @@ export default function SoloPage() {
           <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>AUTUMN / WINTER '26</div>
           <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>The Collection</h2>
         </motion.div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)', gap: mobile ? 16 : 24 }}>
           {SOLO_PRODUCTS.map((p, i) => (
             <motion.div
               key={p.id}

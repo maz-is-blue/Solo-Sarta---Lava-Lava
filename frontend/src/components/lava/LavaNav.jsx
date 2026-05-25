@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import LavaWordmark from '../shared/LavaWordmark'
 import { useCart } from '../../context/CartContext'
+import { useMobile } from '../../hooks/useMobile'
 
 export default function LavaNav() {
   const [scrolled, setScrolled] = useState(false)
   const { cart } = useCart()
   const navigate = useNavigate()
+  const mobile = useMobile()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -17,7 +19,7 @@ export default function LavaNav() {
   return (
     <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-      padding: '14px 40px',
+      padding: mobile ? '12px 20px' : '14px 40px',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       background: scrolled ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.15)',
       backdropFilter: 'blur(18px)',
@@ -30,22 +32,21 @@ export default function LavaNav() {
         onClick={() => navigate('/')}
         style={{
           background: 'none', border: 'none', color: 'rgba(255,255,255,0.9)',
-          cursor: 'pointer', fontSize: 13, fontFamily: 'DM Sans', fontWeight: 500,
-          letterSpacing: 1, display: 'flex', alignItems: 'center', gap: 6,
-          padding: 0
+          cursor: 'pointer', fontSize: mobile ? 12 : 13, fontFamily: 'DM Sans', fontWeight: 500,
+          letterSpacing: 1, display: 'flex', alignItems: 'center', gap: 6, padding: 0, flexShrink: 0
         }}
         onMouseEnter={e => e.currentTarget.style.color = '#fff'}
         onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.9)'}
       >
-        ← BACK
+        ← {!mobile && 'BACK'}
       </button>
 
       {/* Center: wordmark */}
-      <LavaWordmark size={26} />
+      <LavaWordmark size={mobile ? 20 : 26} />
 
       {/* Right: links + bag */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
-        {[['Collection', '/lava/collection'], ['Our Story', '/lava/story'], ['Contact', '/lava/contact']].map(([label, path]) => (
+      <div style={{ display: 'flex', alignItems: 'center', gap: mobile ? 12 : 28 }}>
+        {!mobile && [['Collection', '/lava/collection'], ['Our Story', '/lava/story'], ['Contact', '/lava/contact']].map(([label, path]) => (
           <Link
             key={label}
             to={path}
@@ -64,10 +65,10 @@ export default function LavaNav() {
         {/* BAG pill */}
         <div style={{
           background: 'rgba(255,255,255,0.9)', borderRadius: 999,
-          padding: '7px 18px', cursor: 'pointer',
+          padding: mobile ? '6px 14px' : '7px 18px', cursor: 'pointer',
           display: 'flex', alignItems: 'center', gap: 6,
-          fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 1,
-          color: '#8B6FB8', transition: 'background 0.2s ease'
+          fontSize: mobile ? 11 : 12, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 1,
+          color: '#8B6FB8', transition: 'background 0.2s ease', flexShrink: 0
         }}
           onMouseEnter={e => e.currentTarget.style.background = '#fff'}
           onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.9)'}

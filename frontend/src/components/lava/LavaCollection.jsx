@@ -5,10 +5,12 @@ import LavaFooter from './LavaFooter'
 import CollectionCard from '../shared/CollectionCard'
 import { LAVA_PRODUCTS, LAVA_CATEGORIES } from '../../data/products'
 import { useCart } from '../../context/CartContext'
+import { useMobile } from '../../hooks/useMobile'
 
 export default function LavaCollection() {
   const [activeFilter, setActiveFilter] = useState('All')
   const { addItem } = useCart()
+  const mobile = useMobile()
 
   const filtered = useMemo(() => {
     if (activeFilter === 'All') return LAVA_PRODUCTS
@@ -20,7 +22,7 @@ export default function LavaCollection() {
       <LavaNav />
 
       {/* Header */}
-      <section style={{ paddingTop: 140, paddingBottom: 48, paddingLeft: 80, paddingRight: 80, position: 'relative', overflow: 'hidden' }}>
+      <section style={{ paddingTop: mobile ? 100 : 140, paddingBottom: 40, paddingLeft: mobile ? 20 : 80, paddingRight: mobile ? 20 : 80, position: 'relative', overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', width: 600, height: 400, top: 0, right: 0, pointerEvents: 'none',
           background: 'radial-gradient(ellipse, rgba(139,111,184,0.15) 0%, transparent 70%)',
@@ -40,7 +42,7 @@ export default function LavaCollection() {
       </section>
 
       {/* Filters */}
-      <section style={{ paddingLeft: 80, paddingRight: 80, marginBottom: 48 }}>
+      <section style={{ paddingLeft: mobile ? 20 : 80, paddingRight: mobile ? 20 : 80, marginBottom: 36 }}>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           {LAVA_CATEGORIES.map(cat => (
             <button
@@ -64,13 +66,13 @@ export default function LavaCollection() {
       </section>
 
       {/* Grid */}
-      <section style={{ paddingLeft: 80, paddingRight: 80, paddingBottom: 80 }}>
+      <section style={{ paddingLeft: mobile ? 20 : 80, paddingRight: mobile ? 20 : 80, paddingBottom: 64 }}>
         <motion.div
           key={activeFilter}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4 }}
-          style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24 }}
+          style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 12 : 24 }}
         >
           {filtered.map((p, i) => (
             <motion.div

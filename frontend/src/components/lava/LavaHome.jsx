@@ -9,6 +9,7 @@ import ProductSilhouette from '../shared/ProductSilhouette'
 import { LAVA_PRODUCTS, LAVA_CATEGORIES } from '../../data/products'
 import { useCart } from '../../context/CartContext'
 import { subscribeNewsletter } from '../../services/api'
+import { useMobile } from '../../hooks/useMobile'
 
 const PAGE_BG = 'linear-gradient(160deg, #E8906A 0%, #D96A8A 40%, #8B6FB8 100%)'
 const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.7 } }
@@ -50,6 +51,7 @@ export default function LavaHome() {
   const [subscribed, setSubscribed] = useState(false)
   const [heroAdded, setHeroAdded] = useState(false)
   const [activeFilter, setActiveFilter] = useState('All')
+  const mobile = useMobile()
 
   const featured = LAVA_PRODUCTS[0]
   const filtered = activeFilter === 'All'
@@ -75,8 +77,10 @@ export default function LavaHome() {
 
       {/* ── HERO ─────────────────────────────────────────────── */}
       <section style={{
-        minHeight: '100vh', display: 'grid', gridTemplateColumns: '1fr 1fr',
-        alignItems: 'center', gap: 48, padding: '120px 72px 80px',
+        minHeight: '100vh', display: 'grid',
+        gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+        alignItems: 'center', gap: mobile ? 32 : 48,
+        padding: mobile ? '100px 24px 56px' : '120px 72px 80px',
         position: 'relative', overflow: 'hidden'
       }}>
         {/* Aura blobs */}
@@ -171,8 +175,8 @@ export default function LavaHome() {
           </div>
         </motion.div>
 
-        {/* RIGHT: featured product card */}
-        <motion.div
+        {/* RIGHT: featured product card — hidden on mobile */}
+        {!mobile && <motion.div
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
@@ -272,7 +276,7 @@ export default function LavaHome() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </motion.div>}
       </section>
 
       {/* ── MARQUEE ─────────────────────────────────────────── */}
@@ -300,7 +304,7 @@ export default function LavaHome() {
       </div>
 
       {/* ── LATEST DROP / COLLECTION ─────────────────────────── */}
-      <section style={{ padding: '64px 72px 80px' }}>
+      <section style={{ padding: mobile ? '48px 20px 56px' : '64px 72px 80px' }}>
         {/* Section header row */}
         <motion.div {...fadeUp} style={{
           display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
@@ -350,7 +354,7 @@ export default function LavaHome() {
         {/* Product grid */}
         <motion.div
           {...fadeUp}
-          style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}
+          style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 12 : 20 }}
         >
           {filtered.slice(0, 8).map(p => (
             <WarmCollectionCard key={p.id} product={p} onAdd={() => addItem('lava', p, p.sizes[1])} navigate={navigate} />
@@ -402,7 +406,7 @@ export default function LavaHome() {
       </section>
 
       {/* ── COLOR STORY ─────────────────────────────────────── */}
-      <section style={{ padding: '80px 72px' }}>
+      <section style={{ padding: mobile ? '56px 20px' : '80px 72px' }}>
         <motion.div {...fadeUp} style={{ marginBottom: 48, textAlign: 'center' }}>
           <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.7)', fontFamily: 'DM Sans', marginBottom: 8 }}>
             THE PALETTE
@@ -444,7 +448,7 @@ export default function LavaHome() {
       </section>
 
       {/* ── NEWSLETTER ──────────────────────────────────────── */}
-      <section style={{ padding: '20px 72px 80px' }}>
+      <section style={{ padding: mobile ? '20px 20px 56px' : '20px 72px 80px' }}>
         <motion.div {...fadeUp} style={{ maxWidth: 560, margin: '0 auto' }}>
           <div style={{
             background: 'rgba(255,255,255,0.28)', backdropFilter: 'blur(24px)',
@@ -466,7 +470,7 @@ export default function LavaHome() {
                 ✦ You're on the list. Watch for the next drop.
               </div>
             ) : (
-              <form onSubmit={handleSubscribe} style={{ display: 'flex', gap: 10 }}>
+              <form onSubmit={handleSubscribe} style={{ display: 'flex', flexDirection: mobile ? 'column' : 'row', gap: 10 }}>
                 <input
                   type="email" value={email} onChange={e => setEmail(e.target.value)}
                   placeholder="your@email.com" required

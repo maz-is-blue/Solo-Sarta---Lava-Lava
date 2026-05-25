@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
+import { useMobile } from '../../hooks/useMobile'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
 
@@ -23,6 +24,7 @@ export default function SoloContact() {
   const [form, setForm] = useState({ name: '', email: '', type: INQUIRY_TYPES[0], message: '' })
   const [submitted, setSubmitted] = useState(false)
   const [focused, setFocused] = useState(null)
+  const mobile = useMobile()
 
   const set = key => e => setForm(f => ({ ...f, [key]: e.target.value }))
 
@@ -47,7 +49,7 @@ export default function SoloContact() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
-          style={{ padding: '64px 80px 0' }}
+          style={{ padding: mobile ? '40px 24px 0' : '64px 80px 0' }}
         >
           <div style={{ fontSize: 11, letterSpacing: 4, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 20 }}>CONTACT</div>
           <h1 style={{ fontSize: 60, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, lineHeight: 1.05, marginBottom: 16 }}>
@@ -59,7 +61,7 @@ export default function SoloContact() {
         </motion.section>
 
         {/* Content */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, padding: '64px 80px 96px', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr', gap: mobile ? 32 : 80, padding: mobile ? '32px 24px 56px' : '64px 80px 96px', alignItems: 'start' }}>
           {/* Form */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
