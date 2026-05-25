@@ -40,6 +40,19 @@ export default function SoloNav() {
         borderBottom: '1px solid rgba(201,169,110,0.12)'
       }}>
 
+        {/* Mobile back button */}
+        {mobile && (
+          <button
+            onClick={() => navigate('/')}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px 4px 0',
+              color: 'rgba(201,169,110,0.7)', fontSize: 18, lineHeight: 1, flexShrink: 0
+            }}
+          >
+            ←
+          </button>
+        )}
+
         {/* Logo + by Shiyam */}
         <div onClick={() => navigate('/solo')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', flexShrink: 0 }}>
           <img
