@@ -12,6 +12,7 @@ import LavaProduct from './components/lava/LavaProduct'
 import LavaStory from './components/lava/LavaStory'
 import LavaContact from './components/lava/LavaContact'
 import BagPage from './components/BagPage'
+import CheckoutPage from './components/CheckoutPage'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/bag" element={<BagPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/solo" element={<SoloPage />} />
           <Route path="/solo/collection" element={<SoloCollection />} />
           <Route path="/solo/piece/:slug" element={<SoloPiece />} />

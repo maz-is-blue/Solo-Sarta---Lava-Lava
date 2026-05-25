@@ -202,14 +202,14 @@ export default function BagPage() {
                     <span style={{ fontFamily: 'Cormorant Garamond', fontSize: 22, color: '#C9A96E' }}>₹{soloTotal.toLocaleString()}</span>
                   </div>
                   <button
-                    onClick={() => navigate('/solo/contact')}
+                    onClick={() => navigate('/checkout', { state: { brand: 'solo' } })}
                     style={{
                       width: '100%', padding: '15px', borderRadius: 2, border: 'none', cursor: 'pointer',
                       background: '#C9A96E', color: '#1A1A1A',
                       fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2
                     }}
                   >
-                    REQUEST CONSULTATION
+                    CHECKOUT
                   </button>
                   <p style={{ fontSize: 11, color: 'rgba(250,248,245,0.2)', fontFamily: 'DM Sans', textAlign: 'center', marginTop: 12, lineHeight: 1.6 }}>
                     All commissions begin with a personal consultation.
@@ -244,7 +244,7 @@ export default function BagPage() {
                       <span style={{ fontFamily: 'DM Sans', fontSize: 20, fontWeight: 600, color: '#A990CC' }}>₹{lavaTotal.toLocaleString()}</span>
                     </div>
                     <button
-                      onClick={() => navigate('/lava/contact')}
+                      onClick={() => navigate('/checkout', { state: { brand: 'lava' } })}
                       style={{
                         width: '100%', padding: '15px', borderRadius: 999, border: 'none', cursor: 'pointer',
                         background: 'linear-gradient(90deg, #E8906A, #D96A8A, #8B6FB8)',
