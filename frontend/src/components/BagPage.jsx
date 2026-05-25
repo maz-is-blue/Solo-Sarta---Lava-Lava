@@ -99,8 +99,8 @@ export default function BagPage() {
   const navigate = useNavigate()
   const mobile = useMobile()
 
-  const soloItems = cartItems.filter(i => i.brand === 'solo')
-  const lavaItems = cartItems.filter(i => i.brand === 'lava')
+  const soloItems = cartItems.filter(i => i.brand === 'solo' || (!i.brand && i.code))
+  const lavaItems = cartItems.filter(i => i.brand === 'lava' || (!i.brand && !i.code))
   const isEmpty = cartItems.length === 0
 
   const soloTotal = soloItems.reduce((sum, i) => sum + i.price * i.qty, 0)
