@@ -55,3 +55,80 @@ body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fff; overf
   from { transform:translateX(0); }
   to { transform:translateX(-50%); }
 }
+
+/* ─── Landing page — CSS-driven responsive layout ─────────────────────────── */
+.landing-wrap {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+.landing-panel {
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.landing-divider {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  z-index: 10;
+}
+.landing-eyebrow {
+  position: absolute;
+  top: 48px;
+}
+.landing-logo-wrap {
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 44px;
+  z-index: 1;
+}
+.landing-logo-img {
+  max-height: 100%;
+  width: auto;
+  max-width: 300px;
+}
+.landing-wordmark-wrap {
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 44px;
+  z-index: 1;
+}
+.landing-btn {
+  padding: 16px 52px;
+  font-size: 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  z-index: 1;
+}
+.landing-label-desktop { display: block; }
+
+@media (max-width: 768px) {
+  .landing-wrap { flex-direction: column; }
+  .landing-panel { width: 100%; height: 50vh; }
+  .landing-divider {
+    left: 0; right: 0; top: 50%; bottom: auto;
+    width: 100%; height: 1px;
+  }
+  .landing-eyebrow { top: 20px; }
+  .landing-logo-wrap { height: 110px; margin-bottom: 20px; }
+  .landing-logo-img { max-width: 180px; }
+  .landing-wordmark-wrap { height: 80px; margin-bottom: 20px; }
+  .landing-btn { padding: 11px 32px; font-size: 11px; }
+  .landing-label-desktop { display: none !important; }
+}
