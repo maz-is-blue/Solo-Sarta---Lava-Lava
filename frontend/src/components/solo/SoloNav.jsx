@@ -40,58 +40,58 @@ export default function SoloNav() {
         borderBottom: '1px solid rgba(201,169,110,0.12)'
       }}>
 
-        {/* Back button — always visible */}
-        <button
-          onClick={() => navigate('/')}
-          style={{
-            background: 'none', border: 'none', cursor: 'pointer',
-            padding: mobile ? '4px 8px 4px 0' : '4px 12px 4px 0',
-            color: 'rgba(201,169,110,0.6)', fontSize: mobile ? 18 : 14,
-            lineHeight: 1, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6,
-            fontFamily: 'DM Sans', letterSpacing: 1, transition: 'color 0.2s ease'
-          }}
-          onMouseEnter={e => e.currentTarget.style.color = '#C9A96E'}
-          onMouseLeave={e => e.currentTarget.style.color = 'rgba(201,169,110,0.6)'}
-        >
-          ← {!mobile && <span style={{ fontSize: 10, letterSpacing: 2 }}>HOME</span>}
-        </button>
+        {/* LEFT: back + logo + by Shiyam */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: mobile ? 8 : 20, flexShrink: 0 }}>
+          <button
+            onClick={() => navigate('/')}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              padding: 0,
+              color: 'rgba(201,169,110,0.6)', fontSize: mobile ? 18 : 14,
+              lineHeight: 1, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6,
+              fontFamily: 'DM Sans', letterSpacing: 1, transition: 'color 0.2s ease'
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = '#C9A96E'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(201,169,110,0.6)'}
+          >
+            ← {!mobile && <span style={{ fontSize: 10, letterSpacing: 2 }}>HOME</span>}
+          </button>
 
-        {/* Logo + by Shiyam */}
-        <div onClick={() => navigate('/solo')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', flexShrink: 0 }}>
-          <img
-            src={`${import.meta.env.BASE_URL}assets/solo-logo-nav.png`}
-            alt="Solo Sarto"
-            style={{ height: mobile ? 34 : 44, width: 'auto', objectFit: 'contain' }}
-          />
-          <span style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, fontSize: mobile ? 12 : 13, letterSpacing: 1, color: '#E8956D', whiteSpace: 'nowrap', lineHeight: 1 }}>
-            by Shiyam
-          </span>
+          <div onClick={() => navigate('/solo')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+            <img
+              src={`${import.meta.env.BASE_URL}assets/solo-logo-nav.png`}
+              alt="Solo Sarto"
+              style={{ height: mobile ? 34 : 54, width: 'auto', objectFit: 'contain' }}
+            />
+            <span style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, fontSize: mobile ? 12 : 15, letterSpacing: 1, color: '#E8956D', whiteSpace: 'nowrap', lineHeight: 1 }}>
+              by Shiyam
+            </span>
+          </div>
         </div>
 
-        {/* Desktop nav links + bag */}
+        {/* Desktop RIGHT: nav links + bag */}
         {!mobile && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
             {NAV_LINKS.map(({ label, path }) => {
               const active = pathname === path
               return (
                 <span key={label} onClick={() => navigate(path)} style={{
-                  fontSize: 11, letterSpacing: 1.5, fontFamily: 'DM Sans', cursor: 'pointer',
-                  color: active ? '#C9A96E' : 'rgba(250,248,245,0.6)',
+                  fontSize: 13, letterSpacing: 2, fontFamily: 'DM Sans', cursor: 'pointer',
+                  color: active ? '#C9A96E' : 'rgba(250,248,245,0.7)',
                   borderBottom: active ? '1px solid rgba(201,169,110,0.55)' : '1px solid transparent',
                   paddingBottom: 2, transition: 'color 0.2s ease'
                 }}
                   onMouseEnter={e => { if (!active) e.currentTarget.style.color = '#C9A96E' }}
-                  onMouseLeave={e => { if (!active) e.currentTarget.style.color = 'rgba(250,248,245,0.6)' }}
+                  onMouseLeave={e => { if (!active) e.currentTarget.style.color = 'rgba(250,248,245,0.7)' }}
                 >
                   {label.toUpperCase()}
                 </span>
               )
             })}
 
-            {/* Desktop bag icon */}
             <div
               onClick={() => navigate('/bag')}
-              style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', marginLeft: 8 }}
+              style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
             >
               <BagIcon />
               {cart.solo > 0 && (
