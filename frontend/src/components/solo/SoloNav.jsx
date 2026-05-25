@@ -91,7 +91,7 @@ export default function SoloNav() {
         {mobile && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             {/* Bag */}
-            <div style={{ position: 'relative', cursor: 'pointer', display: 'flex' }}>
+            <div style={{ position: 'relative', cursor: 'pointer', display: 'flex' }} onClick={() => navigate('/bag')}>
               <BagIcon />
               {cart.solo > 0 && (
                 <div style={{
@@ -171,7 +171,7 @@ export default function SoloNav() {
             {/* Bottom */}
             <div style={{ borderTop: '1px solid rgba(201,169,110,0.12)', padding: '20px 22px 32px', display: 'flex', flexDirection: 'column', gap: 12 }}>
               {cart.solo > 0 && (
-                <div style={{
+                <div onClick={() => navigate('/bag')} style={{
                   background: '#C9A96E', borderRadius: 2, padding: '12px 16px',
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer',
                   marginBottom: 4

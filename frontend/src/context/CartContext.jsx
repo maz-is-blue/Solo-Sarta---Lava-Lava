@@ -13,7 +13,7 @@ export function CartProvider({ children }) {
       if (existing) {
         return prev.map(i => i.slug === product.slug && i.size === size ? { ...i, qty: i.qty + quantity } : i)
       }
-      return [...prev, { ...product, size, qty: quantity }]
+      return [...prev, { ...product, brand, size, qty: quantity }]
     })
   }
 
