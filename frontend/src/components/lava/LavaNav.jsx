@@ -83,19 +83,24 @@ export default function LavaNav() {
             </span>
           ))}
 
-          {/* Desktop BAG pill */}
+          {/* Desktop BAG icon */}
           {!mobile && (
-            <div style={{
-              background: 'rgba(255,255,255,0.9)', borderRadius: 999,
-              padding: '7px 18px', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: 6,
-              fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 1,
-              color: '#8B6FB8', transition: 'background 0.2s ease', flexShrink: 0
-            }}
-              onMouseEnter={e => e.currentTarget.style.background = '#fff'}
-              onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.9)'}
+            <div
+              onClick={() => navigate('/bag')}
+              style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
             >
-              BAG · {cart.lava}
+              <BagIcon />
+              {cart.lava > 0 && (
+                <div style={{
+                  position: 'absolute', top: -6, right: -6,
+                  width: 16, height: 16, borderRadius: '50%',
+                  background: '#fff', color: '#8B6FB8',
+                  fontSize: 9, fontWeight: 700, fontFamily: 'DM Sans',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                  {cart.lava}
+                </div>
+              )}
             </div>
           )}
 

@@ -40,18 +40,21 @@ export default function SoloNav() {
         borderBottom: '1px solid rgba(201,169,110,0.12)'
       }}>
 
-        {/* Mobile back button */}
-        {mobile && (
-          <button
-            onClick={() => navigate('/')}
-            style={{
-              background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px 4px 0',
-              color: 'rgba(201,169,110,0.7)', fontSize: 18, lineHeight: 1, flexShrink: 0
-            }}
-          >
-            ←
-          </button>
-        )}
+        {/* Back button — always visible */}
+        <button
+          onClick={() => navigate('/')}
+          style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: mobile ? '4px 8px 4px 0' : '4px 12px 4px 0',
+            color: 'rgba(201,169,110,0.6)', fontSize: mobile ? 18 : 14,
+            lineHeight: 1, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6,
+            fontFamily: 'DM Sans', letterSpacing: 1, transition: 'color 0.2s ease'
+          }}
+          onMouseEnter={e => e.currentTarget.style.color = '#C9A96E'}
+          onMouseLeave={e => e.currentTarget.style.color = 'rgba(201,169,110,0.6)'}
+        >
+          ← {!mobile && <span style={{ fontSize: 10, letterSpacing: 2 }}>HOME</span>}
+        </button>
 
         {/* Logo + by Shiyam */}
         <div onClick={() => navigate('/solo')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', flexShrink: 0 }}>
@@ -65,7 +68,7 @@ export default function SoloNav() {
           </span>
         </div>
 
-        {/* Desktop nav links */}
+        {/* Desktop nav links + bag */}
         {!mobile && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
             {NAV_LINKS.map(({ label, path }) => {
@@ -84,6 +87,25 @@ export default function SoloNav() {
                 </span>
               )
             })}
+
+            {/* Desktop bag icon */}
+            <div
+              onClick={() => navigate('/bag')}
+              style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', marginLeft: 8 }}
+            >
+              <BagIcon />
+              {cart.solo > 0 && (
+                <div style={{
+                  position: 'absolute', top: -6, right: -6,
+                  width: 16, height: 16, borderRadius: '50%',
+                  background: '#C9A96E', color: '#1A1A1A',
+                  fontSize: 9, fontWeight: 700, fontFamily: 'DM Sans',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                  {cart.solo}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
