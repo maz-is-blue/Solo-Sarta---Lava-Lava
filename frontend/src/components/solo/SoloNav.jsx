@@ -61,7 +61,7 @@ export default function SoloNav() {
             <img
               src={`${import.meta.env.BASE_URL}assets/solo-logo-nav.png`}
               alt="Solo Sarto"
-              style={{ height: mobile ? 34 : 54, width: 'auto', objectFit: 'contain' }}
+              style={{ height: mobile ? 34 : 54, width: 'auto', objectFit: 'contain', filter: 'brightness(0) saturate(100%) invert(65%) sepia(39%) saturate(590%) hue-rotate(335deg) brightness(105%)' }}
             />
             <span style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, fontSize: mobile ? 12 : 15, letterSpacing: 1, color: '#E8956D', whiteSpace: 'nowrap', lineHeight: 1 }}>
               by Shiyam
