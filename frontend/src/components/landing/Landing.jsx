@@ -84,6 +84,7 @@ export default function Landing() {
             src={`${import.meta.env.BASE_URL}assets/solo-logo-landing.png`}
             alt="Solo Sarto"
             className="landing-logo-img"
+            style={{ animation: 'float 6s ease-in-out infinite' }}
           />
         </div>
 
