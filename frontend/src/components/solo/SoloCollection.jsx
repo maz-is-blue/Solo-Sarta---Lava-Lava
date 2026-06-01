@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
-import { SOLO_PRODUCTS } from '../../data/soloProducts'
+import { getProducts } from '../../services/api'
 import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
 
@@ -62,9 +62,13 @@ function PieceCard({ product }) {
 
       <div style={{
         height: 220, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: 'linear-gradient(135deg, rgba(201,169,110,0.06), rgba(201,169,110,0.02))'
+        background: 'linear-gradient(135deg, rgba(201,169,110,0.06), rgba(201,169,110,0.02))',
+        overflow: 'hidden', position: 'relative'
       }}>
-        <Silhouette uid={product.id} />
+        {product.image_url
+          ? <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }} />
+          : <Silhouette uid={product.id} />
+        }
       </div>
 
       <div style={{ padding: '20px 20px 24px' }}>
@@ -89,10 +93,19 @@ const CATEGORIES = ['All', 'Gown', 'Slip', 'Bodice', 'Suit', 'Dress', 'Sari']
 
 export default function SoloCollection() {
   const [active, setActive] = useState('All')
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
   const mobile = useMobile()
   const { get } = useContent()
 
-  const filtered = active === 'All' ? SOLO_PRODUCTS : SOLO_PRODUCTS.filter(p => p.cat === active)
+  useEffect(() => {
+    getProducts({ brand: 'solo' })
+      .then(r => setProducts(r.data))
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
+
+  const filtered = active === 'All' ? products : products.filter(p => p.cat === active)
 
   return (
     <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
@@ -114,7 +127,7 @@ export default function SoloCollection() {
             {get('solo.collection.heading', 'The Collection')}
           </h1>
           <p style={{ fontSize: 14, color: 'rgba(250,248,245,0.45)', fontFamily: 'DM Sans', marginBottom: 40 }}>
-            {SOLO_PRODUCTS.length} pieces. No two alike.
+            {loading ? '...' : `${products.length} pieces`}. No two alike.
           </p>
 
           {/* Filter pills */}
@@ -141,20 +154,24 @@ export default function SoloCollection() {
 
         {/* Grid */}
         <div style={{ padding: mobile ? '0 24px 56px' : '0 80px 80px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: mobile ? 12 : 24 }}>
-            {filtered.map((p, i) => (
-              <motion.div
-                key={p.id}
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.07 }}
-              >
-                <PieceCard product={p} />
-              </motion.div>
-            ))}
-          </div>
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(250,248,245,0.3)', fontFamily: 'DM Sans', fontSize: 13 }}>Loading...</div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: mobile ? 12 : 24 }}>
+              {filtered.map((p, i) => (
+                <motion.div
+                  key={p.id}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: i * 0.07 }}
+                >
+                  <PieceCard product={p} />
+                </motion.div>
+              ))}
+            </div>
+          )}
 
-          {filtered.length === 0 && (
+          {!loading && filtered.length === 0 && (
             <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(250,248,245,0.3)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 22 }}>
               No pieces in this category yet.
             </div>

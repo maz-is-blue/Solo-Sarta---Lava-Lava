@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useMobile } from '../../hooks/useMobile'
 import { motion } from 'framer-motion'
@@ -7,7 +7,7 @@ import LavaFooter from './LavaFooter'
 import LavaGlass from '../shared/LavaGlass'
 import ProductSilhouette from '../shared/ProductSilhouette'
 import CollectionCard from '../shared/CollectionCard'
-import { LAVA_PRODUCTS } from '../../data/products'
+import { getProduct, getProducts } from '../../services/api'
 import { useCart } from '../../context/CartContext'
 
 function Accordion({ title, children }) {
@@ -38,7 +38,9 @@ export default function LavaProduct() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const { addItem } = useCart()
-  const product = LAVA_PRODUCTS.find(p => p.slug === slug)
+  const [product, setProduct] = useState(null)
+  const [allProducts, setAllProducts] = useState([])
+  const [loadingProduct, setLoadingProduct] = useState(true)
 
   const [selectedSize, setSelectedSize] = useState(null)
   const [selectedColor, setSelectedColor] = useState(0)
@@ -46,12 +48,29 @@ export default function LavaProduct() {
   const [added, setAdded] = useState(false)
   const mobile = useMobile()
 
+  useEffect(() => {
+    setLoadingProduct(true)
+    getProduct(slug)
+      .then(r => setProduct(r.data))
+      .catch(() => setProduct(null))
+      .finally(() => setLoadingProduct(false))
+    getProducts({ brand: 'lava' }).then(r => setAllProducts(r.data)).catch(() => {})
+  }, [slug])
+
   const related = useMemo(() => {
     if (!product) return []
-    const same = LAVA_PRODUCTS.filter(p => p.cat === product.cat && p.slug !== product.slug)
-    const rest = LAVA_PRODUCTS.filter(p => p.slug !== product.slug && !same.includes(p))
+    const same = allProducts.filter(p => p.cat === product.cat && p.slug !== product.slug)
+    const rest = allProducts.filter(p => p.slug !== product.slug && !same.includes(p))
     return [...same, ...rest].slice(0, 4)
-  }, [product])
+  }, [product, allProducts])
+
+  if (loadingProduct) {
+    return (
+      <div style={{ background: 'linear-gradient(180deg, #0f0018 0%, #050010 100%)', minHeight: '100vh', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <LavaNav />
+      </div>
+    )
+  }
 
   if (!product) {
     return (
@@ -73,6 +92,8 @@ export default function LavaProduct() {
   }
 
   const installment = Math.round(product.price / 3)
+  const palette = product.palette?.length ? product.palette : ['#E8906A', '#D96A8A', '#8B6FB8']
+  const sizes = product.sizes || []
 
   return (
     <div style={{ background: 'linear-gradient(180deg, #0f0018 0%, #050010 100%)', minHeight: '100vh', color: '#fff' }}>
@@ -95,14 +116,17 @@ export default function LavaProduct() {
             <LavaGlass style={{ overflow: 'hidden', marginBottom: 20 }}>
               <div style={{
                 height: 520, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
-                background: `linear-gradient(135deg, ${product.palette[0]}25, ${product.palette[1]}15, ${product.palette[2]}25)`
+                background: `linear-gradient(135deg, ${palette[0]}25, ${palette[1]}15, ${palette[2]}25)`
               }}>
                 <div style={{
                   position: 'absolute', width: 280, height: 280, borderRadius: '50%',
-                  background: `radial-gradient(circle, ${product.palette[selectedColor]}50, transparent 70%)`,
+                  background: `radial-gradient(circle, ${palette[selectedColor]}50, transparent 70%)`,
                   filter: 'blur(50px)'
                 }} />
-                <ProductSilhouette type={product.silhouette} palette={product.palette} width={200} height={320} />
+                {product.image_url
+                  ? <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }} />
+                  : <ProductSilhouette type={product.silhouette} palette={palette} width={200} height={320} />
+                }
                 {product.tag && (
                   <div style={{
                     position: 'absolute', top: 20, left: 20,
@@ -116,13 +140,13 @@ export default function LavaProduct() {
             </LavaGlass>
             {/* Color thumbnails */}
             <div style={{ display: 'flex', gap: 12 }}>
-              {product.palette.map((c, i) => (
+              {palette.map((c, i) => (
                 <button
                   key={i}
                   onClick={() => setSelectedColor(i)}
                   style={{
                     flex: 1, height: 72, borderRadius: 12, border: selectedColor === i ? `2px solid ${c}` : '2px solid transparent',
-                    background: `linear-gradient(135deg, ${c}60, ${product.palette[(i+1)%3]}40)`,
+                    background: `linear-gradient(135deg, ${c}60, ${palette[(i+1)%3]}40)`,
                     cursor: 'pointer', transition: 'all 0.2s ease',
                     boxShadow: selectedColor === i ? `0 4px 16px ${c}60` : 'none'
                   }}
@@ -136,9 +160,9 @@ export default function LavaProduct() {
             {/* Category badge */}
             <div style={{
               display: 'inline-block', padding: '4px 14px', borderRadius: 999,
-              background: `linear-gradient(90deg, ${product.palette[0]}30, ${product.palette[1]}20)`,
-              border: `1px solid ${product.palette[0]}40`,
-              fontSize: 11, letterSpacing: 1.5, color: product.palette[0], fontFamily: 'DM Sans', marginBottom: 16
+              background: `linear-gradient(90deg, ${palette[0]}30, ${palette[1]}20)`,
+              border: `1px solid ${palette[0]}40`,
+              fontSize: 11, letterSpacing: 1.5, color: palette[0], fontFamily: 'DM Sans', marginBottom: 16
             }}>
               {product.cat.toUpperCase()} · DROP {product.drop}
             </div>
@@ -165,7 +189,7 @@ export default function LavaProduct() {
             <div style={{ marginBottom: 28 }}>
               <div style={{ fontSize: 11, letterSpacing: 1.5, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>COLORWAY</div>
               <div style={{ display: 'flex', gap: 10 }}>
-                {product.palette.map((c, i) => (
+                {palette.map((c, i) => (
                   <button
                     key={i}
                     onClick={() => setSelectedColor(i)}
@@ -185,18 +209,18 @@ export default function LavaProduct() {
                 SIZE {selectedSize && `— ${selectedSize}`}
               </div>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                {product.sizes.map(s => (
+                {sizes.map(s => (
                   <button
                     key={s}
                     onClick={() => setSelectedSize(s)}
                     style={{
                       width: 48, height: 48, borderRadius: 12, border: 'none', cursor: 'pointer',
                       background: selectedSize === s
-                        ? `linear-gradient(90deg, ${product.palette[0]}, ${product.palette[1]})`
+                        ? `linear-gradient(90deg, ${palette[0]}, ${palette[1]})`
                         : 'rgba(255,255,255,0.08)',
                       color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans',
                       transition: 'all 0.2s ease',
-                      boxShadow: selectedSize === s ? `0 4px 16px ${product.palette[0]}50` : 'none'
+                      boxShadow: selectedSize === s ? `0 4px 16px ${palette[0]}50` : 'none'
                     }}
                   >
                     {s}
@@ -225,11 +249,11 @@ export default function LavaProduct() {
                 background: added
                   ? '#22c55e'
                   : selectedSize
-                    ? `linear-gradient(90deg, ${product.palette[0]}, ${product.palette[1]}, ${product.palette[2]})`
+                    ? `linear-gradient(90deg, ${palette[0]}, ${palette[1]}, ${palette[2]})`
                     : 'rgba(255,255,255,0.1)',
                 color: '#fff', fontSize: 14, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 1.5,
                 transition: 'all 0.3s ease',
-                boxShadow: selectedSize && !added ? `0 8px 32px ${product.palette[0]}40` : 'none',
+                boxShadow: selectedSize && !added ? `0 8px 32px ${palette[0]}40` : 'none',
                 marginBottom: 16
               }}
             >

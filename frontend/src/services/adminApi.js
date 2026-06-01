@@ -23,4 +23,22 @@ export const updateContent = (id, value) =>
 export const bulkUpdateContent = (updates) =>
   adminApi.post('/content/bulk', { updates })
 
+export const getAdminProducts = (brand) =>
+  adminApi.get('/products', { params: { brand } })
+
+export const createAdminProduct = (data) =>
+  adminApi.post('/products', data)
+
+export const updateAdminProduct = (id, data) =>
+  adminApi.put(`/products/${id}`, data)
+
+export const deleteAdminProduct = (id) =>
+  adminApi.delete(`/products/${id}`)
+
+export const getAdminOrders = (params = {}) =>
+  adminApi.get('/orders', { params })
+
+export const updateAdminOrder = (id, data) =>
+  adminApi.put(`/orders/${id}`, data)
+
 export default adminApi

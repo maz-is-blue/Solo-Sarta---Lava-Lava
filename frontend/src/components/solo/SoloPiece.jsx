@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
-import { SOLO_PRODUCTS } from '../../data/soloProducts'
+import { getProduct, getProducts } from '../../services/api'
 import { useCart } from '../../context/CartContext'
 import { useMobile } from '../../hooks/useMobile'
 
@@ -54,9 +54,30 @@ export default function SoloPiece() {
   const navigate = useNavigate()
   const { addItem } = useCart()
   const [added, setAdded] = useState(false)
+  const [product, setProduct] = useState(null)
+  const [otherPieces, setOtherPieces] = useState([])
+  const [loadingProduct, setLoadingProduct] = useState(true)
 
   const mobile = useMobile()
-  const product = SOLO_PRODUCTS.find(p => p.slug === slug)
+
+  useEffect(() => {
+    setLoadingProduct(true)
+    getProduct(slug)
+      .then(r => setProduct(r.data))
+      .catch(() => setProduct(null))
+      .finally(() => setLoadingProduct(false))
+    getProducts({ brand: 'solo' })
+      .then(r => setOtherPieces(r.data.filter(p => p.slug !== slug).slice(0, 3)))
+      .catch(() => {})
+  }, [slug])
+
+  if (loadingProduct) {
+    return (
+      <div style={{ background: '#2A2420', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <SoloNav />
+      </div>
+    )
+  }
 
   if (!product) {
     return (
@@ -69,8 +90,6 @@ export default function SoloPiece() {
       </div>
     )
   }
-
-  const otherPieces = SOLO_PRODUCTS.filter(p => p.slug !== slug).slice(0, 3)
 
   return (
     <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
@@ -109,8 +128,11 @@ export default function SoloPiece() {
                 background: 'radial-gradient(circle, rgba(201,169,110,0.1) 0%, transparent 70%)',
                 filter: 'blur(60px)', pointerEvents: 'none'
               }} />
-              <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 40 }}>{product.code}</div>
-              <LargeSilhouette />
+              <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: product.image_url ? 0 : 40 }}>{product.code}</div>
+              {product.image_url
+                ? <img src={product.image_url} alt={product.name} style={{ width: '100%', maxWidth: 320, borderRadius: 4, objectFit: 'cover', marginBottom: 24 }} />
+                : <LargeSilhouette />
+              }
               <div style={{ marginTop: 32, fontSize: 11, letterSpacing: 2, color: 'rgba(250,248,245,0.2)', fontFamily: 'DM Sans' }}>
                 AW/26 — ATELIER
               </div>
@@ -132,14 +154,14 @@ export default function SoloPiece() {
               ₹{product.price.toLocaleString()}
             </div>
             <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.65)', fontFamily: 'DM Sans', lineHeight: 1.9, marginBottom: 32, maxWidth: 440 }}>
-              {product.desc}
+              {product.product_desc}
             </p>
 
             {/* Details grid */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 40, borderTop: '1px solid rgba(201,169,110,0.12)', paddingTop: 28 }}>
               {[
                 ['Fabric', product.fabric],
-                ['Timeline', product.process],
+                ['Timeline', product.process_time],
                 ['Method', 'Fully bespoke'],
                 ['Atelier', 'By appointment'],
               ].map(([k, v]) => (

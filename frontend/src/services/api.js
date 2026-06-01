@@ -13,5 +13,6 @@ export const updateCartItem = (id, quantity) => api.put(`/cart/${id}`, { quantit
 export const removeCartItem = (id) => api.delete(`/cart/${id}`)
 export const submitContact = (data) => api.post('/contact', data)
 export const subscribeNewsletter = (email, brand = 'lava') => api.post('/newsletter', { email, brand })
+export const submitOrder = (data) => api.post('/orders', data)
 
 export default api

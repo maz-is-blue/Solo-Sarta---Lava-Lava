@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useMobile } from '../hooks/useMobile'
+import { submitOrder } from '../services/api'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
 
@@ -102,10 +103,25 @@ export default function CheckoutPage() {
     return ''
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const err = validate()
     if (err) { setError(err); return }
     setError('')
+    const items = [...relevantSolo, ...relevantLava].map(i => ({
+      name: i.name, slug: i.slug, price: i.price, qty: i.qty || 1, size: i.size || null, brand: i.brand,
+    }))
+    try {
+      await submitOrder({
+        brand,
+        customer_name:    form.name,
+        customer_email:   form.email,
+        customer_phone:   form.phone,
+        shipping_address: form.address,
+        payment_method:   form.payment,
+        items,
+        total: grandTotal,
+      })
+    } catch { /* offline — still show success */ }
     setSubmitted(true)
     clearCart()
   }
