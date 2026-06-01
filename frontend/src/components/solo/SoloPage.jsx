@@ -5,6 +5,7 @@ import { useCart } from '../../context/CartContext'
 import SoloNav from './SoloNav'
 import { SOLO_PRODUCTS } from '../../data/soloProducts'
 import { useMobile } from '../../hooks/useMobile'
+import { useContent } from '../../context/ContentContext'
 
 function GownSilhouette({ color1 = '#C9A96E', color2 = '#E8D5A3' }) {
   return (
@@ -128,6 +129,7 @@ export default function SoloPage() {
   const [inviteEmail, setInviteEmail] = useState('')
   const [invited, setInvited] = useState(false)
   const mobile = useMobile()
+  const { get } = useContent()
 
   return (
     <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
@@ -150,16 +152,16 @@ export default function SoloPage() {
           style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: mobile ? '40px 24px 32px' : '80px 64px 80px 80px' }}
         >
           <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 24 }}>
-            AUTUMN / WINTER '26
+            {get('solo.home.season', "AUTUMN / WINTER '26")}
           </div>
           <h1 style={{
             fontSize: 56, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300,
             lineHeight: 1.1, marginBottom: 28, color: '#FAF8F5'
           }}>
-            Crafted for those who wear their story.
+            {get('solo.home.headline', 'Crafted for those who wear their story.')}
           </h1>
           <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.6)', fontFamily: 'DM Sans', lineHeight: 1.8, maxWidth: 420, marginBottom: 40 }}>
-            A private atelier of 11 master tailors. Bespoke couture since 2018.
+            {get('solo.home.subtext', 'A private atelier of 11 master tailors. Bespoke couture since 2018.')}
           </p>
           <div style={{ display: 'flex', gap: 16, marginBottom: 56 }}>
             <button
@@ -169,7 +171,7 @@ export default function SoloPage() {
                 background: '#C9A96E', color: '#1A1A1A',
                 fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2
               }}>
-              EXPLORE COLLECTION
+              {get('solo.home.cta1', 'EXPLORE COLLECTION')}
             </button>
             <button
               onClick={() => navigate('/solo/contact')}
@@ -182,12 +184,16 @@ export default function SoloPage() {
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,169,110,0.1)'; e.currentTarget.style.borderColor = '#C9A96E' }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(201,169,110,0.4)' }}
             >
-              BOOK A CONSULTATION
+              {get('solo.home.cta2', 'BOOK A CONSULTATION')}
             </button>
           </div>
           {/* Stats */}
           <div style={{ display: 'flex', gap: 0, borderTop: '1px solid rgba(201,169,110,0.15)', paddingTop: 32 }}>
-            {[['148', 'Pieces / Year'], ['11', 'Master Tailors'], ['Est. 2018', '']].map(([num, label], i) => (
+            {[
+              [get('solo.home.stat1_value','148'), get('solo.home.stat1_label','PIECES / YEAR')],
+              [get('solo.home.stat2_value','11'), get('solo.home.stat2_label','MASTER TAILORS')],
+              [`${get('solo.home.stat3_value','Est.')} ${get('solo.home.stat3_suffix','2018')}`, '']
+            ].map(([num, label], i) => (
               <div key={num} style={{ flex: 1, paddingRight: 24, borderRight: i < 2 ? '1px solid rgba(201,169,110,0.12)' : 'none', paddingLeft: i > 0 ? 24 : 0 }}>
                 <div style={{ fontSize: 28, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#C9A96E', marginBottom: 4 }}>{num}</div>
                 {label && <div style={{ fontSize: 11, letterSpacing: 1.5, color: 'rgba(250,248,245,0.4)', fontFamily: 'DM Sans' }}>{label.toUpperCase()}</div>}
@@ -227,9 +233,9 @@ export default function SoloPage() {
               padding: '16px 20px', borderRadius: 2, marginBottom: 24
             }}>
               <p style={{ fontSize: 13, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: 'rgba(250,248,245,0.7)', lineHeight: 1.7, marginBottom: 8 }}>
-                "Each piece begins as a conversation."
+                "{get('solo.home.mid_quote', 'Each piece begins as a conversation.')}"
               </p>
-              <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>— MAISON NOTES</div>
+              <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>{get('solo.home.mid_attr', '— MAISON NOTES')}</div>
             </div>
             {/* Needle motif */}
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -266,15 +272,15 @@ export default function SoloPage() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.2 }}
         >
-          <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 20 }}>THE CRAFT</div>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 20 }}>{get('solo.home.craft_label', 'THE CRAFT')}</div>
           <h2 style={{ fontSize: 40, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, marginBottom: 24, lineHeight: 1.2 }}>
-            The quiet art of the<br />made-to-measure.
+            {get('solo.home.craft_headline', 'The quiet art of the made-to-measure.')}
           </h2>
           <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.6)', fontFamily: 'DM Sans', lineHeight: 1.9, marginBottom: 20 }}>
-            Every Solo Sarto piece begins with a measurement and ends with a story. Our eleven master tailors work exclusively by appointment, shaping each garment to the exact contour of who will wear it.
+            {get('solo.home.craft_body1', 'Every Solo Sarto piece begins with a measurement and ends with a story. Our eleven master tailors work exclusively by appointment, shaping each garment to the exact contour of who will wear it.')}
           </p>
           <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.5)', fontFamily: 'DM Sans', lineHeight: 1.9 }}>
-            We have never made two identical pieces. We never will.
+            {get('solo.home.craft_body2', 'We have never made two identical pieces. We never will.')}
           </p>
           <div style={{ marginTop: 32, display: 'flex', gap: 24 }}>
             <button
@@ -283,7 +289,7 @@ export default function SoloPage() {
                 padding: '11px 28px', borderRadius: 2, border: '1px solid #C9A96E', cursor: 'pointer',
                 background: 'transparent', color: '#C9A96E', fontSize: 11, fontFamily: 'DM Sans', letterSpacing: 1.5
               }}>
-              OUR STORY
+              {get('solo.home.cta3', 'OUR STORY')}
             </button>
           </div>
         </motion.div>
@@ -298,8 +304,8 @@ export default function SoloPage() {
           transition={{ duration: 0.6 }}
           style={{ marginBottom: 48 }}
         >
-          <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>AUTUMN / WINTER '26</div>
-          <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>The Collection</h2>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>{get('solo.home.collection_label', "AUTUMN / WINTER '26")}</div>
+          <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>{get('solo.home.collection_heading', 'The Collection')}</h2>
         </motion.div>
         <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)', gap: mobile ? 16 : 24 }}>
           {SOLO_PRODUCTS.map((p, i) => (
@@ -319,13 +325,13 @@ export default function SoloPage() {
       {/* Footer band */}
       <section style={{ background: '#FAF8F5', padding: '64px 80px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(26,26,26,0.4)', fontFamily: 'DM Sans', marginBottom: 16 }}>
-          THE PRIVATE CIRCLE
+          {get('solo.home.circle_label', 'THE PRIVATE CIRCLE')}
         </div>
         <h3 style={{ fontSize: 32, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#1A1A1A', marginBottom: 8 }}>
-          For an invitation to the next private viewing.
+          {get('solo.home.circle_sub', 'For an invitation to the next private viewing.')}
         </h3>
         <p style={{ fontSize: 14, color: 'rgba(26,26,26,0.55)', fontFamily: 'DM Sans', marginBottom: 32 }}>
-          By invitation only. Three showings per season.
+          {get('solo.home.circle_note', 'By invitation only. Three showings per season.')}
         </p>
         {invited ? (
           <div style={{ fontSize: 16, color: '#C9A96E', fontFamily: 'Cormorant Garamond', fontStyle: 'italic' }}>

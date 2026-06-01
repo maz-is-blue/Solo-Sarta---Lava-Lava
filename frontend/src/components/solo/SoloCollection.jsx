@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
 import { SOLO_PRODUCTS } from '../../data/soloProducts'
 import { useMobile } from '../../hooks/useMobile'
+import { useContent } from '../../context/ContentContext'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
 
@@ -89,6 +90,7 @@ const CATEGORIES = ['All', 'Gown', 'Slip', 'Bodice', 'Suit', 'Dress', 'Sari']
 export default function SoloCollection() {
   const [active, setActive] = useState('All')
   const mobile = useMobile()
+  const { get } = useContent()
 
   const filtered = active === 'All' ? SOLO_PRODUCTS : SOLO_PRODUCTS.filter(p => p.cat === active)
 
@@ -106,10 +108,10 @@ export default function SoloCollection() {
           style={{ padding: mobile ? '32px 24px 0' : '48px 80px 0' }}
         >
           <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>
-            AUTUMN / WINTER '26
+            {get('solo.collection.season', "AUTUMN / WINTER '26")}
           </div>
           <h1 style={{ fontSize: 52, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, marginBottom: 8, lineHeight: 1.1 }}>
-            The Collection
+            {get('solo.collection.heading', 'The Collection')}
           </h1>
           <p style={{ fontSize: 14, color: 'rgba(250,248,245,0.45)', fontFamily: 'DM Sans', marginBottom: 40 }}>
             {SOLO_PRODUCTS.length} pieces. No two alike.

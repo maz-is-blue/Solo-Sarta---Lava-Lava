@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
 import { useMobile } from '../../hooks/useMobile'
+import { useContent } from '../../context/ContentContext'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
 
@@ -26,6 +27,7 @@ export default function SoloContact() {
   const [focused, setFocused] = useState(null)
   const mobile = useMobile()
 
+  const { get } = useContent()
   const set = key => e => setForm(f => ({ ...f, [key]: e.target.value }))
 
   const handleSubmit = e => {
@@ -51,12 +53,12 @@ export default function SoloContact() {
           transition={{ duration: 0.7 }}
           style={{ padding: mobile ? '40px 24px 0' : '64px 80px 0' }}
         >
-          <div style={{ fontSize: 11, letterSpacing: 4, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 20 }}>CONTACT</div>
+          <div style={{ fontSize: 11, letterSpacing: 4, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 20 }}>{get('solo.contact.eyebrow', 'CONTACT')}</div>
           <h1 style={{ fontSize: 60, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, lineHeight: 1.05, marginBottom: 16 }}>
-            Begin the conversation.
+            {get('solo.contact.headline', 'Begin the conversation.')}
           </h1>
           <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.45)', fontFamily: 'DM Sans', maxWidth: 480, lineHeight: 1.8 }}>
-            All commissions, fittings and viewings begin here. We respond within 48 hours.
+            {get('solo.contact.subtext', 'All commissions, fittings and viewings begin here. We respond within 48 hours.')}
           </p>
         </motion.section>
 
@@ -157,12 +159,12 @@ export default function SoloContact() {
           >
             {/* Atelier details */}
             <div>
-              <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 24 }}>THE ATELIER</div>
+              <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 24 }}>{get('solo.contact.atelier_label', 'THE ATELIER')}</div>
               {[
-                ['Email', 'studio@solosarto.com'],
-                ['Hours', 'Mon–Sat, 10am–6pm'],
-                ['Appointments', 'By arrangement only'],
-                ['Response time', 'Within 48 hours'],
+                ['Email', get('solo.contact.email', 'studio@solosarto.com')],
+                ['Hours', get('solo.contact.hours', 'Mon–Sat, 10am–6pm')],
+                ['Appointments', get('solo.contact.appointments', 'By arrangement only')],
+                ['Response time', get('solo.contact.response_time', 'Within 48 hours')],
               ].map(([k, v]) => (
                 <div key={k} style={{ borderBottom: '1px solid rgba(201,169,110,0.1)', padding: '14px 0', display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: 12, color: 'rgba(250,248,245,0.35)', fontFamily: 'DM Sans', letterSpacing: 1 }}>{k.toUpperCase()}</span>
@@ -177,14 +179,14 @@ export default function SoloContact() {
               border: '1px solid rgba(201,169,110,0.15)',
               borderRadius: 4, padding: '32px 28px'
             }}>
-              <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 12 }}>THE PRIVATE CIRCLE</div>
+              <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 12 }}>{get('solo.contact.circle_label', 'THE PRIVATE CIRCLE')}</div>
               <h4 style={{ fontSize: 22, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, marginBottom: 12, lineHeight: 1.3 }}>
-                An invitation to our<br />private seasonal viewing.
+                {get('solo.contact.circle_headline', 'An invitation to our private seasonal viewing.')}
               </h4>
               <p style={{ fontSize: 13, color: 'rgba(250,248,245,0.45)', fontFamily: 'DM Sans', lineHeight: 1.7, marginBottom: 20 }}>
-                Three times a year, we invite a small group of clients to preview the next collection before it is announced. Mention your interest in the message above.
+                {get('solo.contact.circle_body', 'Three times a year, we invite a small group of clients to preview the next collection before it is announced. Mention your interest in the message above.')}
               </p>
-              <div style={{ fontSize: 11, color: 'rgba(201,169,110,0.6)', fontFamily: 'DM Sans', letterSpacing: 1.5 }}>BY INVITATION ONLY</div>
+              <div style={{ fontSize: 11, color: 'rgba(201,169,110,0.6)', fontFamily: 'DM Sans', letterSpacing: 1.5 }}>{get('solo.contact.circle_note', 'BY INVITATION ONLY')}</div>
             </div>
           </motion.div>
         </div>

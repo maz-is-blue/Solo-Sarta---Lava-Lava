@@ -2,15 +2,9 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
 import { useMobile } from '../../hooks/useMobile'
+import { useContent } from '../../context/ContentContext'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
-
-const PILLARS = [
-  { title: 'Singularity', body: 'We have never made two identical pieces. Every pattern is drawn by hand for one person, then destroyed.' },
-  { title: 'Time', body: 'A Solo Sarto commission takes between eight and twenty-four weeks. This is not a flaw — it is the point.' },
-  { title: 'Silence', body: 'No seasonal collections. No lookbooks. No fast fashion. We work when we are ready, for clients who are ready to wait.' },
-  { title: 'Craft', body: 'Eleven master tailors who trained in Naples, Paris, and Dhaka. Between them, over 300 years of accumulated knowledge.' },
-]
 
 function ThreadLine() {
   return (
@@ -25,6 +19,14 @@ function ThreadLine() {
 export default function SoloStory() {
   const navigate = useNavigate()
   const mobile = useMobile()
+  const { get } = useContent()
+
+  const PILLARS = [
+    { title: get('solo.story.pillar1_title', 'Singularity'), body: get('solo.story.pillar1_body', 'We have never made two identical pieces. Every pattern is drawn by hand for one person, then destroyed.') },
+    { title: get('solo.story.pillar2_title', 'Time'), body: get('solo.story.pillar2_body', 'A Solo Sarto commission takes between eight and twenty-four weeks. This is not a flaw — it is the point.') },
+    { title: get('solo.story.pillar3_title', 'Silence'), body: get('solo.story.pillar3_body', 'No seasonal collections. No lookbooks. No fast fashion. We work when we are ready, for clients who are ready to wait.') },
+    { title: get('solo.story.pillar4_title', 'Craft'), body: get('solo.story.pillar4_body', 'Eleven master tailors who trained in Naples, Paris, and Dhaka. Between them, over 300 years of accumulated knowledge.') },
+  ]
 
   return (
     <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
@@ -39,15 +41,15 @@ export default function SoloStory() {
           transition={{ duration: 1 }}
           style={{ padding: mobile ? '40px 24px 40px' : '72px 80px 64px', borderBottom: '1px solid rgba(201,169,110,0.1)' }}
         >
-          <div style={{ fontSize: 11, letterSpacing: 4, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 24 }}>OUR STORY</div>
+          <div style={{ fontSize: 11, letterSpacing: 4, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 24 }}>{get('solo.story.eyebrow', 'OUR STORY')}</div>
           <h1 style={{
             fontSize: 68, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300,
             lineHeight: 1.05, maxWidth: 800, marginBottom: 32, color: '#FAF8F5'
           }}>
-            A needle, a thread,<br />and a refusal to rush.
+            {get('solo.story.headline', 'A needle, a thread, and a refusal to rush.')}
           </h1>
           <p style={{ fontSize: 16, color: 'rgba(250,248,245,0.55)', fontFamily: 'DM Sans', lineHeight: 1.9, maxWidth: 580 }}>
-            Solo Sarto began in a small room in 2018 with a single tailor, a borrowed machine, and a conviction: that the most extraordinary thing a garment could be was irreplaceable.
+            {get('solo.story.intro', 'Solo Sarto began in a small room in 2018 with a single tailor, a borrowed machine, and a conviction: that the most extraordinary thing a garment could be was irreplaceable.')}
           </p>
         </motion.section>
 
@@ -59,15 +61,15 @@ export default function SoloStory() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 20 }}>THE BEGINNING</div>
+            <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 20 }}>{get('solo.story.begin_label', 'THE BEGINNING')}</div>
             <h2 style={{ fontSize: 40, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, lineHeight: 1.2, marginBottom: 28 }}>
-              Shiyam started alone.<br />On purpose.
+              {get('solo.story.begin_headline', 'Shiyam started alone. On purpose.')}
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.6)', fontFamily: 'DM Sans', lineHeight: 1.9, marginBottom: 20 }}>
-              Shiyam trained under two of the most exacting tailors in South Asia before breaking away to form something quieter and more demanding: a private atelier with no ready-to-wear line, no discounts, and no compromises.
+              {get('solo.story.begin_body', 'Shiyam trained under two of the most exacting tailors in South Asia before breaking away to form something quieter and more demanding: a private atelier with no ready-to-wear line, no discounts, and no compromises.')}
             </p>
             <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.5)', fontFamily: 'DM Sans', lineHeight: 1.9 }}>
-              The name — <em style={{ fontFamily: 'Cormorant Garamond', fontSize: 17, color: 'rgba(250,248,245,0.7)' }}>Solo Sarto</em> — is Italian for "single tailor." It was always the intention to remain small.
+              {get('solo.story.begin_note', 'The name — Solo Sarto — is Italian for "single tailor." It was always the intention to remain small.')}
             </p>
           </motion.div>
           <motion.div
@@ -88,10 +90,10 @@ export default function SoloStory() {
               }} />
               <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.4)', fontFamily: 'DM Sans', marginBottom: 20 }}>EST. 2018</div>
               {[
-                ['148', 'Pieces per year'],
-                ['11', 'Master tailors'],
-                ['2', 'Fittings minimum'],
-                ['0', 'Pieces alike'],
+                [get('solo.story.stat1_value','148'), get('solo.story.stat1_label','Pieces per year')],
+                [get('solo.story.stat2_value','11'), get('solo.story.stat2_label','Master tailors')],
+                [get('solo.story.stat3_value','2'), get('solo.story.stat3_label','Fittings minimum')],
+                [get('solo.story.stat4_value','0'), get('solo.story.stat4_label','Pieces alike')],
               ].map(([n, l]) => (
                 <div key={n} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '1px solid rgba(201,169,110,0.08)', padding: '16px 0' }}>
                   <span style={{ fontSize: 32, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#C9A96E' }}>{n}</span>
@@ -113,8 +115,8 @@ export default function SoloStory() {
             transition={{ duration: 0.6 }}
             style={{ marginBottom: 56 }}
           >
-            <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>OUR PHILOSOPHY</div>
-            <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300 }}>Four things we believe in.</h2>
+            <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>{get('solo.story.philosophy_label', 'OUR PHILOSOPHY')}</div>
+            <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300 }}>{get('solo.story.philosophy_intro', 'Four things we believe in.')}</h2>
           </motion.div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: mobile ? 24 : 40 }}>
             {PILLARS.map((p, i) => (
@@ -144,9 +146,9 @@ export default function SoloStory() {
           style={{ padding: '0 80px 96px', textAlign: 'center', maxWidth: 900, margin: '0 auto' }}
         >
           <p style={{ fontSize: 34, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, lineHeight: 1.4, color: 'rgba(250,248,245,0.85)', marginBottom: 24 }}>
-            "We are not in the business of clothing people. We are in the business of making something that, fifty years from now, someone's daughter will still wear."
+            "{get('solo.story.quote', 'We are not in the business of clothing people. We are in the business of making something that, fifty years from now, someone\'s daughter will still wear.')}"
           </p>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(201,169,110,0.6)', fontFamily: 'DM Sans' }}>— SHIYAM, FOUNDER</div>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(201,169,110,0.6)', fontFamily: 'DM Sans' }}>{get('solo.story.quote_attr', '— SHIYAM, FOUNDER')}</div>
         </motion.section>
 
         {/* CTA band */}

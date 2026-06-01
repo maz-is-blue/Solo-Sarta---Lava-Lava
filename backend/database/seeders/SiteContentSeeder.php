@@ -1,0 +1,191 @@
+<?php
+namespace Database\Seeders;
+
+use App\Models\SiteContent;
+use Illuminate\Database\Seeder;
+
+class SiteContentSeeder extends Seeder {
+    public function run(): void {
+        $items = [
+
+            // ─── SOLO SARTO — LANDING ───────────────────────────────────────
+            ['solo', 'landing', 'eyebrow',      'THE ATELIER',         'Eyebrow Label',     'text'],
+            ['solo', 'landing', 'button',        'ENTER SOLO SARTO',    'Enter Button Text', 'text'],
+            ['solo', 'landing', 'label',         'ATELIER · EST. 2018', 'Bottom Tag Label',  'text'],
+            ['solo', 'landing', 'sublabel',      'Bespoke / Couture',   'Bottom Sub-label',  'text'],
+
+            // ─── SOLO SARTO — HOME ──────────────────────────────────────────
+            ['solo', 'home', 'season',           'AUTUMN / WINTER \'26',                      'Season Label',              'text'],
+            ['solo', 'home', 'headline',         'Crafted for those who wear their story.',    'Hero Headline',             'textarea'],
+            ['solo', 'home', 'subtext',          'A private atelier of 11 master tailors. Bespoke couture since 2018.', 'Hero Subtext', 'textarea'],
+            ['solo', 'home', 'stat1_value',      '148',                                        'Stat 1 — Value',            'text'],
+            ['solo', 'home', 'stat1_label',      'PIECES / YEAR',                              'Stat 1 — Label',            'text'],
+            ['solo', 'home', 'stat2_value',      '11',                                         'Stat 2 — Value',            'text'],
+            ['solo', 'home', 'stat2_label',      'MASTER TAILORS',                             'Stat 2 — Label',            'text'],
+            ['solo', 'home', 'stat3_value',      'Est.',                                       'Stat 3 — Value',            'text'],
+            ['solo', 'home', 'stat3_suffix',     '2018',                                       'Stat 3 — Year',             'text'],
+            ['solo', 'home', 'mid_quote',        'Each piece begins as a conversation.',       'Mid-page Quote',            'textarea'],
+            ['solo', 'home', 'mid_attr',         '— MAISON NOTES',                             'Mid-page Attribution',      'text'],
+            ['solo', 'home', 'craft_label',      'THE CRAFT',                                  'Craft Section Label',       'text'],
+            ['solo', 'home', 'craft_headline',   'The quiet art of the made-to-measure.',      'Craft Headline',            'textarea'],
+            ['solo', 'home', 'craft_body1',      'Every Solo Sarto piece begins with a measurement and ends with a story. Our eleven master tailors work exclusively by appointment, shaping each garment to the exact contour of who will wear it.', 'Craft Body Paragraph 1', 'textarea'],
+            ['solo', 'home', 'craft_body2',      'We have never made two identical pieces. We never will.',  'Craft Body Paragraph 2', 'textarea'],
+            ['solo', 'home', 'collection_label', 'AUTUMN / WINTER \'26',                       'Collection Section Label',  'text'],
+            ['solo', 'home', 'collection_heading','The Collection',                             'Collection Heading',        'text'],
+            ['solo', 'home', 'collection_sub',   'AW/26 — ATELIER',                            'Collection Sub-label',      'text'],
+            ['solo', 'home', 'circle_label',     'THE PRIVATE CIRCLE',                         'Private Circle Label',      'text'],
+            ['solo', 'home', 'circle_sub',       'For an invitation to the next private viewing.', 'Private Circle Subtext', 'textarea'],
+            ['solo', 'home', 'circle_note',      'By invitation only. Three showings per season.', 'Private Circle Note',   'text'],
+            ['solo', 'home', 'cta1',             'EXPLORE COLLECTION',                          'CTA Button 1',             'text'],
+            ['solo', 'home', 'cta2',             'BOOK A CONSULTATION',                         'CTA Button 2',             'text'],
+            ['solo', 'home', 'cta3',             'OUR STORY',                                   'CTA Button 3',             'text'],
+
+            // ─── SOLO SARTO — STORY ─────────────────────────────────────────
+            ['solo', 'story', 'eyebrow',         'OUR STORY',                                                  'Eyebrow Label',         'text'],
+            ['solo', 'story', 'headline',        'A needle, a thread, and a refusal to rush.',                 'Headline',              'textarea'],
+            ['solo', 'story', 'intro',           'Solo Sarto began in a small room in 2018 with a single tailor, a borrowed machine, and a conviction: that the most extraordinary thing a garment could be was irreplaceable.', 'Intro Paragraph', 'textarea'],
+            ['solo', 'story', 'begin_label',     'THE BEGINNING',                                              'Beginning Label',       'text'],
+            ['solo', 'story', 'begin_headline',  'Shiyam started alone. On purpose.',                          'Beginning Headline',    'textarea'],
+            ['solo', 'story', 'begin_body',      'Shiyam trained under two of the most exacting tailors in South Asia before breaking away to form something quieter and more demanding: a private atelier with no ready-to-wear line, no discounts, and no compromises.', 'Beginning Body', 'textarea'],
+            ['solo', 'story', 'begin_note',      'The name — Solo Sarto — is Italian for "single tailor." It was always the intention to remain small.', 'Beginning Note', 'textarea'],
+            ['solo', 'story', 'stat1_value',     '148',                                                        'Stat 1 — Value',        'text'],
+            ['solo', 'story', 'stat1_label',     'Pieces per year',                                            'Stat 1 — Label',        'text'],
+            ['solo', 'story', 'stat2_value',     '11',                                                         'Stat 2 — Value',        'text'],
+            ['solo', 'story', 'stat2_label',     'Master tailors',                                             'Stat 2 — Label',        'text'],
+            ['solo', 'story', 'stat3_value',     '2',                                                          'Stat 3 — Value',        'text'],
+            ['solo', 'story', 'stat3_label',     'Fittings minimum',                                           'Stat 3 — Label',        'text'],
+            ['solo', 'story', 'stat4_value',     '0',                                                          'Stat 4 — Value',        'text'],
+            ['solo', 'story', 'stat4_label',     'Pieces alike',                                               'Stat 4 — Label',        'text'],
+            ['solo', 'story', 'philosophy_label','OUR PHILOSOPHY',                                             'Philosophy Label',      'text'],
+            ['solo', 'story', 'philosophy_intro','Four things we believe in.',                                 'Philosophy Intro',      'text'],
+            ['solo', 'story', 'pillar1_title',   'Singularity',                                                'Pillar 1 — Title',      'text'],
+            ['solo', 'story', 'pillar1_body',    'We have never made two identical pieces. Every pattern is drawn by hand for one person, then destroyed.', 'Pillar 1 — Body', 'textarea'],
+            ['solo', 'story', 'pillar2_title',   'Time',                                                       'Pillar 2 — Title',      'text'],
+            ['solo', 'story', 'pillar2_body',    'A Solo Sarto commission takes between eight and twenty-four weeks. This is not a flaw — it is the point.', 'Pillar 2 — Body', 'textarea'],
+            ['solo', 'story', 'pillar3_title',   'Silence',                                                    'Pillar 3 — Title',      'text'],
+            ['solo', 'story', 'pillar3_body',    'No seasonal collections. No lookbooks. No fast fashion. We work when we are ready, for clients who are ready to wait.', 'Pillar 3 — Body', 'textarea'],
+            ['solo', 'story', 'pillar4_title',   'Craft',                                                      'Pillar 4 — Title',      'text'],
+            ['solo', 'story', 'pillar4_body',    'Eleven master tailors who trained in Naples, Paris, and Dhaka. Between them, over 300 years of accumulated knowledge.', 'Pillar 4 — Body', 'textarea'],
+            ['solo', 'story', 'quote',           'We are not in the business of clothing people. We are in the business of making something that, fifty years from now, someone\'s daughter will still wear.', 'Founder Quote', 'textarea'],
+            ['solo', 'story', 'quote_attr',      '— SHIYAM, FOUNDER',                                          'Quote Attribution',     'text'],
+            ['solo', 'story', 'cta_label',       'READY TO BEGIN?',                                            'CTA Label',             'text'],
+            ['solo', 'story', 'cta_sub',         'Every commission starts with a conversation.',               'CTA Subtext',           'text'],
+
+            // ─── SOLO SARTO — CONTACT ───────────────────────────────────────
+            ['solo', 'contact', 'eyebrow',       'CONTACT',                                                   'Eyebrow Label',         'text'],
+            ['solo', 'contact', 'headline',      'Begin the conversation.',                                   'Headline',              'text'],
+            ['solo', 'contact', 'subtext',       'All commissions, fittings and viewings begin here. We respond within 48 hours.', 'Subtext', 'textarea'],
+            ['solo', 'contact', 'atelier_label', 'THE ATELIER',                                               'Atelier Section Label', 'text'],
+            ['solo', 'contact', 'email',         'studio@solosarto.com',                                      'Studio Email',          'text'],
+            ['solo', 'contact', 'hours',         'Mon–Sat, 10am–6pm',                                         'Opening Hours',         'text'],
+            ['solo', 'contact', 'appointments',  'By arrangement only',                                       'Appointments Text',     'text'],
+            ['solo', 'contact', 'response_time', 'Within 48 hours',                                           'Response Time',         'text'],
+            ['solo', 'contact', 'circle_label',  'THE PRIVATE CIRCLE',                                        'Private Circle Label',  'text'],
+            ['solo', 'contact', 'circle_headline','An invitation to our private seasonal viewing.',           'Private Circle Headline','textarea'],
+            ['solo', 'contact', 'circle_body',   'Three times a year, we invite a small group of clients to preview the next collection before it is announced. Mention your interest in the message above.', 'Private Circle Body', 'textarea'],
+            ['solo', 'contact', 'circle_note',   'BY INVITATION ONLY',                                        'Private Circle Note',   'text'],
+
+            // ─── SOLO SARTO — COLLECTION ────────────────────────────────────
+            ['solo', 'collection', 'season',     'AUTUMN / WINTER \'26',                                      'Season Label',          'text'],
+            ['solo', 'collection', 'heading',    'The Collection',                                             'Page Heading',          'text'],
+            ['solo', 'collection', 'footer_label','BESPOKE ENQUIRIES',                                        'Footer Label',          'text'],
+            ['solo', 'collection', 'footer_text', 'Each piece is made to measure. Prices are a guide — your commission is a conversation.', 'Footer Text', 'textarea'],
+
+            // ─── LAVA LAVA — LANDING ────────────────────────────────────────
+            ['lava', 'landing', 'eyebrow',       'DROP 04 · SOLAR BLOOM',                                     'Eyebrow Label',         'text'],
+            ['lava', 'landing', 'button',        'ENTER LAVA LAVA',                                           'Enter Button Text',     'text'],
+            ['lava', 'landing', 'tagline',       'THE DIFFUSION LINE',                                        'Tagline',               'text'],
+            ['lava', 'landing', 'label',         'READY-TO-WEAR',                                             'Bottom Label',          'text'],
+            ['lava', 'landing', 'sublabel',      'For the fearless ✦',                                        'Bottom Sub-label',      'text'],
+
+            // ─── LAVA LAVA — HOME ───────────────────────────────────────────
+            ['lava', 'home', 'drop_label',       'DROP 04 — LIVE NOW',                                        'Drop Label Badge',      'text'],
+            ['lava', 'home', 'hero_text',        'The diffusion line that never asks permission. Bold prints, glowy textures, and color stories that refuse to behave.', 'Hero Description', 'textarea'],
+            ['lava', 'home', 'cta1',             'Shop the Drop ⚡',                                          'CTA Button 1',          'text'],
+            ['lava', 'home', 'cta2',             'Read our vibe',                                             'CTA Button 2',          'text'],
+            ['lava', 'home', 'collection_label', 'LATEST DROP',                                               'Collection Label',      'text'],
+            ['lava', 'home', 'collection_h1',    'Color,',                                                    'Collection Headline Part 1', 'text'],
+            ['lava', 'home', 'collection_h2',    'louder.',                                                   'Collection Headline Part 2', 'text'],
+            ['lava', 'home', 'manifesto',        'A second look. A last dance. Color tastes different when you wear it without permission.', 'Manifesto Quote', 'textarea'],
+            ['lava', 'home', 'palette_label',    'THE PALETTE',                                               'Palette Section Label', 'text'],
+            ['lava', 'home', 'palette_heading',  'The Solar Bloom Palette',                                   'Palette Heading',       'text'],
+            ['lava', 'home', 'newsletter_label', 'THE DROP LIST',                                             'Newsletter Label',      'text'],
+            ['lava', 'home', 'newsletter_heading','Stay on the drop list',                                    'Newsletter Heading',    'text'],
+            ['lava', 'home', 'newsletter_body',  'Early access to every drop. First to know, first to shop.','Newsletter Body',       'textarea'],
+            ['lava', 'home', 'marquee',          'color, louder ✦ made for the fearless ✦ solar bloom ✦ drop 04 ✦', 'Marquee Text',   'text'],
+
+            // ─── LAVA LAVA — STORY ──────────────────────────────────────────
+            ['lava', 'story', 'eyebrow',         'OUR STORY',                                                 'Eyebrow Label',         'text'],
+            ['lava', 'story', 'headline',        'Born backstage, raised on color.',                          'Headline',              'textarea'],
+            ['lava', 'story', 'intro',           'Lava Lava is a diffusion line born from Solo Sarto — a private atelier of 11 master tailors. We took what we couldn\'t show on the couture floor and gave it its own stage.', 'Intro Paragraph', 'textarea'],
+            ['lava', 'story', 'brand_code_label','THE BRAND CODE',                                            'Brand Code Label',      'text'],
+            ['lava', 'story', 'brand_code_sub',  'Three things we hold.',                                     'Brand Code Subtext',    'text'],
+            ['lava', 'story', 'pillar1_icon',    '✦',                                                         'Pillar 1 — Icon',       'text'],
+            ['lava', 'story', 'pillar1_title',   'Color is a verb',                                           'Pillar 1 — Title',      'text'],
+            ['lava', 'story', 'pillar1_body',    'We start with the palette. Every season, we pick five colors that feel like a feeling. The garments follow.', 'Pillar 1 — Body', 'textarea'],
+            ['lava', 'story', 'pillar2_icon',    '◈',                                                         'Pillar 2 — Icon',       'text'],
+            ['lava', 'story', 'pillar2_title',   'Drape over decoration',                                     'Pillar 2 — Title',      'text'],
+            ['lava', 'story', 'pillar2_body',    'Fabric first. Always. We spend more time on the hand of a cloth than on any embellishment.', 'Pillar 2 — Body', 'textarea'],
+            ['lava', 'story', 'pillar3_icon',    '◉',                                                         'Pillar 3 — Icon',       'text'],
+            ['lava', 'story', 'pillar3_title',   'Slow at the seam',                                          'Pillar 3 — Title',      'text'],
+            ['lava', 'story', 'pillar3_body',    '12 pieces per drop. 200–400 editions. We make less. We mean it more.', 'Pillar 3 — Body', 'textarea'],
+            ['lava', 'story', 'about_label',     'SOLAR BLOOM · DROP 04',                                     'About Label',           'text'],
+            ['lava', 'story', 'about_meta',      '12 pieces · 200–400 editions each',                         'About Meta',            'text'],
+            ['lava', 'story', 'history_label',   'THE HISTORY',                                               'History Label',         'text'],
+            ['lava', 'story', 'history_heading', 'How we got here',                                           'History Heading',       'text'],
+            ['lava', 'story', 'timeline1_year',  '2018',                                                      'Timeline 1 — Year',     'text'],
+            ['lava', 'story', 'timeline1_title', 'Solo Sarto opens its doors',                                'Timeline 1 — Title',    'text'],
+            ['lava', 'story', 'timeline1_body',  'Bespoke couture for those who know. Eleven master tailors. A private atelier in Mumbai.', 'Timeline 1 — Body', 'textarea'],
+            ['lava', 'story', 'timeline2_year',  '2021',                                                      'Timeline 2 — Year',     'text'],
+            ['lava', 'story', 'timeline2_title', 'The first riot',                                            'Timeline 2 — Title',    'text'],
+            ['lava', 'story', 'timeline2_body',  'A collection too colorful for couture, too careful for fast fashion. We put it away. Then we didn\'t.', 'Timeline 2 — Body', 'textarea'],
+            ['lava', 'story', 'timeline3_year',  '2024',                                                      'Timeline 3 — Year',     'text'],
+            ['lava', 'story', 'timeline3_title', 'Lava Lava is born',                                         'Timeline 3 — Title',    'text'],
+            ['lava', 'story', 'timeline3_body',  'The diffusion line drops. Drop 01. Color, louder. Sold out in 72 hours. We knew.', 'Timeline 3 — Body', 'textarea'],
+            ['lava', 'story', 'timeline4_year',  '2026',                                                      'Timeline 4 — Year',     'text'],
+            ['lava', 'story', 'timeline4_title', 'Drop 04 · Solar Bloom',                                     'Timeline 4 — Title',    'text'],
+            ['lava', 'story', 'timeline4_body',  '12 pieces. 200–400 editions each. Sell out in 48h. The world is catching up to the feeling.', 'Timeline 4 — Body', 'textarea'],
+            ['lava', 'story', 'cta',             'Now go be seen.',                                           'CTA Text',              'text'],
+
+            // ─── LAVA LAVA — CONTACT ────────────────────────────────────────
+            ['lava', 'contact', 'eyebrow',       'REACH OUT',                                                 'Eyebrow Label',         'text'],
+            ['lava', 'contact', 'headline',      'Get in touch',                                              'Headline',              'text'],
+            ['lava', 'contact', 'studio_label',  'STUDIO',                                                    'Studio Label',          'text'],
+            ['lava', 'contact', 'address1',      '12 Maker Lane',                                             'Address Line 1',        'text'],
+            ['lava', 'contact', 'address2',      'Mumbai 400001',                                             'Address Line 2',        'text'],
+            ['lava', 'contact', 'address3',      'India',                                                     'Address Line 3',        'text'],
+            ['lava', 'contact', 'email_general', 'hello@lavalava.in',                                         'General Email',         'text'],
+            ['lava', 'contact', 'email_press',   'press@solosarto.com',                                       'Press Email',           'text'],
+            ['lava', 'contact', 'follow_label',  'FOLLOW',                                                    'Follow Label',          'text'],
+            ['lava', 'contact', 'hours_label',  'HOURS',                                                     'Hours Label',           'text'],
+            ['lava', 'contact', 'hours',         'Mon–Sat · 10am–6pm IST',                                    'Opening Hours',         'text'],
+            ['lava', 'contact', 'success_headline','Sent, loud and clear ✦',                                  'Success Headline',      'text'],
+            ['lava', 'contact', 'success_body',  "We'll get back to you within 2 business days.",             'Success Body',          'text'],
+            ['lava', 'contact', 'privacy_text',  'I agree to the privacy policy and consent to being contacted regarding my enquiry.', 'Privacy Checkbox Text', 'textarea'],
+            ['lava', 'contact', 'submit_btn',    'SEND MESSAGE',                                              'Submit Button Text',    'text'],
+            ['lava', 'contact', 'faq_label',     'QUICK ANSWERS',                                             'FAQ Section Label',     'text'],
+            ['lava', 'contact', 'faq_heading',   'FAQ',                                                       'FAQ Section Heading',   'text'],
+            ['lava', 'contact', 'faq1_q',        'When does Drop 05 land?',                                   'FAQ 1 — Question',      'text'],
+            ['lava', 'contact', 'faq1_a',        'We drop 4 times a year. Sign up for the newsletter to get early access — sometimes 48h before anyone else.', 'FAQ 1 — Answer', 'textarea'],
+            ['lava', 'contact', 'faq2_q',        'Do you ship internationally?',                              'FAQ 2 — Question',      'text'],
+            ['lava', 'contact', 'faq2_a',        'Yes, we ship to 40+ countries. Duties and taxes may apply depending on your location.', 'FAQ 2 — Answer', 'textarea'],
+            ['lava', 'contact', 'faq3_q',        'What\'s your return policy?',                               'FAQ 3 — Question',      'text'],
+            ['lava', 'contact', 'faq3_a',        'Returns within 14 days of delivery. Items must be unworn, untagged, and in original packaging.', 'FAQ 3 — Answer', 'textarea'],
+            ['lava', 'contact', 'faq4_q',        'Can I size exchange?',                                      'FAQ 4 — Question',      'text'],
+            ['lava', 'contact', 'faq4_a',        'Yes, free size exchanges within India. Contact us within 14 days of delivery with your order number.', 'FAQ 4 — Answer', 'textarea'],
+            ['lava', 'contact', 'faq5_q',        'Are the pieces limited edition?',                           'FAQ 5 — Question',      'text'],
+            ['lava', 'contact', 'faq5_a',        'Each piece is made in 200–400 editions per drop. Once they\'re gone, they\'re gone. No restocks.', 'FAQ 5 — Answer', 'textarea'],
+
+            // ─── LAVA LAVA — COLLECTION ─────────────────────────────────────
+            ['lava', 'collection', 'drop_label', 'DROP 04 · SOLAR BLOOM',                                     'Drop Label',            'text'],
+            ['lava', 'collection', 'heading',    'The Collection',                                             'Page Heading',          'text'],
+        ];
+
+        foreach ($items as [$brand, $section, $key, $value, $label, $type]) {
+            SiteContent::updateOrCreate(
+                ['brand' => $brand, 'section' => $section, 'key' => $key],
+                ['value' => $value, 'label' => $label, 'type' => $type]
+            );
+        }
+    }
+}

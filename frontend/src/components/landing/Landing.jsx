@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LavaWordmark from '../shared/LavaWordmark'
 import { useMobile } from '../../hooks/useMobile'
+import { useContent } from '../../context/ContentContext'
 
 function SoloDressSketch() {
   return (
@@ -31,6 +32,7 @@ export default function Landing() {
   const [soloHover, setSoloHover] = useState(false)
   const [lavaHover, setLavaHover] = useState(false)
   const mobile = useMobile()
+  const { get } = useContent()
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -74,7 +76,7 @@ export default function Landing() {
           fontSize: 10, letterSpacing: 4, color: 'rgba(201,169,110,0.8)', fontFamily: 'DM Sans',
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
         }}>
-          THE ATELIER
+          {get('solo.landing.eyebrow', 'THE ATELIER')}
         </div>
 
         <div className="landing-logo-wrap" style={{
@@ -100,15 +102,15 @@ export default function Landing() {
             opacity: mounted ? 1 : 0,
           }}
         >
-          ENTER SOLO SARTO
+          {get('solo.landing.button', 'ENTER SOLO SARTO')}
         </button>
 
         <div className="landing-label-desktop" style={{
           position: 'absolute', bottom: 40, left: 40,
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.6s'
         }}>
-          <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.8)', fontFamily: 'DM Sans', marginBottom: 4 }}>ATELIER · EST. 2018</div>
-          <div style={{ fontSize: 14, letterSpacing: 1.5, color: 'rgba(26,26,26,0.35)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic' }}>Bespoke / Couture</div>
+          <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.8)', fontFamily: 'DM Sans', marginBottom: 4 }}>{get('solo.landing.label', 'ATELIER · EST. 2018')}</div>
+          <div style={{ fontSize: 14, letterSpacing: 1.5, color: 'rgba(26,26,26,0.35)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic' }}>{get('solo.landing.sublabel', 'Bespoke / Couture')}</div>
         </div>
       </div>
 
@@ -171,7 +173,7 @@ export default function Landing() {
           fontSize: 10, letterSpacing: 4, color: 'rgba(255,255,255,0.8)', fontFamily: 'DM Sans',
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.2s'
         }}>
-          DROP 04 · SOLAR BLOOM
+          {get('lava.landing.eyebrow', 'DROP 04 · SOLAR BLOOM')}
         </div>
 
         <div className="landing-wordmark-wrap" style={{
@@ -179,7 +181,7 @@ export default function Landing() {
         }}>
           <LavaWordmark size={mobile ? 90 : 150} animate={true} style={{ marginBottom: mobile ? 10 : 16 }} />
           <div style={{ fontSize: mobile ? 10 : 11, letterSpacing: 3, color: 'rgba(255,255,255,0.85)', fontFamily: 'DM Sans' }}>
-            THE DIFFUSION LINE
+            {get('lava.landing.tagline', 'THE DIFFUSION LINE')}
           </div>
         </div>
 
@@ -196,15 +198,15 @@ export default function Landing() {
             opacity: mounted ? 1 : 0,
           }}
         >
-          ENTER LAVA LAVA
+          {get('lava.landing.button', 'ENTER LAVA LAVA')}
         </button>
 
         <div className="landing-label-desktop" style={{
           position: 'absolute', bottom: 40, right: 40, textAlign: 'right',
           opacity: mounted ? 1 : 0, transition: 'opacity 0.8s ease 1.6s', zIndex: 1
         }}>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontFamily: 'DM Sans', marginBottom: 4 }}>READY-TO-WEAR</div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.9)', fontFamily: 'DM Sans' }}>For the fearless ✦</div>
+          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontFamily: 'DM Sans', marginBottom: 4 }}>{get('lava.landing.label', 'READY-TO-WEAR')}</div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.9)', fontFamily: 'DM Sans' }}>{get('lava.landing.sublabel', 'For the fearless ✦')}</div>
         </div>
       </div>
 

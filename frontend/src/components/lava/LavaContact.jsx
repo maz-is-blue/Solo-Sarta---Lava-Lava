@@ -5,16 +5,9 @@ import LavaFooter from './LavaFooter'
 import LavaGlass from '../shared/LavaGlass'
 import { submitContact } from '../../services/api'
 import { useMobile } from '../../hooks/useMobile'
+import { useContent } from '../../context/ContentContext'
 
 const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.7 } }
-
-const FAQS = [
-  { q: 'When does Drop 05 land?', a: 'We drop 4 times a year. Sign up for the newsletter to get early access — sometimes 48h before anyone else.' },
-  { q: 'Do you ship internationally?', a: 'Yes, we ship to 40+ countries. Duties and taxes may apply depending on your location.' },
-  { q: 'What\'s your return policy?', a: 'Returns within 14 days of delivery. Items must be unworn, untagged, and in original packaging.' },
-  { q: 'Can I size exchange?', a: 'Yes, free size exchanges within India. Contact us within 14 days of delivery with your order number.' },
-  { q: 'Are the pieces limited edition?', a: 'Each piece is made in 200–400 editions per drop. Once they\'re gone, they\'re gone. No restocks.' },
-]
 
 function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false)
@@ -50,6 +43,7 @@ export default function LavaContact() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const mobile = useMobile()
+  const { get } = useContent()
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -68,6 +62,14 @@ export default function LavaContact() {
     setLoading(false)
   }
 
+  const faqs = [
+    { q: get('lava.contact.faq1_q', 'When does Drop 05 land?'), a: get('lava.contact.faq1_a', 'We drop 4 times a year. Sign up for the newsletter to get early access — sometimes 48h before anyone else.') },
+    { q: get('lava.contact.faq2_q', 'Do you ship internationally?'), a: get('lava.contact.faq2_a', 'Yes, we ship to 40+ countries. Duties and taxes may apply depending on your location.') },
+    { q: get('lava.contact.faq3_q', "What's your return policy?"), a: get('lava.contact.faq3_a', 'Returns within 14 days of delivery. Items must be unworn, untagged, and in original packaging.') },
+    { q: get('lava.contact.faq4_q', 'Can I size exchange?'), a: get('lava.contact.faq4_a', 'Yes, free size exchanges within India. Contact us within 14 days of delivery with your order number.') },
+    { q: get('lava.contact.faq5_q', 'Are the pieces limited edition?'), a: get('lava.contact.faq5_a', "Each piece is made in 200–400 editions per drop. Once they're gone, they're gone. No restocks.") },
+  ]
+
   return (
     <div style={{ background: 'linear-gradient(180deg, #0f0018 0%, #050010 100%)', minHeight: '100vh', color: '#fff' }}>
       <LavaNav />
@@ -75,8 +77,8 @@ export default function LavaContact() {
       {/* Header */}
       <section style={{ paddingTop: mobile ? 100 : 140, paddingBottom: 40, paddingLeft: mobile ? 20 : 80, paddingRight: mobile ? 20 : 80 }}>
         <motion.div {...fadeUp}>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>REACH OUT</div>
-          <h1 style={{ fontSize: 60, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>Get in touch</h1>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>{get('lava.contact.eyebrow', 'REACH OUT')}</div>
+          <h1 style={{ fontSize: 60, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>{get('lava.contact.headline', 'Get in touch')}</h1>
         </motion.div>
       </section>
 
@@ -85,16 +87,18 @@ export default function LavaContact() {
         {/* Left info */}
         <motion.div {...fadeUp}>
           <LavaGlass style={{ padding: 40 }}>
-            <div style={{ fontSize: 11, letterSpacing: 2, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 24 }}>STUDIO</div>
+            <div style={{ fontSize: 11, letterSpacing: 2, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 24 }}>{get('lava.contact.studio_label', 'STUDIO')}</div>
             <div style={{ marginBottom: 32 }}>
               <div style={{ fontSize: 14, fontFamily: 'DM Sans', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)' }}>
-                12 Maker Lane<br />Mumbai 400001<br />India
+                {get('lava.contact.address1', '12 Maker Lane')}<br />
+                {get('lava.contact.address2', 'Mumbai 400001')}<br />
+                {get('lava.contact.address3', 'India')}
               </div>
             </div>
             <div style={{ marginBottom: 32 }}>
               {[
-                ['General', 'hello@lavalava.in'],
-                ['Press', 'press@solosarto.com'],
+                ['General', get('lava.contact.email_general', 'hello@lavalava.in')],
+                ['Press', get('lava.contact.email_press', 'press@solosarto.com')],
               ].map(([label, em]) => (
                 <div key={label} style={{ marginBottom: 12 }}>
                   <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(255,255,255,0.35)', fontFamily: 'DM Sans', marginBottom: 2 }}>{label.toUpperCase()}</div>
@@ -103,7 +107,7 @@ export default function LavaContact() {
               ))}
             </div>
             <div style={{ marginBottom: 32 }}>
-              <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(255,255,255,0.35)', fontFamily: 'DM Sans', marginBottom: 12 }}>FOLLOW</div>
+              <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(255,255,255,0.35)', fontFamily: 'DM Sans', marginBottom: 12 }}>{get('lava.contact.follow_label', 'FOLLOW')}</div>
               <div style={{ display: 'flex', gap: 16 }}>
                 {['Instagram', 'Pinterest', 'TikTok'].map(s => (
                   <span key={s} style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', cursor: 'pointer', fontFamily: 'DM Sans' }}
@@ -114,8 +118,8 @@ export default function LavaContact() {
               </div>
             </div>
             <div>
-              <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(255,255,255,0.35)', fontFamily: 'DM Sans', marginBottom: 6 }}>HOURS</div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans' }}>Mon–Sat · 10am–6pm IST</div>
+              <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(255,255,255,0.35)', fontFamily: 'DM Sans', marginBottom: 6 }}>{get('lava.contact.hours_label', 'HOURS')}</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans' }}>{get('lava.contact.hours', 'Mon–Sat · 10am–6pm IST')}</div>
             </div>
           </LavaGlass>
         </motion.div>
@@ -126,8 +130,8 @@ export default function LavaContact() {
             {submitted ? (
               <div style={{ textAlign: 'center', padding: '40px 0' }}>
                 <div style={{ fontSize: 48, marginBottom: 16 }}>✦</div>
-                <h3 style={{ fontSize: 28, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', marginBottom: 12 }}>Sent, loud and clear ✦</h3>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans' }}>We'll get back to you within 2 business days.</p>
+                <h3 style={{ fontSize: 28, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', marginBottom: 12 }}>{get('lava.contact.success_headline', 'Sent, loud and clear ✦')}</h3>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans' }}>{get('lava.contact.success_body', "We'll get back to you within 2 business days.")}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -174,7 +178,7 @@ export default function LavaContact() {
                     style={{ marginTop: 3, accentColor: '#D99AB4', cursor: 'pointer' }}
                   />
                   <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', fontFamily: 'DM Sans', cursor: 'pointer', lineHeight: 1.6 }}>
-                    I agree to the privacy policy and consent to being contacted regarding my enquiry.
+                    {get('lava.contact.privacy_text', 'I agree to the privacy policy and consent to being contacted regarding my enquiry.')}
                   </label>
                 </div>
                 {error && <div style={{ fontSize: 13, color: '#D96A8A', fontFamily: 'DM Sans' }}>{error}</div>}
@@ -188,7 +192,7 @@ export default function LavaContact() {
                     opacity: loading ? 0.7 : 1, transition: 'opacity 0.2s'
                   }}
                 >
-                  {loading ? 'SENDING...' : 'SEND MESSAGE'}
+                  {loading ? 'SENDING...' : get('lava.contact.submit_btn', 'SEND MESSAGE')}
                 </button>
               </form>
             )}
@@ -199,11 +203,11 @@ export default function LavaContact() {
       {/* FAQ */}
       <section style={{ padding: mobile ? '0 20px 56px' : '0 80px 80px' }}>
         <motion.div {...fadeUp} style={{ marginBottom: 40 }}>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>QUICK ANSWERS</div>
-          <h2 style={{ fontSize: 40, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>FAQ</h2>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>{get('lava.contact.faq_label', 'QUICK ANSWERS')}</div>
+          <h2 style={{ fontSize: 40, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>{get('lava.contact.faq_heading', 'FAQ')}</h2>
         </motion.div>
         <motion.div {...fadeUp} style={{ maxWidth: 720 }}>
-          {FAQS.map(item => <FaqItem key={item.q} q={item.q} a={item.a} />)}
+          {faqs.map(item => <FaqItem key={item.q} q={item.q} a={item.a} />)}
         </motion.div>
       </section>
 

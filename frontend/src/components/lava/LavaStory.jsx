@@ -5,6 +5,7 @@ import LavaFooter from './LavaFooter'
 import LavaGlass from '../shared/LavaGlass'
 import ProductSilhouette from '../shared/ProductSilhouette'
 import { useMobile } from '../../hooks/useMobile'
+import { useContent } from '../../context/ContentContext'
 
 const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.7 } }
 
@@ -24,6 +25,7 @@ const PILLARS = [
 export default function LavaStory() {
   const navigate = useNavigate()
   const mobile = useMobile()
+  const { get } = useContent()
 
   return (
     <div style={{ background: 'linear-gradient(180deg, #0f0018 0%, #050010 100%)', minHeight: '100vh', color: '#fff' }}>
@@ -37,12 +39,12 @@ export default function LavaStory() {
           filter: 'blur(80px)'
         }} />
         <motion.div {...fadeUp} style={{ maxWidth: 720, position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 20 }}>OUR STORY</div>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 20 }}>{get('lava.story.eyebrow', 'OUR STORY')}</div>
           <h1 style={{ fontSize: 68, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, lineHeight: 1.1, marginBottom: 24 }}>
-            Born backstage,<br />raised on color.
+            {get('lava.story.headline', 'Born backstage, raised on color.')}
           </h1>
           <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.65)', fontFamily: 'DM Sans', fontWeight: 300, lineHeight: 1.8 }}>
-            Lava Lava is a diffusion line born from Solo Sarto — a private atelier of 11 master tailors. We took what we couldn't show on the couture floor and gave it its own stage.
+            {get('lava.story.intro', "Lava Lava is a diffusion line born from Solo Sarto — a private atelier of 11 master tailors. We took what we couldn't show on the couture floor and gave it its own stage.")}
           </p>
         </motion.div>
       </section>
@@ -66,7 +68,7 @@ export default function LavaStory() {
           </LavaGlass>
         </motion.div>
         <motion.div {...fadeUp} transition={{ delay: 0.2 }}>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 20 }}>THE BRAND CODE</div>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 20 }}>{get('lava.story.brand_code_label', 'THE BRAND CODE')}</div>
           <h2 style={{ fontSize: 36, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', marginBottom: 40 }}>
             Three things we hold.
           </h2>
@@ -87,8 +89,8 @@ export default function LavaStory() {
       {/* Timeline */}
       <section style={{ padding: mobile ? '48px 20px' : '80px 80px', position: 'relative' }}>
         <motion.div {...fadeUp} style={{ textAlign: 'center', marginBottom: 64 }}>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>THE HISTORY</div>
-          <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>How we got here</h2>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>{get('lava.story.history_label', 'THE HISTORY')}</div>
+          <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>{get('lava.story.history_heading', 'How we got here')}</h2>
         </motion.div>
         <div style={{ position: 'relative', maxWidth: 800, margin: '0 auto' }}>
           {/* Center line */}
@@ -148,7 +150,7 @@ export default function LavaStory() {
             fontSize: 56, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300,
             marginBottom: 40, lineHeight: 1.2
           }}>
-            Now go be seen.
+            {get('lava.story.cta', 'Now go be seen.')}
           </p>
           <button
             onClick={() => navigate('/lava/collection')}

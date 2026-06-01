@@ -10,6 +10,7 @@ import { LAVA_PRODUCTS, LAVA_CATEGORIES } from '../../data/products'
 import { useCart } from '../../context/CartContext'
 import { subscribeNewsletter } from '../../services/api'
 import { useMobile } from '../../hooks/useMobile'
+import { useContent } from '../../context/ContentContext'
 
 const PAGE_BG = 'linear-gradient(160deg, #E8906A 0%, #D96A8A 40%, #8B6FB8 100%)'
 const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.7 } }
@@ -52,6 +53,7 @@ export default function LavaHome() {
   const [heroAdded, setHeroAdded] = useState(false)
   const [activeFilter, setActiveFilter] = useState('All')
   const mobile = useMobile()
+  const { get } = useContent()
 
   const featured = LAVA_PRODUCTS[0]
   const filtered = activeFilter === 'All'
@@ -113,7 +115,7 @@ export default function LavaHome() {
               boxShadow: '0 0 6px #E8906A', display: 'inline-block',
               animation: 'sparkle 1.5s ease-in-out infinite'
             }} />
-            DROP 04 — LIVE NOW
+            {get('lava.home.drop_label', 'DROP 04 — LIVE NOW')}
           </div>
 
           {/* Wordmark */}
@@ -127,8 +129,7 @@ export default function LavaHome() {
             color: 'rgba(255,255,255,0.95)', lineHeight: 1.7,
             marginBottom: 40, maxWidth: 480
           }}>
-            The diffusion line that never asks permission. Bold prints,
-            glowy textures, and color stories that refuse to behave.
+            {get('lava.home.hero_text', 'The diffusion line that never asks permission. Bold prints, glowy textures, and color stories that refuse to behave.')}
           </p>
 
           {/* CTAs */}
@@ -143,7 +144,7 @@ export default function LavaHome() {
               onMouseEnter={e => e.currentTarget.style.opacity = '0.8'}
               onMouseLeave={e => e.currentTarget.style.opacity = '1'}
             >
-              Shop the Drop ⚡
+              {get('lava.home.cta1', 'Shop the Drop ⚡')}
             </button>
             <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 18 }}>·</span>
             <button
@@ -292,7 +293,7 @@ export default function LavaHome() {
               fontSize: 12, letterSpacing: 3, fontFamily: 'DM Sans', fontWeight: 500,
               color: 'rgba(255,255,255,0.85)', paddingRight: 0
             }}>
-              {'color, louder ✦ made for the fearless ✦ solar bloom ✦ drop 04 ✦ '}
+              {get('lava.home.marquee', 'color, louder ✦ made for the fearless ✦ solar bloom ✦ drop 04 ✦') + ' '}
             </span>
           ))}
         </div>
@@ -315,17 +316,17 @@ export default function LavaHome() {
               fontSize: 11, letterSpacing: 3, fontFamily: 'DM Sans', fontWeight: 600,
               color: 'rgba(255,255,255,0.75)', marginBottom: 8
             }}>
-              LATEST DROP
+              {get('lava.home.collection_label', 'LATEST DROP')}
             </div>
             <div style={{ lineHeight: 1 }}>
               <span style={{
                 fontFamily: 'Dancing Script', fontSize: 72, fontWeight: 700,
                 color: '#fff', letterSpacing: -1
-              }}>Color, </span>
+              }}>{get('lava.home.collection_h1', 'Color,')} </span>
               <span style={{
                 fontFamily: 'Dancing Script', fontSize: 72, fontWeight: 700,
                 color: '#F8E5A8'
-              }}>louder.</span>
+              }}>{get('lava.home.collection_h2', 'louder.')}</span>
             </div>
           </div>
 
@@ -409,10 +410,10 @@ export default function LavaHome() {
       <section style={{ padding: mobile ? '56px 20px' : '80px 72px' }}>
         <motion.div {...fadeUp} style={{ marginBottom: 48, textAlign: 'center' }}>
           <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.7)', fontFamily: 'DM Sans', marginBottom: 8 }}>
-            THE PALETTE
+            {get('lava.home.palette_label', 'THE PALETTE')}
           </div>
           <h2 style={{ fontSize: 38, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400, color: '#fff' }}>
-            The Solar Bloom Palette
+            {get('lava.home.palette_heading', 'The Solar Bloom Palette')}
           </h2>
         </motion.div>
         <motion.div {...fadeUp} style={{ display: 'flex', gap: 28, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -457,13 +458,13 @@ export default function LavaHome() {
             borderRadius: 32, padding: '48px', textAlign: 'center'
           }}>
             <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.7)', fontFamily: 'DM Sans', marginBottom: 16 }}>
-              THE DROP LIST
+              {get('lava.home.newsletter_label', 'THE DROP LIST')}
             </div>
             <h3 style={{ fontSize: 28, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#fff', marginBottom: 8 }}>
-              Stay on the drop list
+              {get('lava.home.newsletter_heading', 'Stay on the drop list')}
             </h3>
             <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', fontFamily: 'DM Sans', marginBottom: 32, lineHeight: 1.6 }}>
-              Early access to every drop. First to know, first to shop.
+              {get('lava.home.newsletter_body', 'Early access to every drop. First to know, first to shop.')}
             </p>
             {subscribed ? (
               <div style={{ color: '#fff', fontSize: 16, fontFamily: 'DM Sans', padding: '16px 0', fontWeight: 500 }}>

@@ -6,11 +6,13 @@ import CollectionCard from '../shared/CollectionCard'
 import { LAVA_PRODUCTS, LAVA_CATEGORIES } from '../../data/products'
 import { useCart } from '../../context/CartContext'
 import { useMobile } from '../../hooks/useMobile'
+import { useContent } from '../../context/ContentContext'
 
 export default function LavaCollection() {
   const [activeFilter, setActiveFilter] = useState('All')
   const { addItem } = useCart()
   const mobile = useMobile()
+  const { get } = useContent()
 
   const filtered = useMemo(() => {
     if (activeFilter === 'All') return LAVA_PRODUCTS
@@ -30,10 +32,10 @@ export default function LavaCollection() {
         }} />
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>
-            DROP 04 · SOLAR BLOOM
+            {get('lava.collection.drop_label', 'DROP 04 · SOLAR BLOOM')}
           </div>
           <h1 style={{ fontSize: 64, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400, marginBottom: 8 }}>
-            The Collection
+            {get('lava.collection.heading', 'The Collection')}
           </h1>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', fontFamily: 'DM Sans' }}>
             {filtered.length} piece{filtered.length !== 1 ? 's' : ''}
