@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useCart } from '../../context/CartContext'
 import SoloNav from './SoloNav'
-import { SOLO_PRODUCTS } from '../../data/soloProducts'
+import { getProducts } from '../../services/api'
 import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
 
@@ -128,7 +128,12 @@ export default function SoloPage() {
   const navigate = useNavigate()
   const [inviteEmail, setInviteEmail] = useState('')
   const [invited, setInvited] = useState(false)
+  const [products, setProducts] = useState([])
   const mobile = useMobile()
+
+  useEffect(() => {
+    getProducts({ brand: 'solo' }).then(r => setProducts(r.data)).catch(() => {})
+  }, [])
   const { get } = useContent()
 
   return (
@@ -308,7 +313,7 @@ export default function SoloPage() {
           <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>{get('solo.home.collection_heading', 'The Collection')}</h2>
         </motion.div>
         <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)', gap: mobile ? 16 : 24 }}>
-          {SOLO_PRODUCTS.map((p, i) => (
+          {products.map((p, i) => (
             <motion.div
               key={p.id}
               initial={{ opacity: 0, y: 24 }}

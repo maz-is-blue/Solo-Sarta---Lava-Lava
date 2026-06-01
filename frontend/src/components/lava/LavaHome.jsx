@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import LavaNav from './LavaNav'
@@ -6,8 +6,8 @@ import LavaFooter from './LavaFooter'
 import LavaWordmark from '../shared/LavaWordmark'
 import CollectionCard from '../shared/CollectionCard'
 import ProductSilhouette from '../shared/ProductSilhouette'
-import { LAVA_PRODUCTS, LAVA_CATEGORIES } from '../../data/products'
 import { useCart } from '../../context/CartContext'
+import { getProducts } from '../../services/api'
 import { subscribeNewsletter } from '../../services/api'
 import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
@@ -55,10 +55,16 @@ export default function LavaHome() {
   const mobile = useMobile()
   const { get } = useContent()
 
-  const featured = LAVA_PRODUCTS[0]
+  const [products, setProducts] = useState([])
+  useEffect(() => {
+    getProducts({ brand: 'lava' }).then(r => setProducts(r.data)).catch(() => {})
+  }, [])
+
+  const featured = products[0] || null
+  const categories = ['All', ...new Set(products.map(p => p.cat).filter(Boolean))]
   const filtered = activeFilter === 'All'
-    ? LAVA_PRODUCTS
-    : LAVA_PRODUCTS.filter(p => p.cat === activeFilter)
+    ? products
+    : products.filter(p => p.cat === activeFilter)
 
   const handleSubscribe = async (e) => {
     e.preventDefault()
@@ -68,7 +74,8 @@ export default function LavaHome() {
   }
 
   const handleHeroAdd = () => {
-    addItem('lava', featured, featured.sizes[1])
+    if (!featured) return
+    addItem('lava', featured, (featured.sizes || [])[1] || 'M')
     setHeroAdded(true)
     setTimeout(() => setHeroAdded(false), 2000)
   }
@@ -176,8 +183,8 @@ export default function LavaHome() {
           </div>
         </motion.div>
 
-        {/* RIGHT: featured product card — hidden on mobile */}
-        {!mobile && <motion.div
+        {/* RIGHT: featured product card — hidden on mobile or when no products */}
+        {!mobile && featured && <motion.div
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
@@ -332,7 +339,7 @@ export default function LavaHome() {
 
           {/* Filter pills */}
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {LAVA_CATEGORIES.map(cat => (
+            {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveFilter(cat)}

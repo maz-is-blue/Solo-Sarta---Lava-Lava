@@ -8,6 +8,9 @@ class ProductSeeder extends Seeder
 {
     public function run(): void
     {
+        // No placeholder products — all products are managed via the admin CMS.
+        return;
+
         // ─── Lava Lava products ───────────────────────────────────────────────
         $lavaProducts = [
             ['slug'=>'halo-slip','name'=>'The Halo Slip','price'=>3499,'cat'=>'Slips','palette'=>['#FF5A2C','#F08A8B','#EFA0BA'],'accent'=>'#D7A8E8','tag'=>'Featured','sub'=>'Bias-cut viscose, gradient dyed','sizes'=>['XS','S','M','L'],'drop'=>'04','story'=>'Cut on the bias from a whisper-weight viscose, the Halo Slip follows the body the way light follows water.','details'=>'100% Viscose. Bias cut. Hand-finished hem.','care'=>'Hand wash cold. Dry flat.','fit'=>'True to size. 32" length from waist.','silhouette'=>'slip'],
