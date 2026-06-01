@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\AdminAuthController;
 use App\Http\Controllers\Api\AdminContentController;
 use App\Http\Controllers\Api\AdminProductController;
 use App\Http\Controllers\Api\AdminOrderController;
+use App\Http\Controllers\Api\MediaController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -34,6 +35,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/content', [AdminContentController::class, 'index']);
         Route::put('/content/{id}', [AdminContentController::class, 'update']);
         Route::post('/content/bulk', [AdminContentController::class, 'bulkUpdate']);
+
+        Route::post('/media/upload', [MediaController::class, 'upload']);
 
         Route::get('/products', [AdminProductController::class, 'index']);
         Route::post('/products', [AdminProductController::class, 'store']);

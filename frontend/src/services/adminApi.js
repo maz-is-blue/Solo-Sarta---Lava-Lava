@@ -35,6 +35,14 @@ export const updateAdminProduct = (id, data) =>
 export const deleteAdminProduct = (id) =>
   adminApi.delete(`/products/${id}`)
 
+export const uploadMedia = (file) => {
+  const fd = new FormData()
+  fd.append('file', file)
+  return adminApi.post('/media/upload', fd, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
+
 export const getAdminOrders = (params = {}) =>
   adminApi.get('/orders', { params })
 

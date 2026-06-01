@@ -23,7 +23,8 @@ class AdminProductController extends Controller {
             'cat'          => 'required|string|max:100',
             'tag'          => 'nullable|string|max:50',
             'drop'         => 'nullable|string|max:10',
-            'image_url'    => 'nullable|string|max:500',
+            'images'       => 'nullable|array',
+            'images.*'     => 'string|max:500',
             'sizes'        => 'nullable|array',
             'palette'      => 'nullable|array',
             'accent'       => 'nullable|string|max:20',
@@ -38,10 +39,12 @@ class AdminProductController extends Controller {
             'product_desc' => 'nullable|string',
         ]);
 
-        $data['slug']   = Str::slug($data['name']) . '-' . time();
-        $data['active'] = true;
-        $data['palette'] = $data['palette'] ?? [];
-        $data['sizes']   = $data['sizes'] ?? [];
+        $data['slug']      = Str::slug($data['name']) . '-' . time();
+        $data['active']    = true;
+        $data['palette']   = $data['palette'] ?? [];
+        $data['sizes']     = $data['sizes'] ?? [];
+        $data['images']    = $data['images'] ?? [];
+        $data['image_url'] = $data['images'][0] ?? null;
 
         $product = Product::create($data);
         return response()->json($product, 201);
@@ -56,7 +59,8 @@ class AdminProductController extends Controller {
             'cat'          => 'sometimes|string|max:100',
             'tag'          => 'nullable|string|max:50',
             'drop'         => 'nullable|string|max:10',
-            'image_url'    => 'nullable|string|max:500',
+            'images'       => 'nullable|array',
+            'images.*'     => 'string|max:500',
             'sizes'        => 'nullable|array',
             'palette'      => 'nullable|array',
             'accent'       => 'nullable|string|max:20',
@@ -71,6 +75,9 @@ class AdminProductController extends Controller {
             'fabric'       => 'nullable|string|max:255',
             'product_desc' => 'nullable|string',
         ]);
+        if (isset($data['images'])) {
+            $data['image_url'] = $data['images'][0] ?? null;
+        }
         $product->update($data);
         return response()->json($product);
     }
