@@ -6,6 +6,7 @@ import SoloFooter from './SoloFooter'
 import { getProducts } from '../../services/api'
 import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
+import { useLanguage } from '../../context/LanguageContext'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
 
@@ -35,9 +36,10 @@ function Silhouette({ uid }) {
   )
 }
 
-function PieceCard({ product }) {
+function PieceCard({ product, lang }) {
   const [hovered, setHovered] = useState(false)
   const navigate = useNavigate()
+  const displayName = (lang === 'ar' && product.name_ar) ? product.name_ar : product.name
 
   return (
     <div
@@ -74,7 +76,7 @@ function PieceCard({ product }) {
 
       <div style={{ padding: '20px 20px 24px' }}>
         <div style={{ fontSize: 18, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5', marginBottom: 6 }}>
-          {product.name}
+          {displayName}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'DM Sans' }}>₹{product.price.toLocaleString()}</span>
@@ -98,6 +100,7 @@ export default function SoloCollection() {
   const [loading, setLoading] = useState(true)
   const mobile = useMobile()
   const { get } = useContent()
+  const { lang, t } = useLanguage()
 
   useEffect(() => {
     getProducts({ brand: 'solo' })
@@ -128,7 +131,7 @@ export default function SoloCollection() {
             {get('solo.collection.heading', 'The Collection')}
           </h1>
           <p style={{ fontSize: 14, color: 'rgba(250,248,245,0.45)', fontFamily: 'DM Sans', marginBottom: 40 }}>
-            {loading ? '...' : `${products.length} pieces`}. No two alike.
+            {loading ? t('loading') : `${products.length} ${t('pieces')}`}{t('no_two_alike')}
           </p>
 
           {/* Filter pills */}
@@ -156,7 +159,7 @@ export default function SoloCollection() {
         {/* Grid */}
         <div style={{ padding: mobile ? '0 24px 56px' : '0 80px 80px' }}>
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(250,248,245,0.3)', fontFamily: 'DM Sans', fontSize: 13 }}>Loading...</div>
+            <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(250,248,245,0.3)', fontFamily: 'DM Sans', fontSize: 13 }}>{t('loading')}</div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: mobile ? 12 : 24 }}>
               {filtered.map((p, i) => (
@@ -166,7 +169,7 @@ export default function SoloCollection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.07 }}
                 >
-                  <PieceCard product={p} />
+                  <PieceCard product={p} lang={lang} />
                 </motion.div>
               ))}
             </div>
@@ -174,7 +177,7 @@ export default function SoloCollection() {
 
           {!loading && filtered.length === 0 && (
             <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(250,248,245,0.3)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 22 }}>
-              No pieces in this category yet.
+              {t('no_pieces_yet')}
             </div>
           )}
         </div>

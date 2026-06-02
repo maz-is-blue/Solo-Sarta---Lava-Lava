@@ -15,9 +15,9 @@ const SECTIONS = [
 
 const ACCENT = '#C9A96E'
 
-function Field({ item, value, onChange }) {
+function BilingualField({ item, enValue, arValue, onEnChange, onArChange }) {
   const isTextarea = item.type === 'textarea'
-  const base = {
+  const enBase = {
     width: '100%', boxSizing: 'border-box',
     background: 'rgba(201,169,110,0.05)',
     border: '1px solid rgba(201,169,110,0.15)',
@@ -25,19 +25,45 @@ function Field({ item, value, onChange }) {
     fontSize: 13, fontFamily: 'DM Sans', color: '#FAF8F5',
     outline: 'none', resize: 'vertical',
   }
+  const arBase = {
+    ...enBase,
+    direction: 'rtl', fontFamily: 'Cairo, DM Sans, sans-serif',
+    background: 'rgba(201,169,110,0.03)',
+    border: '1px solid rgba(201,169,110,0.1)',
+  }
   return (
-    <div style={{ marginBottom: 22 }}>
-      <div style={{ fontSize: 10, letterSpacing: 1.5, color: 'rgba(201,169,110,0.6)', fontFamily: 'DM Sans', marginBottom: 6 }}>{item.label}</div>
-      {isTextarea
-        ? <textarea rows={3} value={value} onChange={e => onChange(item.id, e.target.value)}
-            onFocus={e => e.target.style.borderColor = 'rgba(201,169,110,0.5)'}
-            onBlur={e => e.target.style.borderColor = 'rgba(201,169,110,0.15)'}
-            style={base} />
-        : <input type="text" value={value} onChange={e => onChange(item.id, e.target.value)}
-            onFocus={e => e.target.style.borderColor = 'rgba(201,169,110,0.5)'}
-            onBlur={e => e.target.style.borderColor = 'rgba(201,169,110,0.15)'}
-            style={base} />
-      }
+    <div style={{ marginBottom: 24 }}>
+      <div style={{ fontSize: 10, letterSpacing: 1.5, color: 'rgba(201,169,110,0.6)', fontFamily: 'DM Sans', marginBottom: 8 }}>{item.label}</div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <div>
+          <div style={{ fontSize: 9, letterSpacing: 1, color: 'rgba(250,248,245,0.25)', fontFamily: 'DM Sans', marginBottom: 4 }}>EN</div>
+          {isTextarea
+            ? <textarea rows={3} value={enValue} onChange={e => onEnChange(item.id, e.target.value)}
+                onFocus={e => e.target.style.borderColor = 'rgba(201,169,110,0.5)'}
+                onBlur={e => e.target.style.borderColor = 'rgba(201,169,110,0.15)'}
+                style={enBase} />
+            : <input type="text" value={enValue} onChange={e => onEnChange(item.id, e.target.value)}
+                onFocus={e => e.target.style.borderColor = 'rgba(201,169,110,0.5)'}
+                onBlur={e => e.target.style.borderColor = 'rgba(201,169,110,0.15)'}
+                style={enBase} />
+          }
+        </div>
+        <div>
+          <div style={{ fontSize: 9, letterSpacing: 1, color: 'rgba(250,248,245,0.25)', fontFamily: 'DM Sans', marginBottom: 4, textAlign: 'right' }}>عربي</div>
+          {isTextarea
+            ? <textarea rows={3} value={arValue} onChange={e => onArChange(`${item.section}.${item.key}`, e.target.value)}
+                onFocus={e => e.target.style.borderColor = 'rgba(201,169,110,0.4)'}
+                onBlur={e => e.target.style.borderColor = 'rgba(201,169,110,0.1)'}
+                placeholder="النص العربي..."
+                style={arBase} />
+            : <input type="text" value={arValue} onChange={e => onArChange(`${item.section}.${item.key}`, e.target.value)}
+                onFocus={e => e.target.style.borderColor = 'rgba(201,169,110,0.4)'}
+                onBlur={e => e.target.style.borderColor = 'rgba(201,169,110,0.1)'}
+                placeholder="النص العربي..."
+                style={arBase} />
+          }
+        </div>
+      </div>
     </div>
   )
 }
@@ -49,6 +75,7 @@ export default function SoloAdminDashboard() {
   const [activeSection, setActiveSection] = useState('home')
   const [allItems, setAllItems] = useState([])
   const [edits, setEdits] = useState({})
+  const [arEdits, setArEdits] = useState({})
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
@@ -60,21 +87,33 @@ export default function SoloAdminDashboard() {
     getAdminContent('solo')
       .then(res => {
         setAllItems(res.data)
-        const map = {}
-        res.data.forEach(i => { map[i.id] = i.value })
-        setEdits(map)
+        const enMap = {}, arMap = {}
+        res.data.forEach(i => {
+          if (i.lang === 'ar') arMap[`${i.section}.${i.key}`] = i.value
+          else enMap[i.id] = i.value
+        })
+        setEdits(enMap)
+        setArEdits(arMap)
       })
       .catch(() => navigate('/admin/login'))
   }, [])
 
-  const sectionItems = allItems.filter(i => i.section === activeSection)
+  const enSectionItems = allItems.filter(i => i.section === activeSection && i.lang !== 'ar')
   const handleChange = (id, value) => setEdits(prev => ({ ...prev, [id]: value }))
+  const handleArChange = (sectionKey, value) => setArEdits(prev => ({ ...prev, [sectionKey]: value }))
 
   const handleSave = async () => {
     setSaving(true); setError(''); setSaved(false)
     try {
-      const updates = sectionItems.map(i => ({ id: i.id, value: edits[i.id] ?? i.value }))
-      await bulkUpdateContent(updates)
+      const enUpdates = enSectionItems.map(i => ({ id: i.id, value: edits[i.id] ?? i.value }))
+      const arUpdates = enSectionItems.flatMap(i => {
+        const val = arEdits[`${i.section}.${i.key}`]
+        if (!val && val !== '') return []
+        const existing = allItems.find(x => x.lang === 'ar' && x.section === i.section && x.key === i.key)
+        if (existing) return [{ id: existing.id, value: val }]
+        return [{ brand: 'solo', section: i.section, key: i.key, lang: 'ar', value: val, label: i.label, type: i.type }]
+      })
+      await bulkUpdateContent([...enUpdates, ...arUpdates])
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch { setError('Failed to save. Please try again.') }
@@ -210,10 +249,17 @@ export default function SoloAdminDashboard() {
 
         {/* Content area */}
         {activeTab === 'content' && (
-          <div style={{ flex: 1, padding: mobile ? '28px 20px' : '36px 48px', maxWidth: 760 }}>
-            {sectionItems.length === 0 && <div style={{ color: 'rgba(250,248,245,0.3)', fontSize: 13 }}>Loading content...</div>}
-            {sectionItems.map(item => (
-              <Field key={item.id} item={item} value={edits[item.id] ?? item.value} onChange={handleChange} />
+          <div style={{ flex: 1, padding: mobile ? '28px 20px' : '36px 48px', maxWidth: 1100 }}>
+            {enSectionItems.length === 0 && <div style={{ color: 'rgba(250,248,245,0.3)', fontSize: 13 }}>Loading content...</div>}
+            {enSectionItems.map(item => (
+              <BilingualField
+                key={item.id}
+                item={item}
+                enValue={edits[item.id] ?? item.value}
+                arValue={arEdits[`${item.section}.${item.key}`] ?? ''}
+                onEnChange={handleChange}
+                onArChange={handleArChange}
+              />
             ))}
           </div>
         )}

@@ -9,6 +9,7 @@ import ProductSilhouette from '../shared/ProductSilhouette'
 import CollectionCard from '../shared/CollectionCard'
 import { getProduct, getProducts } from '../../services/api'
 import { useCart } from '../../context/CartContext'
+import { useLanguage } from '../../context/LanguageContext'
 
 function Accordion({ title, children }) {
   const [open, setOpen] = useState(false)
@@ -47,6 +48,7 @@ export default function LavaProduct() {
   const [quantity, setQuantity] = useState(1)
   const [added, setAdded] = useState(false)
   const mobile = useMobile()
+  const { lang, t } = useLanguage()
 
   useEffect(() => {
     setLoadingProduct(true)
@@ -168,9 +170,11 @@ export default function LavaProduct() {
             </div>
 
             <h1 style={{ fontSize: 48, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400, marginBottom: 8 }}>
-              {product.name}
+              {(lang === 'ar' && product.name_ar) ? product.name_ar : product.name}
             </h1>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans', marginBottom: 24 }}>{product.sub}</p>
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans', marginBottom: 24 }}>
+              {(lang === 'ar' && product.sub_ar) ? product.sub_ar : product.sub}
+            </p>
 
             {/* Price */}
             <div style={{ marginBottom: 8 }}>
@@ -182,12 +186,12 @@ export default function LavaProduct() {
 
             {/* Story */}
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.75)', fontFamily: 'DM Sans', lineHeight: 1.8, marginBottom: 28 }}>
-              {product.story}
+              {(lang === 'ar' && product.story_ar) ? product.story_ar : product.story}
             </p>
 
             {/* Color swatches */}
             <div style={{ marginBottom: 28 }}>
-              <div style={{ fontSize: 11, letterSpacing: 1.5, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>COLORWAY</div>
+              <div style={{ fontSize: 11, letterSpacing: 1.5, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>{t('colorway')}</div>
               <div style={{ display: 'flex', gap: 10 }}>
                 {palette.map((c, i) => (
                   <button
@@ -206,7 +210,7 @@ export default function LavaProduct() {
             {/* Size selector */}
             <div style={{ marginBottom: 28 }}>
               <div style={{ fontSize: 11, letterSpacing: 1.5, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>
-                SIZE {selectedSize && `— ${selectedSize}`}
+                {t('size_label')} {selectedSize && `— ${selectedSize}`}
               </div>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 {sizes.map(s => (
@@ -227,12 +231,14 @@ export default function LavaProduct() {
                   </button>
                 ))}
               </div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontFamily: 'DM Sans', marginTop: 8 }}>{product.fit}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontFamily: 'DM Sans', marginTop: 8 }}>
+                {(lang === 'ar' && product.fit_ar) ? product.fit_ar : product.fit}
+              </div>
             </div>
 
             {/* Quantity */}
             <div style={{ marginBottom: 28 }}>
-              <div style={{ fontSize: 11, letterSpacing: 1.5, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>QUANTITY</div>
+              <div style={{ fontSize: 11, letterSpacing: 1.5, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>{t('quantity')}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                 <button onClick={() => setQuantity(q => Math.max(1, q - 1))} style={{ width: 36, height: 36, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', background: 'none', color: '#fff', fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>−</button>
                 <span style={{ fontSize: 18, fontFamily: 'DM Sans', minWidth: 24, textAlign: 'center' }}>{quantity}</span>
@@ -257,7 +263,7 @@ export default function LavaProduct() {
                 marginBottom: 16
               }}
             >
-              {added ? '✓ ADDED TO BAG' : selectedSize ? 'ADD TO BAG' : 'SELECT A SIZE'}
+              {added ? t('added_to_bag') : selectedSize ? t('add_to_bag_btn') : t('select_size')}
             </button>
 
             {/* Shipping info */}
@@ -267,13 +273,13 @@ export default function LavaProduct() {
             </div>
 
             {/* Accordions */}
-            <Accordion title="Details">
-              <p>{product.details}</p>
+            <Accordion title={t('tab_details')}>
+              <p>{(lang === 'ar' && product.details_ar) ? product.details_ar : product.details}</p>
             </Accordion>
-            <Accordion title="Care">
-              <p>{product.care}</p>
+            <Accordion title={t('tab_care')}>
+              <p>{(lang === 'ar' && product.care_ar) ? product.care_ar : product.care}</p>
             </Accordion>
-            <Accordion title="Shipping & Returns">
+            <Accordion title={t('tab_shipping')}>
               <p>Free standard shipping within India. Estimated 3–5 business days. Returns accepted within 14 days of delivery. Items must be unworn and untagged.</p>
             </Accordion>
           </motion.div>

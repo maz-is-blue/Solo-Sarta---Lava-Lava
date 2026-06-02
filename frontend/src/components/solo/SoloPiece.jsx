@@ -6,6 +6,7 @@ import SoloFooter from './SoloFooter'
 import { getProduct, getProducts } from '../../services/api'
 import { useCart } from '../../context/CartContext'
 import { useMobile } from '../../hooks/useMobile'
+import { useLanguage } from '../../context/LanguageContext'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
 
@@ -60,6 +61,7 @@ export default function SoloPiece() {
   const [loadingProduct, setLoadingProduct] = useState(true)
 
   const mobile = useMobile()
+  const { lang, t } = useLanguage()
 
   useEffect(() => {
     setLoadingProduct(true)
@@ -149,22 +151,22 @@ export default function SoloPiece() {
           >
             <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 16 }}>{product.cat.toUpperCase()}</div>
             <h1 style={{ fontSize: 48, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, lineHeight: 1.1, marginBottom: 24 }}>
-              {product.name}
+              {(lang === 'ar' && product.name_ar) ? product.name_ar : product.name}
             </h1>
             <div style={{ fontSize: 26, color: '#C9A96E', fontFamily: 'Cormorant Garamond', marginBottom: 32 }}>
               ₹{product.price.toLocaleString()}
             </div>
             <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.65)', fontFamily: 'DM Sans', lineHeight: 1.9, marginBottom: 32, maxWidth: 440 }}>
-              {product.product_desc}
+              {(lang === 'ar' && product.product_desc_ar) ? product.product_desc_ar : product.product_desc}
             </p>
 
             {/* Details grid */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 40, borderTop: '1px solid rgba(201,169,110,0.12)', paddingTop: 28 }}>
               {[
-                ['Fabric', product.fabric],
-                ['Timeline', product.process_time],
-                ['Method', 'Fully bespoke'],
-                ['Atelier', 'By appointment'],
+                [t('fabric_label'), product.fabric],
+                [t('process_label'), product.process_time],
+                [t('method_label'), 'Fully bespoke'],
+                [t('atelier_label'), 'By appointment'],
               ].map(([k, v]) => (
                 <div key={k}>
                   <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 6 }}>{k.toUpperCase()}</div>
@@ -183,7 +185,7 @@ export default function SoloPiece() {
                   fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2
                 }}
               >
-                REQUEST A FITTING
+                {t('request_fitting')}
               </button>
               <button
                 onClick={() => { addItem('solo', product, 'Bespoke'); setAdded(true); setTimeout(() => setAdded(false), 2500) }}
@@ -195,7 +197,7 @@ export default function SoloPiece() {
                   fontSize: 11, fontFamily: 'DM Sans', letterSpacing: 2, transition: 'all 0.25s ease'
                 }}
               >
-                {added ? '✓ ADDED TO BAG' : 'ADD TO BAG'}
+                {added ? `✓ ${t('added_to_bag')}` : t('add_to_bag_btn')}
               </button>
             </div>
 

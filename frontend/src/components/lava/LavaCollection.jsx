@@ -7,6 +7,7 @@ import { getProducts } from '../../services/api'
 import { useCart } from '../../context/CartContext'
 import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
+import { useLanguage } from '../../context/LanguageContext'
 
 const LAVA_CATEGORIES = ['All', 'Tops', 'Slips', 'Sets', 'Outerwear']
 
@@ -17,6 +18,7 @@ export default function LavaCollection() {
   const { addItem } = useCart()
   const mobile = useMobile()
   const { get } = useContent()
+  const { t } = useLanguage()
 
   useEffect(() => {
     getProducts({ brand: 'lava' })
@@ -49,7 +51,7 @@ export default function LavaCollection() {
             {get('lava.collection.heading', 'The Collection')}
           </h1>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', fontFamily: 'DM Sans' }}>
-            {loading ? '...' : `${filtered.length} piece${filtered.length !== 1 ? 's' : ''}`}
+            {loading ? t('loading') : `${filtered.length} ${t('pieces')}`}
           </p>
         </motion.div>
       </section>
@@ -81,7 +83,7 @@ export default function LavaCollection() {
       {/* Grid */}
       <section style={{ paddingLeft: mobile ? 20 : 80, paddingRight: mobile ? 20 : 80, paddingBottom: 64 }}>
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans' }}>Loading...</div>
+          <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans' }}>{t('loading')}</div>
         ) : (
           <motion.div
             key={activeFilter}
@@ -104,7 +106,7 @@ export default function LavaCollection() {
         )}
         {!loading && filtered.length === 0 && (
           <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans' }}>
-            No pieces in this category yet.
+            {t('no_pieces_yet')}
           </div>
         )}
       </section>

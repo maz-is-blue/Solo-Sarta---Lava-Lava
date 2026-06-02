@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { getAdminProducts, createAdminProduct, updateAdminProduct, deleteAdminProduct, uploadMedia } from '../../services/adminApi'
 
 const LAVA_TAGS = ['', 'Featured', 'New', 'Limited', 'Restock']
@@ -6,17 +6,17 @@ const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL']
 
 function emptyForm(brand) {
   if (brand === 'solo') {
-    return { name: '', price: '', cat: '', code: '', process_time: '', fabric: '', product_desc: '', images: [], active: true }
+    return { name: '', price: '', cat: '', code: '', process_time: '', fabric: '', product_desc: '', product_desc_ar: '', name_ar: '', images: [], active: true }
   }
-  return { name: '', price: '', cat: '', tag: '', sub: '', drop: '05', sizes: ['S', 'M', 'L'], story: '', details: '', care: '', fit: '', images: [], active: true }
+  return { name: '', price: '', cat: '', tag: '', sub: '', sub_ar: '', drop: '05', sizes: ['S', 'M', 'L'], story: '', story_ar: '', details: '', details_ar: '', care: '', care_ar: '', fit: '', fit_ar: '', name_ar: '', images: [], active: true }
 }
 
 function formFromProduct(p, brand) {
   const images = p.images?.length ? p.images : (p.image_url ? [p.image_url] : [])
   if (brand === 'solo') {
-    return { name: p.name || '', price: p.price || '', cat: p.cat || '', code: p.code || '', process_time: p.process_time || '', fabric: p.fabric || '', product_desc: p.product_desc || '', images, active: p.active !== false }
+    return { name: p.name || '', price: p.price || '', cat: p.cat || '', code: p.code || '', process_time: p.process_time || '', fabric: p.fabric || '', product_desc: p.product_desc || '', product_desc_ar: p.product_desc_ar || '', name_ar: p.name_ar || '', images, active: p.active !== false }
   }
-  return { name: p.name || '', price: p.price || '', cat: p.cat || '', tag: p.tag || '', sub: p.sub || '', drop: p.drop || '05', sizes: p.sizes || [], story: p.story || '', details: p.details || '', care: p.care || '', fit: p.fit || '', images, active: p.active !== false }
+  return { name: p.name || '', price: p.price || '', cat: p.cat || '', tag: p.tag || '', sub: p.sub || '', sub_ar: p.sub_ar || '', drop: p.drop || '05', sizes: p.sizes || [], story: p.story || '', story_ar: p.story_ar || '', details: p.details || '', details_ar: p.details_ar || '', care: p.care || '', care_ar: p.care_ar || '', fit: p.fit || '', fit_ar: p.fit_ar || '', name_ar: p.name_ar || '', images, active: p.active !== false }
 }
 
 function ImageUploader({ images, onChange, accent, uploading, onUpload }) {
@@ -137,6 +137,70 @@ function ImageUploader({ images, onChange, accent, uploading, onUpload }) {
       <div style={{ marginTop: 6, fontSize: 10, color: 'rgba(250,248,245,0.3)', fontFamily: 'DM Sans' }}>
         First image is the main display image. Click SET MAIN to reorder.
       </div>
+    </div>
+  )
+}
+
+function ArabicSection({ brand, form, set, inputStyle, labelStyle }) {
+  const [open, setOpen] = useState(false)
+  const arStyle = { ...inputStyle, direction: 'rtl', fontFamily: 'Cairo, DM Sans, sans-serif' }
+  const arLabelStyle = { ...labelStyle, direction: 'rtl', textAlign: 'right', fontFamily: 'Cairo, DM Sans, sans-serif', fontSize: 11 }
+
+  return (
+    <div style={{ border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, overflow: 'hidden' }}>
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          padding: '12px 16px', background: 'rgba(255,255,255,0.03)', border: 'none', cursor: 'pointer',
+          color: 'rgba(250,248,245,0.6)', fontSize: 11, fontFamily: 'DM Sans', letterSpacing: 1.5,
+        }}
+      >
+        <span>ARABIC / عربي</span>
+        <span style={{ fontSize: 16, transition: 'transform 0.2s', transform: open ? 'rotate(45deg)' : 'rotate(0deg)', color: 'rgba(250,248,245,0.4)' }}>+</span>
+      </button>
+
+      {open && (
+        <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 16, background: 'rgba(255,255,255,0.02)' }}>
+          <div>
+            <label style={arLabelStyle}>اسم المنتج</label>
+            <input style={arStyle} value={form.name_ar} onChange={e => set('name_ar', e.target.value)} placeholder="الاسم بالعربية" />
+          </div>
+
+          {brand === 'solo' ? (
+            <div>
+              <label style={arLabelStyle}>الوصف</label>
+              <textarea rows={3} style={{ ...arStyle, resize: 'vertical' }} value={form.product_desc_ar} onChange={e => set('product_desc_ar', e.target.value)} placeholder="الوصف بالعربية..." />
+            </div>
+          ) : (
+            <>
+              <div>
+                <label style={arLabelStyle}>العنوان الفرعي</label>
+                <input style={arStyle} value={form.sub_ar} onChange={e => set('sub_ar', e.target.value)} placeholder="مثل: قماش فيسكوز مائل" />
+              </div>
+              <div>
+                <label style={arLabelStyle}>القصة</label>
+                <textarea rows={2} style={{ ...arStyle, resize: 'vertical' }} value={form.story_ar} onChange={e => set('story_ar', e.target.value)} placeholder="وصف تحريري..." />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                <div>
+                  <label style={arLabelStyle}>التفاصيل</label>
+                  <textarea rows={2} style={{ ...arStyle, resize: 'vertical' }} value={form.details_ar} onChange={e => set('details_ar', e.target.value)} placeholder="مواصفات القماش..." />
+                </div>
+                <div>
+                  <label style={arLabelStyle}>العناية</label>
+                  <textarea rows={2} style={{ ...arStyle, resize: 'vertical' }} value={form.care_ar} onChange={e => set('care_ar', e.target.value)} placeholder="تعليمات العناية..." />
+                </div>
+              </div>
+              <div>
+                <label style={arLabelStyle}>المقاس</label>
+                <input style={arStyle} value={form.fit_ar} onChange={e => set('fit_ar', e.target.value)} placeholder='مناسب للمقاس الأصلي' />
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -471,6 +535,9 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
                   </div>
                 </>
               )}
+
+              {/* Arabic fields */}
+              <ArabicSection brand={brand} form={form} set={set} inputStyle={inputStyle} labelStyle={labelStyle} />
 
               {/* Active toggle */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
