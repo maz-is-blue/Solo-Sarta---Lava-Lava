@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
+import SoloFooter from './SoloFooter'
 import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
 
@@ -191,6 +192,7 @@ export default function SoloContact() {
           </motion.div>
         </div>
       </div>
+      <SoloFooter />
     </div>
   )
 }

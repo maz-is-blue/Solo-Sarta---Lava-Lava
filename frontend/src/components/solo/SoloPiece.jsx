@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
+import SoloFooter from './SoloFooter'
 import { getProduct, getProducts } from '../../services/api'
 import { useCart } from '../../context/CartContext'
 import { useMobile } from '../../hooks/useMobile'
@@ -266,6 +267,7 @@ export default function SoloPiece() {
             </div>
           </section>
         )}
+        <SoloFooter />
       </div>
     </div>
   )

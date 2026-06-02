@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
+import SoloFooter from './SoloFooter'
 import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
 
@@ -183,6 +184,7 @@ export default function SoloStory() {
           </div>
         </div>
       </div>
+      <SoloFooter />
     </div>
   )
 }

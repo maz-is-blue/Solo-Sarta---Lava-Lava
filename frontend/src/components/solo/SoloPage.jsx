@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useCart } from '../../context/CartContext'
 import SoloNav from './SoloNav'
+import SoloFooter from './SoloFooter'
 import { getProducts } from '../../services/api'
 import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
+import { useLanguage } from '../../context/LanguageContext'
 
 function GownSilhouette({ color1 = '#C9A96E', color2 = '#E8D5A3' }) {
   return (
@@ -60,11 +62,12 @@ function NeedleMotif() {
   )
 }
 
-function SoloProductCard({ product }) {
+function SoloProductCard({ product, lang, t }) {
   const [hovered, setHovered] = useState(false)
   const { addItem } = useCart()
   const [added, setAdded] = useState(false)
   const navigate = useNavigate()
+  const displayName = (lang === 'ar' && product.name_ar) ? product.name_ar : product.name
 
   return (
     <div
@@ -107,7 +110,7 @@ function SoloProductCard({ product }) {
         transition: 'transform 0.35s ease'
       }}>
         <div style={{ fontSize: 12, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', letterSpacing: 1, marginBottom: 4 }}>{product.cat.toUpperCase()}</div>
-        <div style={{ fontSize: 17, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5', marginBottom: 4 }}>{product.name}</div>
+        <div style={{ fontSize: 17, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5', marginBottom: 4 }}>{displayName}</div>
         <div style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>₹{product.price.toLocaleString()}</div>
         <button
           onClick={() => { addItem('solo', product, 'Bespoke'); setAdded(true); setTimeout(() => setAdded(false), 2000) }}
@@ -117,7 +120,7 @@ function SoloProductCard({ product }) {
             fontSize: 11, fontFamily: 'DM Sans', letterSpacing: 1.5, transition: 'all 0.25s ease'
           }}
         >
-          {added ? '✓ ADDED' : 'ADD TO ATELIER BAG'}
+          {added ? `✓ ${t('added')}` : t('add_atelier_bag')}
         </button>
       </div>
     </div>
@@ -130,6 +133,7 @@ export default function SoloPage() {
   const [invited, setInvited] = useState(false)
   const [products, setProducts] = useState([])
   const mobile = useMobile()
+  const { lang, t } = useLanguage()
 
   useEffect(() => {
     getProducts({ brand: 'solo' }).then(r => setProducts(r.data)).catch(() => {})
@@ -176,7 +180,7 @@ export default function SoloPage() {
                 background: '#C9A96E', color: '#1A1A1A',
                 fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2
               }}>
-              {get('solo.home.cta1', 'EXPLORE COLLECTION')}
+              {get('solo.home.cta1', t('explore_collection'))}
             </button>
             <button
               onClick={() => navigate('/solo/contact')}
@@ -189,7 +193,7 @@ export default function SoloPage() {
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,169,110,0.1)'; e.currentTarget.style.borderColor = '#C9A96E' }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(201,169,110,0.4)' }}
             >
-              {get('solo.home.cta2', 'BOOK A CONSULTATION')}
+              {get('solo.home.cta2', t('book_consultation'))}
             </button>
           </div>
           {/* Stats */}
@@ -294,7 +298,7 @@ export default function SoloPage() {
                 padding: '11px 28px', borderRadius: 2, border: '1px solid #C9A96E', cursor: 'pointer',
                 background: 'transparent', color: '#C9A96E', fontSize: 11, fontFamily: 'DM Sans', letterSpacing: 1.5
               }}>
-              {get('solo.home.cta3', 'OUR STORY')}
+              {get('solo.home.cta3', t('our_story'))}
             </button>
           </div>
         </motion.div>
@@ -321,7 +325,7 @@ export default function SoloPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
             >
-              <SoloProductCard product={p} />
+              <SoloProductCard product={p} lang={lang} t={t} />
             </motion.div>
           ))}
         </div>
@@ -365,11 +369,12 @@ export default function SoloPage() {
               fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2,
               borderRadius: '0 2px 2px 0', whiteSpace: 'nowrap'
             }}>
-              REQUEST INVITATION
+              {t('request_invitation')}
             </button>
           </form>
         )}
       </section>
+      <SoloFooter />
     </div>
   )
 }
