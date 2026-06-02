@@ -1,6 +1,7 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { CartProvider } from './context/CartContext'
 import { ContentProvider } from './context/ContentContext'
+import { LanguageProvider } from './context/LanguageContext'
 import Landing from './components/landing/Landing'
 import SoloPage from './components/solo/SoloPage'
 import SoloCollection from './components/solo/SoloCollection'
@@ -21,6 +22,7 @@ import LavaAdminDashboard from './components/admin/LavaAdminDashboard'
 export default function App() {
   return (
     <HashRouter>
+      <LanguageProvider>
       <ContentProvider>
         <CartProvider>
           <Routes>
@@ -45,6 +47,7 @@ export default function App() {
           </Routes>
         </CartProvider>
       </ContentProvider>
+      </LanguageProvider>
     </HashRouter>
   )
 }

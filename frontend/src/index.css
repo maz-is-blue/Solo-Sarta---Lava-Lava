@@ -1,6 +1,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; color-scheme: only light; }
 html { scroll-behavior: smooth; color-scheme: only light; }
 body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fff; overflow-x: hidden; color-scheme: only light; }
+.lang-ar, .lang-ar * { font-family: 'Cairo', 'DM Sans', sans-serif !important; }
 :root {
   --solo-ivory: #FAF8F5;
   --solo-charcoal: #1A1A1A;

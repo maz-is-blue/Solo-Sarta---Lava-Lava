@@ -8,6 +8,7 @@ import CollectionCard from '../shared/CollectionCard'
 import ProductSilhouette from '../shared/ProductSilhouette'
 import { useCart } from '../../context/CartContext'
 import { getProducts } from '../../services/api'
+import { useLanguage } from '../../context/LanguageContext'
 import { subscribeNewsletter } from '../../services/api'
 import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
@@ -54,6 +55,7 @@ export default function LavaHome() {
   const [activeFilter, setActiveFilter] = useState('All')
   const mobile = useMobile()
   const { get } = useContent()
+  const { lang, t } = useLanguage()
 
   const [products, setProducts] = useState([])
   useEffect(() => {
@@ -151,7 +153,7 @@ export default function LavaHome() {
               onMouseEnter={e => e.currentTarget.style.opacity = '0.8'}
               onMouseLeave={e => e.currentTarget.style.opacity = '1'}
             >
-              {get('lava.home.cta1', 'Shop the Drop ⚡')}
+              {get('lava.home.cta1', t('shop_drop'))}
             </button>
             <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 18 }}>·</span>
             <button
@@ -164,7 +166,7 @@ export default function LavaHome() {
               onMouseEnter={e => e.currentTarget.style.color = '#fff'}
               onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}
             >
-              Read our vibe
+              {t('read_vibe')}
             </button>
           </div>
 
@@ -268,7 +270,7 @@ export default function LavaHome() {
                     transition: 'background 0.3s ease'
                   }}
                 >
-                  {heroAdded ? '✓ Added' : 'Add to Bag ⚡'}
+                  {heroAdded ? t('added') : t('add_to_bag')}
                 </button>
                 <button style={{
                   width: 48, height: 48, borderRadius: '50%', border: '1.5px solid rgba(0,0,0,0.15)',
@@ -365,7 +367,7 @@ export default function LavaHome() {
           style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 12 : 20 }}
         >
           {filtered.slice(0, 8).map(p => (
-            <WarmCollectionCard key={p.id} product={p} onAdd={() => addItem('lava', p, p.sizes[1])} navigate={navigate} />
+            <WarmCollectionCard key={p.id} product={p} onAdd={() => addItem('lava', p, (p.sizes||[])[1]||'M')} navigate={navigate} t={t} lang={lang} />
           ))}
         </motion.div>
 
@@ -382,7 +384,7 @@ export default function LavaHome() {
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.3)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)' }}
           >
-            VIEW ALL {filtered.length} PIECES
+            {t('view_all')} {filtered.length} {t('pieces').toUpperCase()}
           </button>
         </motion.div>
       </section>
@@ -495,7 +497,7 @@ export default function LavaHome() {
                   color: '#fff', fontSize: 12, fontWeight: 700,
                   fontFamily: 'DM Sans', letterSpacing: 1, whiteSpace: 'nowrap'
                 }}>
-                  JOIN ✦
+                  {t('join')}
                 </button>
               </form>
             )}
@@ -509,7 +511,7 @@ export default function LavaHome() {
 }
 
 /* Warm-toned collection card for the light gradient background */
-function WarmCollectionCard({ product, onAdd, navigate }) {
+function WarmCollectionCard({ product, onAdd, navigate, t, lang }) {
   const [added, setAdded] = useState(false)
   const [hovered, setHovered] = useState(false)
 
@@ -578,7 +580,7 @@ function WarmCollectionCard({ product, onAdd, navigate }) {
         padding: '14px 16px'
       }}>
         <div style={{ fontSize: 14, fontWeight: 600, fontFamily: 'DM Sans', color: '#1a0020', marginBottom: 2 }}>
-          {product.name}
+          {(lang === 'ar' && product.name_ar) ? product.name_ar : product.name}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontSize: 13, color: 'rgba(0,0,0,0.5)', fontFamily: 'DM Sans' }}>
@@ -593,7 +595,7 @@ function WarmCollectionCard({ product, onAdd, navigate }) {
               fontFamily: 'DM Sans', transition: 'background 0.3s ease'
             }}
           >
-            {added ? '✓' : 'ADD'}
+            {added ? '✓' : t('add')}
           </button>
         </div>
       </div>

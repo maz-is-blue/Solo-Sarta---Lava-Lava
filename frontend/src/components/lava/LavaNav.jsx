@@ -3,12 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import LavaWordmark from '../shared/LavaWordmark'
 import { useCart } from '../../context/CartContext'
 import { useMobile } from '../../hooks/useMobile'
-
-const NAV_LINKS = [
-  { label: 'Collection', path: '/lava/collection' },
-  { label: 'Our Story', path: '/lava/story' },
-  { label: 'Contact', path: '/lava/contact' },
-]
+import { useLanguage } from '../../context/LanguageContext'
 
 function BagIcon({ color = 'rgba(255,255,255,0.9)' }) {
   return (
@@ -20,6 +15,26 @@ function BagIcon({ color = 'rgba(255,255,255,0.9)' }) {
   )
 }
 
+function LangToggle({ lang, setLang, t }) {
+  return (
+    <button
+      onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
+      style={{
+        background: 'rgba(255,255,255,0.15)',
+        border: '1px solid rgba(255,255,255,0.35)',
+        borderRadius: 999, padding: '4px 11px', cursor: 'pointer',
+        fontSize: 11, fontFamily: lang === 'ar' ? 'Cairo, DM Sans, sans-serif' : 'DM Sans, sans-serif',
+        fontWeight: 600, color: '#fff', letterSpacing: 0.5,
+        transition: 'background 0.2s ease', flexShrink: 0,
+      }}
+      onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.25)'}
+      onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+    >
+      {t('lang_label')}
+    </button>
+  )
+}
+
 export default function LavaNav() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
@@ -27,6 +42,13 @@ export default function LavaNav() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const mobile = useMobile()
+  const { lang, setLang, isRTL, t } = useLanguage()
+
+  const NAV_LINKS = [
+    { label: t('lava_collection'), path: '/lava/collection' },
+    { label: t('lava_story'), path: '/lava/story' },
+    { label: t('lava_contact'), path: '/lava/contact' },
+  ]
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -61,7 +83,7 @@ export default function LavaNav() {
             onMouseEnter={e => e.currentTarget.style.color = '#fff'}
             onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.85)'}
           >
-            ← {!mobile && <span style={{ fontSize: 10, letterSpacing: 2 }}>HOME</span>}
+            {t('back_arrow')} {!mobile && <span style={{ fontSize: 10, letterSpacing: 2 }}>{t('back_home')}</span>}
           </button>
 
           <div onClick={() => navigate('/lava')} style={{ cursor: 'pointer' }}>
@@ -69,15 +91,15 @@ export default function LavaNav() {
           </div>
         </div>
 
-        {/* RIGHT: desktop links + bag / mobile controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: mobile ? 16 : 40 }}>
+        {/* RIGHT: desktop links + lang + bag / mobile controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: mobile ? 12 : 32 }}>
 
           {/* Desktop links */}
           {!mobile && NAV_LINKS.map(({ label, path }) => {
             const active = pathname === path
             return (
               <span
-                key={label}
+                key={path}
                 onClick={() => navigate(path)}
                 style={{
                   color: active ? '#fff' : 'rgba(255,255,255,0.8)',
@@ -93,6 +115,9 @@ export default function LavaNav() {
               </span>
             )
           })}
+
+          {/* Language toggle */}
+          {!mobile && <LangToggle lang={lang} setLang={setLang} t={t} />}
 
           {/* Desktop BAG icon */}
           {!mobile && (
@@ -115,9 +140,10 @@ export default function LavaNav() {
             </div>
           )}
 
-          {/* Mobile: bag icon + hamburger */}
+          {/* Mobile: lang + bag + hamburger */}
           {mobile && (
             <>
+              <LangToggle lang={lang} setLang={setLang} t={t} />
               <div style={{ position: 'relative', cursor: 'pointer', display: 'flex' }} onClick={() => navigate('/bag')}>
                 <BagIcon />
                 {cart.lava > 0 && (
@@ -146,7 +172,6 @@ export default function LavaNav() {
       {/* Mobile sidebar */}
       {mobile && (
         <>
-          {/* Backdrop */}
           <div
             onClick={() => setOpen(false)}
             style={{
@@ -158,27 +183,26 @@ export default function LavaNav() {
             }}
           />
 
-          {/* Drawer */}
+          {/* Drawer — slides from right in LTR, left in RTL */}
           <div style={{
-            position: 'fixed', top: 0, right: 0, bottom: 0, zIndex: 201,
+            position: 'fixed', top: 0, bottom: 0, zIndex: 201,
+            [isRTL ? 'left' : 'right']: 0,
             width: 270,
             background: 'linear-gradient(160deg, #3a1a2e, #1e1030)',
-            borderLeft: '1px solid rgba(255,255,255,0.12)',
-            transform: open ? 'translateX(0)' : 'translateX(100%)',
+            [isRTL ? 'borderRight' : 'borderLeft']: '1px solid rgba(255,255,255,0.12)',
+            transform: open ? 'translateX(0)' : isRTL ? 'translateX(-100%)' : 'translateX(100%)',
             transition: 'transform 0.35s cubic-bezier(0.4,0,0.2,1)',
             display: 'flex', flexDirection: 'column',
           }}>
-            {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '22px 22px 28px' }}>
               <LavaWordmark size={22} />
               <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.5)', fontSize: 20, padding: 4, lineHeight: 1, display: 'flex' }}>✕</button>
             </div>
 
-            {/* Links */}
             {NAV_LINKS.map(({ label, path }) => {
               const active = pathname === path
               return (
-                <div key={label} onClick={() => navigate(path)} style={{
+                <div key={path} onClick={() => navigate(path)} style={{
                   padding: '17px 22px',
                   borderTop: '1px solid rgba(255,255,255,0.07)',
                   cursor: 'pointer',
@@ -188,14 +212,13 @@ export default function LavaNav() {
                   <span style={{ fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2.5, color: active ? '#fff' : 'rgba(255,255,255,0.65)' }}>
                     {label.toUpperCase()}
                   </span>
-                  <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}>→</span>
+                  <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}>{isRTL ? '←' : '→'}</span>
                 </div>
               )
             })}
 
             <div style={{ flex: 1 }} />
 
-            {/* Bottom */}
             <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', padding: '20px 22px 32px', display: 'flex', flexDirection: 'column', gap: 12 }}>
               {cart.lava > 0 && (
                 <div onClick={() => navigate('/bag')} style={{
@@ -203,13 +226,13 @@ export default function LavaNav() {
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer',
                   marginBottom: 4
                 }}>
-                  <span style={{ fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2, fontWeight: 600, color: '#8B6FB8' }}>VIEW BAG</span>
-                  <span style={{ fontFamily: 'DM Sans', fontSize: 11, fontWeight: 700, color: '#8B6FB8' }}>{cart.lava} item{cart.lava > 1 ? 's' : ''}</span>
+                  <span style={{ fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2, fontWeight: 600, color: '#8B6FB8' }}>{t('view_bag')}</span>
+                  <span style={{ fontFamily: 'DM Sans', fontSize: 11, fontWeight: 700, color: '#8B6FB8' }}>{cart.lava}</span>
                 </div>
               )}
               <div onClick={() => navigate('/')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0' }}>
-                <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>←</span>
-                <span style={{ fontFamily: 'DM Sans', fontSize: 10, letterSpacing: 2, color: 'rgba(255,255,255,0.3)' }}>BACK TO HOME</span>
+                <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>{t('back_arrow')}</span>
+                <span style={{ fontFamily: 'DM Sans', fontSize: 10, letterSpacing: 2, color: 'rgba(255,255,255,0.3)' }}>{t('back_to_home')}</span>
               </div>
             </div>
           </div>

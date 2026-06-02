@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import LavaWordmark from '../shared/LavaWordmark'
 import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
+import { useLanguage } from '../../context/LanguageContext'
 
 function SoloDressSketch() {
   return (
@@ -33,6 +34,7 @@ export default function Landing() {
   const [lavaHover, setLavaHover] = useState(false)
   const mobile = useMobile()
   const { get } = useContent()
+  const { lang, setLang, t } = useLanguage()
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -48,7 +50,21 @@ export default function Landing() {
   ]
 
   return (
-    <div className="landing-wrap">
+    <div className="landing-wrap" style={{ position: 'relative' }}>
+      {/* Language toggle — top-right corner */}
+      <button
+        onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
+        style={{
+          position: 'fixed', top: 16, right: 16, zIndex: 200,
+          background: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,255,255,0.5)', borderRadius: 999,
+          padding: '6px 14px', cursor: 'pointer',
+          fontSize: 12, fontFamily: lang === 'ar' ? 'Cairo, DM Sans, sans-serif' : 'DM Sans, sans-serif',
+          fontWeight: 600, color: '#1A1A1A', letterSpacing: 0.5,
+        }}
+      >
+        {t('lang_label')}
+      </button>
 
       {/* Solo Sarto — Top on mobile, Left on desktop */}
       <div

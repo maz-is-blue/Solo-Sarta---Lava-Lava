@@ -1,39 +1,48 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import api from '../services/api'
+import { useLanguage } from './LanguageContext'
 
 const ContentContext = createContext(null)
 
 export function ContentProvider({ children }) {
-  const [contentMap, setContentMap] = useState({})
+  const { lang } = useLanguage()
+  const [contentMaps, setContentMaps] = useState({ en: {}, ar: {} })
   const [rawItems, setRawItems] = useState([])
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     api.get('/content')
       .then(res => {
-        const map = {}
+        const maps = { en: {}, ar: {} }
         res.data.forEach(item => {
-          map[`${item.brand}.${item.section}.${item.key}`] = item.value
+          const l = item.lang || 'en'
+          if (!maps[l]) maps[l] = {}
+          maps[l][`${item.brand}.${item.section}.${item.key}`] = item.value
         })
-        setContentMap(map)
+        setContentMaps(maps)
         setRawItems(res.data)
         setLoaded(true)
       })
       .catch(() => setLoaded(true))
   }, [])
 
-  const get = (key, fallback = '') => contentMap[key] ?? fallback
+  const get = useCallback(
+    (key, fallback = '') =>
+      contentMaps[lang]?.[key] ?? contentMaps.en?.[key] ?? fallback,
+    [lang, contentMaps]
+  )
 
-  const refresh = () => {
-    return api.get('/content').then(res => {
-      const map = {}
+  const refresh = () =>
+    api.get('/content').then(res => {
+      const maps = { en: {}, ar: {} }
       res.data.forEach(item => {
-        map[`${item.brand}.${item.section}.${item.key}`] = item.value
+        const l = item.lang || 'en'
+        if (!maps[l]) maps[l] = {}
+        maps[l][`${item.brand}.${item.section}.${item.key}`] = item.value
       })
-      setContentMap(map)
+      setContentMaps(maps)
       setRawItems(res.data)
     })
-  }
 
   return (
     <ContentContext.Provider value={{ get, rawItems, loaded, refresh }}>

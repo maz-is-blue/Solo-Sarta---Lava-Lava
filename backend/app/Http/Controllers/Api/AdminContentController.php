@@ -22,15 +22,22 @@ class AdminContentController extends Controller {
 
     public function bulkUpdate(Request $request) {
         $updates = $request->input('updates', []);
-        $updated = [];
+        $updated = 0;
         foreach ($updates as $upd) {
-            if (!isset($upd['id'], $upd['value'])) continue;
-            $item = SiteContent::find($upd['id']);
-            if ($item) {
-                $item->update(['value' => $upd['value']]);
-                $updated[] = $item;
+            if (isset($upd['id'])) {
+                $item = SiteContent::find($upd['id']);
+                if ($item) {
+                    $item->update(['value' => $upd['value'] ?? '']);
+                    $updated++;
+                }
+            } elseif (isset($upd['brand'], $upd['section'], $upd['key'], $upd['lang'])) {
+                SiteContent::updateOrCreate(
+                    ['brand' => $upd['brand'], 'section' => $upd['section'], 'key' => $upd['key'], 'lang' => $upd['lang']],
+                    ['value' => $upd['value'] ?? '', 'label' => $upd['label'] ?? $upd['key'], 'type' => $upd['type'] ?? 'text']
+                );
+                $updated++;
             }
         }
-        return response()->json(['updated' => count($updated)]);
+        return response()->json(['updated' => $updated]);
     }
 }

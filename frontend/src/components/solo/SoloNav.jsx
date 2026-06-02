@@ -2,13 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useCart } from '../../context/CartContext'
 import { useMobile } from '../../hooks/useMobile'
-
-const NAV_LINKS = [
-  { label: 'Atelier', path: '/solo' },
-  { label: 'Collection', path: '/solo/collection' },
-  { label: 'Story', path: '/solo/story' },
-  { label: 'Contact', path: '/solo/contact' },
-]
+import { useLanguage } from '../../context/LanguageContext'
 
 function BagIcon() {
   return (
@@ -20,12 +14,40 @@ function BagIcon() {
   )
 }
 
+function LangToggle({ lang, setLang, t }) {
+  return (
+    <button
+      onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
+      style={{
+        background: 'rgba(201,169,110,0.1)',
+        border: '1px solid rgba(201,169,110,0.35)',
+        borderRadius: 2, padding: '4px 11px', cursor: 'pointer',
+        fontSize: 11, fontFamily: lang === 'ar' ? 'Cairo, DM Sans, sans-serif' : 'DM Sans, sans-serif',
+        fontWeight: 600, color: '#C9A96E', letterSpacing: 0.5,
+        transition: 'background 0.2s ease', flexShrink: 0,
+      }}
+      onMouseEnter={e => e.currentTarget.style.background = 'rgba(201,169,110,0.2)'}
+      onMouseLeave={e => e.currentTarget.style.background = 'rgba(201,169,110,0.1)'}
+    >
+      {t('lang_label')}
+    </button>
+  )
+}
+
 export default function SoloNav() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const [open, setOpen] = useState(false)
   const { cart } = useCart()
   const mobile = useMobile()
+  const { lang, setLang, isRTL, t } = useLanguage()
+
+  const NAV_LINKS = [
+    { label: t('solo_atelier'), path: '/solo' },
+    { label: t('solo_collection'), path: '/solo/collection' },
+    { label: t('solo_story'), path: '/solo/story' },
+    { label: t('solo_contact'), path: '/solo/contact' },
+  ]
 
   useEffect(() => { setOpen(false) }, [pathname])
 
@@ -40,13 +62,12 @@ export default function SoloNav() {
         borderBottom: '1px solid rgba(201,169,110,0.12)'
       }}>
 
-        {/* LEFT: back + logo + by Shiyam */}
+        {/* LEFT: back + logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: mobile ? 8 : 20, flexShrink: 0 }}>
           <button
             onClick={() => navigate('/')}
             style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              padding: 0,
+              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
               color: 'rgba(201,169,110,0.6)', fontSize: mobile ? 18 : 14,
               lineHeight: 1, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6,
               fontFamily: 'DM Sans', letterSpacing: 1, transition: 'color 0.2s ease'
@@ -54,7 +75,7 @@ export default function SoloNav() {
             onMouseEnter={e => e.currentTarget.style.color = '#C9A96E'}
             onMouseLeave={e => e.currentTarget.style.color = 'rgba(201,169,110,0.6)'}
           >
-            ← {!mobile && <span style={{ fontSize: 10, letterSpacing: 2 }}>HOME</span>}
+            {t('back_arrow')} {!mobile && <span style={{ fontSize: 10, letterSpacing: 2 }}>{t('back_home')}</span>}
           </button>
 
           <div onClick={() => navigate('/solo')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
@@ -69,13 +90,13 @@ export default function SoloNav() {
           </div>
         </div>
 
-        {/* Desktop RIGHT: nav links + bag */}
+        {/* Desktop RIGHT: nav links + lang + bag */}
         {!mobile && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
             {NAV_LINKS.map(({ label, path }) => {
               const active = pathname === path
               return (
-                <span key={label} onClick={() => navigate(path)} style={{
+                <span key={path} onClick={() => navigate(path)} style={{
                   fontSize: 13, letterSpacing: 2, fontFamily: 'DM Sans', cursor: 'pointer',
                   color: active ? '#C9A96E' : 'rgba(250,248,245,0.7)',
                   borderBottom: active ? '1px solid rgba(201,169,110,0.55)' : '1px solid transparent',
@@ -88,6 +109,8 @@ export default function SoloNav() {
                 </span>
               )
             })}
+
+            <LangToggle lang={lang} setLang={setLang} t={t} />
 
             <div
               onClick={() => navigate('/bag')}
@@ -109,10 +132,11 @@ export default function SoloNav() {
           </div>
         )}
 
-        {/* Mobile: bag + hamburger */}
+        {/* Mobile: lang + bag + hamburger */}
         {mobile && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            {/* Bag */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <LangToggle lang={lang} setLang={setLang} t={t} />
+
             <div style={{ position: 'relative', cursor: 'pointer', display: 'flex' }} onClick={() => navigate('/bag')}>
               <BagIcon />
               {cart.solo > 0 && (
@@ -128,7 +152,6 @@ export default function SoloNav() {
               )}
             </div>
 
-            {/* Hamburger */}
             <button onClick={() => setOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, display: 'flex', flexDirection: 'column', gap: 5, alignItems: 'flex-end' }}>
               <span style={{ display: 'block', width: 22, height: 1.5, background: 'rgba(201,169,110,0.8)', borderRadius: 1 }} />
               <span style={{ display: 'block', width: 15, height: 1.5, background: 'rgba(201,169,110,0.8)', borderRadius: 1 }} />
@@ -141,7 +164,6 @@ export default function SoloNav() {
       {/* Mobile sidebar */}
       {mobile && (
         <>
-          {/* Backdrop */}
           <div
             onClick={() => setOpen(false)}
             style={{
@@ -155,25 +177,24 @@ export default function SoloNav() {
 
           {/* Drawer */}
           <div style={{
-            position: 'fixed', top: 0, right: 0, bottom: 0, zIndex: 201,
+            position: 'fixed', top: 0, bottom: 0, zIndex: 201,
+            [isRTL ? 'left' : 'right']: 0,
             width: 270,
             background: '#2A2420',
-            borderLeft: '1px solid rgba(201,169,110,0.18)',
-            transform: open ? 'translateX(0)' : 'translateX(100%)',
+            [isRTL ? 'borderRight' : 'borderLeft']: '1px solid rgba(201,169,110,0.18)',
+            transform: open ? 'translateX(0)' : isRTL ? 'translateX(-100%)' : 'translateX(100%)',
             transition: 'transform 0.35s cubic-bezier(0.4,0,0.2,1)',
             display: 'flex', flexDirection: 'column',
           }}>
-            {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '22px 22px 28px' }}>
               <span style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 19, color: '#C9A96E', fontWeight: 300 }}>Solo Sarto</span>
               <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(250,248,245,0.5)', fontSize: 20, padding: 4, lineHeight: 1, display: 'flex' }}>✕</button>
             </div>
 
-            {/* Links */}
             {NAV_LINKS.map(({ label, path }) => {
               const active = pathname === path
               return (
-                <div key={label} onClick={() => navigate(path)} style={{
+                <div key={path} onClick={() => navigate(path)} style={{
                   padding: '17px 22px',
                   borderTop: '1px solid rgba(201,169,110,0.08)',
                   cursor: 'pointer',
@@ -183,14 +204,13 @@ export default function SoloNav() {
                   <span style={{ fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2.5, color: active ? '#C9A96E' : 'rgba(250,248,245,0.7)' }}>
                     {label.toUpperCase()}
                   </span>
-                  <span style={{ color: active ? '#C9A96E' : 'rgba(250,248,245,0.2)', fontSize: 12 }}>→</span>
+                  <span style={{ color: active ? '#C9A96E' : 'rgba(250,248,245,0.2)', fontSize: 12 }}>{isRTL ? '←' : '→'}</span>
                 </div>
               )
             })}
 
             <div style={{ flex: 1 }} />
 
-            {/* Bottom */}
             <div style={{ borderTop: '1px solid rgba(201,169,110,0.12)', padding: '20px 22px 32px', display: 'flex', flexDirection: 'column', gap: 12 }}>
               {cart.solo > 0 && (
                 <div onClick={() => navigate('/bag')} style={{
@@ -198,13 +218,13 @@ export default function SoloNav() {
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer',
                   marginBottom: 4
                 }}>
-                  <span style={{ fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2, fontWeight: 600, color: '#1A1A1A' }}>VIEW BAG</span>
-                  <span style={{ fontFamily: 'DM Sans', fontSize: 11, fontWeight: 700, color: '#1A1A1A' }}>{cart.solo} item{cart.solo > 1 ? 's' : ''}</span>
+                  <span style={{ fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2, fontWeight: 600, color: '#1A1A1A' }}>{t('view_bag')}</span>
+                  <span style={{ fontFamily: 'DM Sans', fontSize: 11, fontWeight: 700, color: '#1A1A1A' }}>{cart.solo}</span>
                 </div>
               )}
               <div onClick={() => navigate('/')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0' }}>
-                <span style={{ color: 'rgba(201,169,110,0.5)', fontSize: 14 }}>←</span>
-                <span style={{ fontFamily: 'DM Sans', fontSize: 10, letterSpacing: 2, color: 'rgba(250,248,245,0.35)' }}>BACK TO HOME</span>
+                <span style={{ color: 'rgba(201,169,110,0.5)', fontSize: 14 }}>{t('back_arrow')}</span>
+                <span style={{ fontFamily: 'DM Sans', fontSize: 10, letterSpacing: 2, color: 'rgba(250,248,245,0.35)' }}>{t('back_to_home')}</span>
               </div>
             </div>
           </div>
