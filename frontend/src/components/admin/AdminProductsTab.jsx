@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { getAdminProducts, createAdminProduct, updateAdminProduct, deleteAdminProduct, uploadMedia } from '../../services/adminApi'
+import { LAVA_CATS, LAVA_CAT_NAMES } from '../../constants/lavaCategories'
 
 const LAVA_TAGS = ['', 'Featured', 'New', 'Limited', 'Restock']
 const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL']
@@ -8,7 +9,7 @@ function emptyForm(brand) {
   if (brand === 'solo') {
     return { name: '', price: '', cat: '', code: '', process_time: '', fabric: '', product_desc: '', product_desc_ar: '', name_ar: '', images: [], active: true }
   }
-  return { name: '', price: '', cat: '', tag: '', sub: '', sub_ar: '', drop: '05', sizes: ['S', 'M', 'L'], story: '', story_ar: '', details: '', details_ar: '', care: '', care_ar: '', fit: '', fit_ar: '', name_ar: '', images: [], active: true }
+  return { name: '', price: '', cat: '', sub_cat: '', tag: '', sub: '', sub_ar: '', drop: '05', sizes: ['S', 'M', 'L'], story: '', story_ar: '', details: '', details_ar: '', care: '', care_ar: '', fit: '', fit_ar: '', name_ar: '', images: [], active: true }
 }
 
 function formFromProduct(p, brand) {
@@ -16,7 +17,7 @@ function formFromProduct(p, brand) {
   if (brand === 'solo') {
     return { name: p.name || '', price: p.price || '', cat: p.cat || '', code: p.code || '', process_time: p.process_time || '', fabric: p.fabric || '', product_desc: p.product_desc || '', product_desc_ar: p.product_desc_ar || '', name_ar: p.name_ar || '', images, active: p.active !== false }
   }
-  return { name: p.name || '', price: p.price || '', cat: p.cat || '', tag: p.tag || '', sub: p.sub || '', sub_ar: p.sub_ar || '', drop: p.drop || '05', sizes: p.sizes || [], story: p.story || '', story_ar: p.story_ar || '', details: p.details || '', details_ar: p.details_ar || '', care: p.care || '', care_ar: p.care_ar || '', fit: p.fit || '', fit_ar: p.fit_ar || '', name_ar: p.name_ar || '', images, active: p.active !== false }
+  return { name: p.name || '', price: p.price || '', cat: p.cat || '', sub_cat: p.sub_cat || '', tag: p.tag || '', sub: p.sub || '', sub_ar: p.sub_ar || '', drop: p.drop || '05', sizes: p.sizes || [], story: p.story || '', story_ar: p.story_ar || '', details: p.details || '', details_ar: p.details_ar || '', care: p.care || '', care_ar: p.care_ar || '', fit: p.fit || '', fit_ar: p.fit_ar || '', name_ar: p.name_ar || '', images, active: p.active !== false }
 }
 
 function ImageUploader({ images, onChange, accent, uploading, onUpload }) {
@@ -366,7 +367,7 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
                     {!p.active && <span style={{ marginLeft: 8, fontSize: 9, letterSpacing: 1.5, color: '#E8906A', border: '1px solid #E8906A', borderRadius: 999, padding: '2px 8px' }}>HIDDEN</span>}
                   </div>
                   <div style={{ fontSize: 12, color: 'rgba(250,248,245,0.4)', fontFamily: 'DM Sans' }}>
-                    {p.cat} · ₹{Number(p.price).toLocaleString()}
+                    {p.cat}{p.sub_cat ? ` › ${p.sub_cat}` : ''} · ₹{Number(p.price).toLocaleString()}
                     {brand === 'solo' && p.code && ` · ${p.code}`}
                     {brand === 'lava' && p.sizes?.length > 0 && ` · ${p.sizes.join(', ')}`}
                     {p.images?.length > 1 && ` · ${p.images.length} photos`}
@@ -433,37 +434,50 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
                 </div>
               </div>
 
-              {/* Category (free text) + brand-specific meta */}
-              <div style={{ display: 'grid', gridTemplateColumns: brand === 'solo' ? '1fr 1fr' : '1fr 1fr 80px', gap: 14 }}>
-                <div>
-                  <label style={labelStyle}>CATEGORY *</label>
-                  <input
-                    style={inputStyle}
-                    value={form.cat}
-                    onChange={e => set('cat', e.target.value)}
-                    placeholder={brand === 'solo' ? 'e.g. Gown, Suit, Sari...' : 'e.g. Tops, Slips, Sets...'}
-                  />
-                </div>
-                {brand === 'solo' ? (
+              {/* Category + brand-specific meta */}
+              {brand === 'solo' ? (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div>
+                    <label style={labelStyle}>CATEGORY *</label>
+                    <input style={inputStyle} value={form.cat} onChange={e => set('cat', e.target.value)} placeholder="e.g. Gown, Suit, Sari..." />
+                  </div>
                   <div>
                     <label style={labelStyle}>CODE</label>
                     <input style={inputStyle} value={form.code} onChange={e => set('code', e.target.value)} placeholder="HC-01" />
                   </div>
-                ) : (
-                  <>
+                </div>
+              ) : (
+                <>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 80px', gap: 14 }}>
+                    <div>
+                      <label style={labelStyle}>CATEGORY *</label>
+                      <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.cat} onChange={e => { set('cat', e.target.value); set('sub_cat', '') }}>
+                        <option value="">— select category —</option>
+                        {LAVA_CAT_NAMES.map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                    </div>
                     <div>
                       <label style={labelStyle}>TAG</label>
                       <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.tag} onChange={e => set('tag', e.target.value)}>
-                        {LAVA_TAGS.map(t => <option key={t} value={t}>{t || '— none —'}</option>)}
+                        {LAVA_TAGS.map(tg => <option key={tg} value={tg}>{tg || '— none —'}</option>)}
                       </select>
                     </div>
                     <div>
                       <label style={labelStyle}>DROP</label>
                       <input style={inputStyle} value={form.drop} onChange={e => set('drop', e.target.value)} placeholder="05" />
                     </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                  {form.cat && LAVA_CATS[form.cat] && (
+                    <div>
+                      <label style={labelStyle}>SUBCATEGORY</label>
+                      <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.sub_cat} onChange={e => set('sub_cat', e.target.value)}>
+                        <option value="">— select subcategory —</option>
+                        {LAVA_CATS[form.cat].map(sc => <option key={sc} value={sc}>{sc}</option>)}
+                      </select>
+                    </div>
+                  )}
+                </>
+              )}
 
               {/* Images */}
               <div>
