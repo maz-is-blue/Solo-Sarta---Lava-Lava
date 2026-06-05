@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
 import SoloFooter from './SoloFooter'
@@ -7,6 +7,7 @@ import { getProducts } from '../../services/api'
 import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
 import { useLanguage } from '../../context/LanguageContext'
+import { SOLO_CATS } from '../../constants/soloCategories'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
 
@@ -25,10 +26,7 @@ function Silhouette({ uid }) {
       </defs>
       <path d="M45,20 Q42,12 60,8 Q78,12 75,20 L85,80 Q60,90 35,80 Z" fill="none" stroke="#C9A96E" strokeWidth="0.7" opacity="0.35" />
       <path d="M35,80 Q10,130 20,195 Q60,200 100,195 Q110,130 85,80" fill="none" stroke="#C9A96E" strokeWidth="0.7" opacity="0.35" />
-      <path
-        d="M45,20 Q42,12 60,8 Q78,12 75,20 L85,80 Q100,130 95,195 Q60,200 25,195 Q20,130 35,80 Z"
-        fill={`url(#g${uid})`} opacity="0.8" filter={`url(#f${uid})`}
-      />
+      <path d="M45,20 Q42,12 60,8 Q78,12 75,20 L85,80 Q100,130 95,195 Q60,200 25,195 Q20,130 35,80 Z" fill={`url(#g${uid})`} opacity="0.8" filter={`url(#f${uid})`} />
       <line x1="52" y1="8" x2="48" y2="20" stroke="#C9A96E" strokeWidth="1.2" opacity="0.5" />
       <line x1="68" y1="8" x2="72" y2="20" stroke="#C9A96E" strokeWidth="1.2" opacity="0.5" />
       <path d="M38,78 Q60,86 82,78" fill="none" stroke="#C9A96E" strokeWidth="0.7" opacity="0.4" />
@@ -56,18 +54,10 @@ function PieceCard({ product, lang }) {
       }}
     >
       <div style={{ position: 'absolute', inset: 0, opacity: 0.04, pointerEvents: 'none', backgroundImage: GRAIN, backgroundSize: 'cover' }} />
-      <div style={{ position: 'absolute', top: 16, left: 16, fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>
-        {product.code}
-      </div>
-      <div style={{ position: 'absolute', top: 16, right: 16, fontSize: 10, letterSpacing: 1.5, color: 'rgba(250,248,245,0.25)', fontFamily: 'DM Sans' }}>
-        {product.cat.toUpperCase()}
-      </div>
+      <div style={{ position: 'absolute', top: 16, left: 16, fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>{product.code}</div>
+      <div style={{ position: 'absolute', top: 16, right: 16, fontSize: 10, letterSpacing: 1.5, color: 'rgba(250,248,245,0.25)', fontFamily: 'DM Sans' }}>{product.cat?.toUpperCase()}</div>
 
-      <div style={{
-        height: 220, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: 'linear-gradient(135deg, rgba(201,169,110,0.06), rgba(201,169,110,0.02))',
-        overflow: 'hidden', position: 'relative'
-      }}>
+      <div style={{ height: 220, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, rgba(201,169,110,0.06), rgba(201,169,110,0.02))', overflow: 'hidden', position: 'relative' }}>
         {product.image_url
           ? <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }} />
           : <Silhouette uid={product.id} />
@@ -80,10 +70,7 @@ function PieceCard({ product, lang }) {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'DM Sans' }}>₹{product.price.toLocaleString()}</span>
-          <span style={{
-            fontSize: 10, letterSpacing: 1.5, color: hovered ? '#C9A96E' : 'rgba(250,248,245,0.3)',
-            fontFamily: 'DM Sans', transition: 'color 0.25s ease'
-          }}>
+          <span style={{ fontSize: 10, letterSpacing: 1.5, color: hovered ? '#C9A96E' : 'rgba(250,248,245,0.3)', fontFamily: 'DM Sans', transition: 'color 0.25s ease' }}>
             VIEW →
           </span>
         </div>
@@ -92,10 +79,11 @@ function PieceCard({ product, lang }) {
   )
 }
 
-const CATEGORIES = ['All', 'Gown', 'Slip', 'Bodice', 'Suit', 'Dress', 'Sari']
-
 export default function SoloCollection() {
-  const [active, setActive] = useState('All')
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const activeCat = searchParams.get('cat') || null
+
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const mobile = useMobile()
@@ -109,7 +97,20 @@ export default function SoloCollection() {
       .finally(() => setLoading(false))
   }, [])
 
-  const filtered = active === 'All' ? products : products.filter(p => p.cat === active)
+  const filtered = activeCat ? products.filter(p => p.cat === activeCat) : products
+
+  const setFilter = (cat) => {
+    navigate(cat ? `/solo/collection?cat=${encodeURIComponent(cat)}` : '/solo/collection')
+  }
+
+  const catBtnStyle = (active) => ({
+    padding: '7px 20px', borderRadius: 999, cursor: 'pointer',
+    border: `1px solid ${active ? '#C9A96E' : 'rgba(201,169,110,0.25)'}`,
+    background: active ? '#C9A96E' : 'transparent',
+    color: active ? '#1A1A1A' : 'rgba(250,248,245,0.6)',
+    fontSize: 11, fontFamily: 'DM Sans', letterSpacing: 1.5,
+    fontWeight: active ? 600 : 400, transition: 'all 0.25s ease',
+  })
 
   return (
     <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
@@ -117,39 +118,33 @@ export default function SoloCollection() {
       <SoloNav />
 
       <div style={{ paddingTop: 110, position: 'relative', zIndex: 1 }}>
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          style={{ padding: mobile ? '32px 24px 0' : '48px 80px 0' }}
-        >
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}
+          style={{ padding: mobile ? '32px 24px 0' : '48px 80px 0' }}>
+
+          {/* Breadcrumb */}
+          {activeCat && (
+            <div style={{ fontSize: 11, color: 'rgba(201,169,110,0.4)', fontFamily: 'DM Sans', letterSpacing: 1.5, marginBottom: 14, display: 'flex', gap: 8 }}>
+              <span style={{ cursor: 'pointer' }} onClick={() => setFilter(null)}>ALL</span>
+              <span>›</span>
+              <span style={{ color: '#C9A96E' }}>{activeCat.toUpperCase()}</span>
+            </div>
+          )}
+
           <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>
             {get('solo.collection.season', "AUTUMN / WINTER '26")}
           </div>
           <h1 style={{ fontSize: 52, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, marginBottom: 8, lineHeight: 1.1 }}>
-            {get('solo.collection.heading', 'The Collection')}
+            {activeCat || get('solo.collection.heading', 'The Collection')}
           </h1>
-          <p style={{ fontSize: 14, color: 'rgba(250,248,245,0.45)', fontFamily: 'DM Sans', marginBottom: 40 }}>
-            {loading ? t('loading') : `${products.length} ${t('pieces')}`}{t('no_two_alike')}
+          <p style={{ fontSize: 14, color: 'rgba(250,248,245,0.45)', fontFamily: 'DM Sans', marginBottom: 36 }}>
+            {loading ? t('loading') : `${filtered.length} ${t('pieces')}`}{t('no_two_alike')}
           </p>
 
-          {/* Filter pills */}
+          {/* Category filters */}
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 48 }}>
-            {CATEGORIES.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setActive(cat)}
-                style={{
-                  padding: '7px 20px', borderRadius: 999, cursor: 'pointer',
-                  border: `1px solid ${active === cat ? '#C9A96E' : 'rgba(201,169,110,0.25)'}`,
-                  background: active === cat ? '#C9A96E' : 'transparent',
-                  color: active === cat ? '#1A1A1A' : 'rgba(250,248,245,0.6)',
-                  fontSize: 11, fontFamily: 'DM Sans', letterSpacing: 1.5,
-                  fontWeight: active === cat ? 600 : 400,
-                  transition: 'all 0.25s ease'
-                }}
-              >
+            <button onClick={() => setFilter(null)} style={catBtnStyle(!activeCat)}>ALL</button>
+            {SOLO_CATS.map(cat => (
+              <button key={cat} onClick={() => setFilter(cat)} style={catBtnStyle(activeCat === cat)}>
                 {cat.toUpperCase()}
               </button>
             ))}
@@ -161,18 +156,19 @@ export default function SoloCollection() {
           {loading ? (
             <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(250,248,245,0.3)', fontFamily: 'DM Sans', fontSize: 13 }}>{t('loading')}</div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: mobile ? 12 : 24 }}>
+            <motion.div
+              key={activeCat}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.35 }}
+              style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: mobile ? 12 : 24 }}
+            >
               {filtered.map((p, i) => (
-                <motion.div
-                  key={p.id}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: i * 0.07 }}
-                >
+                <motion.div key={p.id} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: i * 0.07 }}>
                   <PieceCard product={p} lang={lang} />
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
           )}
 
           {!loading && filtered.length === 0 && (
@@ -182,9 +178,8 @@ export default function SoloCollection() {
           )}
         </div>
 
-        {/* Footer band */}
         <div style={{ background: '#FAF8F5', padding: '48px 80px', textAlign: 'center' }}>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(26,26,26,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>BESPOKE ENQUIRIES</div>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(26,26,26,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>{t('bespoke_enquiries')}</div>
           <p style={{ fontSize: 15, color: 'rgba(26,26,26,0.6)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic', marginBottom: 24 }}>
             Each piece is made to measure. Prices are a guide — your commission is a conversation.
           </p>

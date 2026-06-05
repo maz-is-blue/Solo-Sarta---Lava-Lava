@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { getAdminProducts, createAdminProduct, updateAdminProduct, deleteAdminProduct, uploadMedia } from '../../services/adminApi'
 import { LAVA_CATS, LAVA_CAT_NAMES } from '../../constants/lavaCategories'
+import { SOLO_CATS } from '../../constants/soloCategories'
 
 const LAVA_TAGS = ['', 'Featured', 'New', 'Limited', 'Restock']
 const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL']
@@ -439,7 +440,10 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                   <div>
                     <label style={labelStyle}>CATEGORY *</label>
-                    <input style={inputStyle} value={form.cat} onChange={e => set('cat', e.target.value)} placeholder="e.g. Gown, Suit, Sari..." />
+                    <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.cat} onChange={e => set('cat', e.target.value)}>
+                      <option value="">— select category —</option>
+                      {SOLO_CATS.map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
                   </div>
                   <div>
                     <label style={labelStyle}>CODE</label>
