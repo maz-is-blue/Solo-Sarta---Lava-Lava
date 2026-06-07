@@ -49,4 +49,21 @@ export const getAdminOrders = (params = {}) =>
 export const updateAdminOrder = (id, data) =>
   adminApi.put(`/orders/${id}`, data)
 
+export const getAdminVideos = (brand) =>
+  adminApi.get('/videos', { params: { brand } })
+
+export const createAdminVideo = (data) =>
+  adminApi.post('/videos', data)
+
+export const deleteAdminVideo = (id) =>
+  adminApi.delete(`/videos/${id}`)
+
+export const uploadVideo = (file) => {
+  const fd = new FormData()
+  fd.append('file', file)
+  return adminApi.post('/media/upload-video', fd, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
+
 export default adminApi

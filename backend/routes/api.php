@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\AdminContentController;
 use App\Http\Controllers\Api\AdminProductController;
 use App\Http\Controllers\Api\AdminOrderController;
 use App\Http\Controllers\Api\MediaController;
+use App\Http\Controllers\Api\BrandVideoController;
+use App\Http\Controllers\Api\AdminBrandVideoController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -25,6 +27,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/orders', [OrderController::class, 'store']);
 
     Route::get('/content', [AdminContentController::class, 'index']);
+    Route::get('/videos', [BrandVideoController::class, 'index']);
 });
 
 // Admin routes
@@ -45,5 +48,10 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/orders', [AdminOrderController::class, 'index']);
         Route::put('/orders/{id}', [AdminOrderController::class, 'update']);
+
+        Route::get('/videos', [AdminBrandVideoController::class, 'index']);
+        Route::post('/videos', [AdminBrandVideoController::class, 'store']);
+        Route::delete('/videos/{id}', [AdminBrandVideoController::class, 'destroy']);
+        Route::post('/media/upload-video', [AdminBrandVideoController::class, 'uploadVideo']);
     });
 });

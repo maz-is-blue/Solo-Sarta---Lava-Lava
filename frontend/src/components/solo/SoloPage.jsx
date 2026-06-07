@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useCart } from '../../context/CartContext'
 import SoloNav from './SoloNav'
 import SoloFooter from './SoloFooter'
-import { getProducts } from '../../services/api'
+import { getProducts, getVideos } from '../../services/api'
 import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
 import { useLanguage } from '../../context/LanguageContext'
@@ -132,11 +132,14 @@ export default function SoloPage() {
   const [inviteEmail, setInviteEmail] = useState('')
   const [invited, setInvited] = useState(false)
   const [products, setProducts] = useState([])
+  const [videos, setVideos] = useState([])
+  const [currentVideo, setCurrentVideo] = useState(0)
   const mobile = useMobile()
   const { lang, t } = useLanguage()
 
   useEffect(() => {
     getProducts({ brand: 'solo' }).then(r => setProducts(r.data)).catch(() => {})
+    getVideos('solo').then(r => setVideos(r.data)).catch(() => {})
   }, [])
   const { get } = useContent()
 
@@ -152,7 +155,37 @@ export default function SoloPage() {
       <SoloNav />
 
       {/* Hero */}
-      <section style={{ paddingTop: mobile ? 80 : 100, minHeight: mobile ? 'auto' : '100vh', display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr', gap: 0, position: 'relative', zIndex: 1 }}>
+      <section style={{ paddingTop: mobile ? 80 : 100, minHeight: '100vh', position: 'relative', zIndex: 1, overflow: 'hidden' }}>
+
+        {/* Background video */}
+        {videos.length > 0 && (
+          <>
+            <video
+              key={videos[currentVideo % videos.length].id}
+              autoPlay
+              muted
+              playsInline
+              loop={videos.length === 1}
+              onEnded={videos.length > 1 ? () => setCurrentVideo(c => (c + 1) % videos.length) : undefined}
+              style={{
+                position: 'absolute', inset: 0, width: '100%', height: '100%',
+                objectFit: 'cover', zIndex: 0,
+              }}
+              src={videos[currentVideo % videos.length].url}
+            />
+            <div style={{
+              position: 'absolute', inset: 0, zIndex: 1,
+              background: 'linear-gradient(135deg, rgba(14,10,8,0.88) 0%, rgba(26,20,16,0.65) 55%, rgba(14,10,8,0.75) 100%)',
+            }} />
+          </>
+        )}
+
+        {/* Content grid */}
+        <div style={{
+          position: 'relative', zIndex: 2,
+          display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+          gap: 0, minHeight: `calc(100vh - ${mobile ? 80 : 100}px)`,
+        }}>
         {/* Left */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -211,47 +244,50 @@ export default function SoloPage() {
           </div>
         </motion.div>
 
-        {/* Right */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.9, delay: 0.15 }}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 80px 80px 40px', position: 'relative' }}
-        >
-          <div style={{
-            background: 'linear-gradient(135deg, #302A24 0%, #201C18 100%)',
-            border: '1px solid rgba(201,169,110,0.15)',
-            borderRadius: 4, padding: '48px 40px', width: '100%', maxWidth: 440,
-            position: 'relative', overflow: 'hidden'
-          }}>
-            {/* Background glow */}
+        {/* Right: decorative card — hidden when video is playing */}
+        {!videos.length && (
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.15 }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 80px 80px 40px', position: 'relative' }}
+          >
             <div style={{
-              position: 'absolute', width: 300, height: 300, top: -80, right: -60,
-              background: 'radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%)',
-              filter: 'blur(40px)', pointerEvents: 'none'
-            }} />
-            {/* Look label */}
-            <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 24 }}>LOOK 01</div>
-            {/* Gown silhouette */}
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
-              <GownSilhouette color1="#C9A96E" color2="#E8D5A3" />
-            </div>
-            {/* Quote card */}
-            <div style={{
-              background: 'rgba(201,169,110,0.06)', border: '1px solid rgba(201,169,110,0.12)',
-              padding: '16px 20px', borderRadius: 2, marginBottom: 24
+              background: 'linear-gradient(135deg, #302A24 0%, #201C18 100%)',
+              border: '1px solid rgba(201,169,110,0.15)',
+              borderRadius: 4, padding: '48px 40px', width: '100%', maxWidth: 440,
+              position: 'relative', overflow: 'hidden'
             }}>
-              <p style={{ fontSize: 13, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: 'rgba(250,248,245,0.7)', lineHeight: 1.7, marginBottom: 8 }}>
-                "{get('solo.home.mid_quote', 'Each piece begins as a conversation.')}"
-              </p>
-              <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>{get('solo.home.mid_attr', '— MAISON NOTES')}</div>
+              {/* Background glow */}
+              <div style={{
+                position: 'absolute', width: 300, height: 300, top: -80, right: -60,
+                background: 'radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%)',
+                filter: 'blur(40px)', pointerEvents: 'none'
+              }} />
+              {/* Look label */}
+              <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 24 }}>LOOK 01</div>
+              {/* Gown silhouette */}
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
+                <GownSilhouette color1="#C9A96E" color2="#E8D5A3" />
+              </div>
+              {/* Quote card */}
+              <div style={{
+                background: 'rgba(201,169,110,0.06)', border: '1px solid rgba(201,169,110,0.12)',
+                padding: '16px 20px', borderRadius: 2, marginBottom: 24
+              }}>
+                <p style={{ fontSize: 13, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: 'rgba(250,248,245,0.7)', lineHeight: 1.7, marginBottom: 8 }}>
+                  "{get('solo.home.mid_quote', 'Each piece begins as a conversation.')}"
+                </p>
+                <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>{get('solo.home.mid_attr', '— MAISON NOTES')}</div>
+              </div>
+              {/* Needle motif */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <NeedleMotif />
+              </div>
             </div>
-            {/* Needle motif */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <NeedleMotif />
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        )}
+        </div>{/* end content grid */}
       </section>
 
       {/* Story section */}

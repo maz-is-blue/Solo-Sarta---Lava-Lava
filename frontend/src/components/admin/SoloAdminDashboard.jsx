@@ -4,6 +4,7 @@ import { getAdminContent, bulkUpdateContent } from '../../services/adminApi'
 import { useMobile } from '../../hooks/useMobile'
 import AdminProductsTab from './AdminProductsTab'
 import AdminOrdersTab from './AdminOrdersTab'
+import AdminVideosTab from './AdminVideosTab'
 
 const SECTIONS = [
   { key: 'home',       label: 'Home Page' },
@@ -161,6 +162,7 @@ export default function SoloAdminDashboard() {
               {tabBtn('content', 'CONTENT')}
               {tabBtn('products', 'PRODUCTS')}
               {tabBtn('orders', 'ORDERS')}
+              {tabBtn('videos', 'VIDEOS')}
             </div>
 
             {/* Sub-nav for content tab */}
@@ -222,11 +224,12 @@ export default function SoloAdminDashboard() {
             )}
             <div>
               <div style={{ fontSize: 9, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', marginBottom: 2 }}>
-                {activeTab === 'content' ? 'EDITING' : activeTab === 'products' ? 'MANAGING' : 'TRACKING'}
+                {activeTab === 'content' ? 'EDITING' : activeTab === 'products' ? 'MANAGING' : activeTab === 'videos' ? 'MANAGING' : 'TRACKING'}
               </div>
               <div style={{ fontSize: 16, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5' }}>
                 {activeTab === 'content' ? SECTIONS.find(s => s.key === activeSection)?.label
                   : activeTab === 'products' ? 'Products'
+                  : activeTab === 'videos' ? 'Hero Videos'
                   : 'Orders'}
               </div>
             </div>
@@ -270,6 +273,10 @@ export default function SoloAdminDashboard() {
 
         {activeTab === 'orders' && (
           <AdminOrdersTab brand="solo" accent={ACCENT} />
+        )}
+
+        {activeTab === 'videos' && (
+          <AdminVideosTab brand="solo" accent={ACCENT} />
         )}
       </div>
     </div>
