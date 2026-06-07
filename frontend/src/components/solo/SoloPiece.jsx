@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
 import SoloFooter from './SoloFooter'
@@ -56,6 +56,8 @@ export default function SoloPiece() {
   const navigate = useNavigate()
   const { addItem } = useCart()
   const [added, setAdded] = useState(false)
+  const [selectedSize, setSelectedSize] = useState(null)
+  const [selectedImg, setSelectedImg] = useState(0)
   const [product, setProduct] = useState(null)
   const [otherPieces, setOtherPieces] = useState([])
   const [loadingProduct, setLoadingProduct] = useState(true)
@@ -73,6 +75,17 @@ export default function SoloPiece() {
       .then(r => setOtherPieces(r.data.filter(p => p.slug !== slug).slice(0, 3)))
       .catch(() => {})
   }, [slug])
+
+  const displayImages = useMemo(() => {
+    if (!product) return []
+    const si = product.size_images || {}
+    if (selectedSize && si[selectedSize]?.length) return si[selectedSize]
+    if (product.images?.length) return product.images
+    if (product.image_url) return [product.image_url]
+    return []
+  }, [selectedSize, product])
+
+  useEffect(() => { setSelectedImg(0) }, [selectedSize])
 
   if (loadingProduct) {
     return (
@@ -131,12 +144,26 @@ export default function SoloPiece() {
                 background: 'radial-gradient(circle, rgba(201,169,110,0.1) 0%, transparent 70%)',
                 filter: 'blur(60px)', pointerEvents: 'none'
               }} />
-              <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: product.image_url ? 0 : 40 }}>{product.code}</div>
-              {product.image_url
-                ? <img src={product.image_url} alt={product.name} style={{ width: '100%', maxWidth: 320, borderRadius: 4, objectFit: 'cover', marginBottom: 24 }} />
+              <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: displayImages.length ? 0 : 40 }}>{product.code}</div>
+              {displayImages[selectedImg]
+                ? <img src={displayImages[selectedImg]} alt={product.name} style={{ width: '100%', maxWidth: 320, borderRadius: 4, objectFit: 'cover', marginBottom: displayImages.length > 1 ? 12 : 24 }} />
                 : <LargeSilhouette />
               }
-              <div style={{ marginTop: 32, fontSize: 11, letterSpacing: 2, color: 'rgba(250,248,245,0.2)', fontFamily: 'DM Sans' }}>
+              {displayImages.length > 1 && (
+                <div style={{ display: 'flex', gap: 8, marginBottom: 24, justifyContent: 'center' }}>
+                  {displayImages.map((url, idx) => (
+                    <button key={idx} onClick={() => setSelectedImg(idx)} style={{
+                      width: 52, height: 52, borderRadius: 3, padding: 0, overflow: 'hidden',
+                      border: `1px solid ${selectedImg === idx ? '#C9A96E' : 'rgba(201,169,110,0.15)'}`,
+                      cursor: 'pointer', opacity: selectedImg === idx ? 1 : 0.55,
+                      transition: 'all 0.2s',
+                    }}>
+                      <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </button>
+                  ))}
+                </div>
+              )}
+              <div style={{ marginTop: 8, fontSize: 11, letterSpacing: 2, color: 'rgba(250,248,245,0.2)', fontFamily: 'DM Sans' }}>
                 AW/26 — ATELIER
               </div>
             </div>
@@ -175,6 +202,25 @@ export default function SoloPiece() {
               ))}
             </div>
 
+            {/* Size selector */}
+            {product.sizes?.length > 0 && (
+              <div style={{ marginBottom: 28 }}>
+                <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>SIZE GUIDE</div>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {product.sizes.map(s => (
+                    <button key={s} onClick={() => setSelectedSize(s === selectedSize ? null : s)} style={{
+                      width: 52, height: 44, borderRadius: 3,
+                      border: `1px solid ${selectedSize === s ? '#C9A96E' : 'rgba(201,169,110,0.2)'}`,
+                      background: selectedSize === s ? 'rgba(201,169,110,0.12)' : 'transparent',
+                      color: selectedSize === s ? '#C9A96E' : 'rgba(250,248,245,0.45)',
+                      fontSize: 11, fontFamily: 'DM Sans', cursor: 'pointer', letterSpacing: 1,
+                      transition: 'all 0.2s ease',
+                    }}>{s}</button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* CTAs */}
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               <button
@@ -188,7 +234,7 @@ export default function SoloPiece() {
                 {t('request_fitting')}
               </button>
               <button
-                onClick={() => { addItem('solo', product, 'Bespoke'); setAdded(true); setTimeout(() => setAdded(false), 2500) }}
+                onClick={() => { addItem('solo', product, selectedSize || 'Bespoke'); setAdded(true); setTimeout(() => setAdded(false), 2500) }}
                 style={{
                   padding: '14px 32px', borderRadius: 2, cursor: 'pointer',
                   border: '1px solid rgba(201,169,110,0.4)',

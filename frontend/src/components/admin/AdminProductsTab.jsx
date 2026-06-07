@@ -8,17 +8,17 @@ const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL']
 
 function emptyForm(brand) {
   if (brand === 'solo') {
-    return { name: '', price: '', cat: '', code: '', process_time: '', fabric: '', product_desc: '', product_desc_ar: '', name_ar: '', images: [], active: true }
+    return { name: '', price: '', cat: '', code: '', process_time: '', fabric: '', product_desc: '', product_desc_ar: '', name_ar: '', images: [], sizes: [], size_images: {}, active: true }
   }
-  return { name: '', price: '', cat: '', sub_cat: '', tag: '', sub: '', sub_ar: '', drop: '05', sizes: ['S', 'M', 'L'], story: '', story_ar: '', details: '', details_ar: '', care: '', care_ar: '', fit: '', fit_ar: '', name_ar: '', images: [], active: true }
+  return { name: '', price: '', cat: '', sub_cat: '', tag: '', sub: '', sub_ar: '', drop: '05', sizes: ['S', 'M', 'L'], size_images: {}, story: '', story_ar: '', details: '', details_ar: '', care: '', care_ar: '', fit: '', fit_ar: '', name_ar: '', images: [], active: true }
 }
 
 function formFromProduct(p, brand) {
   const images = p.images?.length ? p.images : (p.image_url ? [p.image_url] : [])
   if (brand === 'solo') {
-    return { name: p.name || '', price: p.price || '', cat: p.cat || '', code: p.code || '', process_time: p.process_time || '', fabric: p.fabric || '', product_desc: p.product_desc || '', product_desc_ar: p.product_desc_ar || '', name_ar: p.name_ar || '', images, active: p.active !== false }
+    return { name: p.name || '', price: p.price || '', cat: p.cat || '', code: p.code || '', process_time: p.process_time || '', fabric: p.fabric || '', product_desc: p.product_desc || '', product_desc_ar: p.product_desc_ar || '', name_ar: p.name_ar || '', images, sizes: p.sizes || [], size_images: p.size_images || {}, active: p.active !== false }
   }
-  return { name: p.name || '', price: p.price || '', cat: p.cat || '', sub_cat: p.sub_cat || '', tag: p.tag || '', sub: p.sub || '', sub_ar: p.sub_ar || '', drop: p.drop || '05', sizes: p.sizes || [], story: p.story || '', story_ar: p.story_ar || '', details: p.details || '', details_ar: p.details_ar || '', care: p.care || '', care_ar: p.care_ar || '', fit: p.fit || '', fit_ar: p.fit_ar || '', name_ar: p.name_ar || '', images, active: p.active !== false }
+  return { name: p.name || '', price: p.price || '', cat: p.cat || '', sub_cat: p.sub_cat || '', tag: p.tag || '', sub: p.sub || '', sub_ar: p.sub_ar || '', drop: p.drop || '05', sizes: p.sizes || [], size_images: p.size_images || {}, story: p.story || '', story_ar: p.story_ar || '', details: p.details || '', details_ar: p.details_ar || '', care: p.care || '', care_ar: p.care_ar || '', fit: p.fit || '', fit_ar: p.fit_ar || '', name_ar: p.name_ar || '', images, active: p.active !== false }
 }
 
 function ImageUploader({ images, onChange, accent, uploading, onUpload }) {
@@ -207,6 +207,56 @@ function ArabicSection({ brand, form, set, inputStyle, labelStyle }) {
   )
 }
 
+function SizePhotosSection({ sizes, sizeImages, onChangeSizeImages, accent, uploading, onSizeUpload }) {
+  const [openSize, setOpenSize] = useState(null)
+  const labelStyle = { fontSize: 10, letterSpacing: 1.5, color: 'rgba(250,248,245,0.45)', fontFamily: 'DM Sans', display: 'block', marginBottom: 6 }
+
+  if (!sizes || !sizes.length) return null
+
+  return (
+    <div>
+      <label style={labelStyle}>
+        PHOTOS PER SIZE
+        <span style={{ color: 'rgba(250,248,245,0.25)', fontSize: 9, letterSpacing: 0.5, marginLeft: 8, fontWeight: 400 }}>overrides default photos when that size is selected</span>
+      </label>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
+        {sizes.map(size => {
+          const imgs = sizeImages[size] || []
+          const isOpen = openSize === size
+          return (
+            <div key={size} style={{ border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, overflow: 'hidden' }}>
+              <button
+                type="button"
+                onClick={() => setOpenSize(isOpen ? null : size)}
+                style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'rgba(255,255,255,0.02)', border: 'none', cursor: 'pointer', color: '#FAF8F5', fontFamily: 'DM Sans', fontSize: 12 }}
+              >
+                <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                  <span style={{ fontWeight: 600, fontSize: 13 }}>{size}</span>
+                  <span style={{ fontSize: 11, color: imgs.length ? accent : 'rgba(250,248,245,0.25)' }}>
+                    {imgs.length ? `${imgs.length} photo${imgs.length > 1 ? 's' : ''}` : 'uses default'}
+                  </span>
+                </div>
+                <span style={{ fontSize: 16, color: 'rgba(250,248,245,0.4)', transition: 'transform 0.2s', display: 'inline-block', transform: isOpen ? 'rotate(45deg)' : 'none' }}>+</span>
+              </button>
+              {isOpen && (
+                <div style={{ padding: '0 14px 14px', background: 'rgba(255,255,255,0.01)' }}>
+                  <ImageUploader
+                    images={imgs}
+                    onChange={newImgs => onChangeSizeImages(size, newImgs)}
+                    accent={accent}
+                    uploading={uploading}
+                    onUpload={e => onSizeUpload(size, e)}
+                  />
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 export default function AdminProductsTab({ brand, accent, gradient }) {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -251,10 +301,13 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
   const set = (k, v) => setForm(prev => ({ ...prev, [k]: v }))
 
   const toggleSize = (s) => {
-    setForm(prev => ({
-      ...prev,
-      sizes: prev.sizes.includes(s) ? prev.sizes.filter(x => x !== s) : [...prev.sizes, s]
-    }))
+    setForm(prev => {
+      const had = (prev.sizes || []).includes(s)
+      const newSizes = had ? (prev.sizes || []).filter(x => x !== s) : [...(prev.sizes || []), s]
+      const newSizeImages = { ...(prev.size_images || {}) }
+      if (had) delete newSizeImages[s]
+      return { ...prev, sizes: newSizes, size_images: newSizeImages }
+    })
   }
 
   const handleFilesUpload = async (e) => {
@@ -271,6 +324,23 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
     setUploading(false)
     e.target.value = ''
   }
+
+  const handleSizeFilesUpload = async (size, e) => {
+    const files = Array.from(e.target.files)
+    if (!files.length) return
+    setUploading(true)
+    setError('')
+    try {
+      const urls = await Promise.all(files.map(f => uploadMedia(f).then(r => r.data.url)))
+      set('size_images', { ...form.size_images, [size]: [...(form.size_images[size] || []), ...urls] })
+    } catch {
+      setError('Upload failed. Check file size (max 8 MB each).')
+    }
+    setUploading(false)
+    e.target.value = ''
+  }
+
+  const setSizeImages = (size, imgs) => set('size_images', { ...form.size_images, [size]: imgs })
 
   const handleSave = async () => {
     if (!form.name.trim() || !form.price || !form.cat.trim()) {
@@ -495,9 +565,38 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
                 />
               </div>
 
+              {/* Per-size photos */}
+              {form.sizes?.length > 0 && (
+                <SizePhotosSection
+                  sizes={form.sizes}
+                  sizeImages={form.size_images || {}}
+                  onChangeSizeImages={setSizeImages}
+                  accent={accent}
+                  uploading={uploading}
+                  onSizeUpload={handleSizeFilesUpload}
+                />
+              )}
+
               {/* Brand-specific fields */}
               {brand === 'solo' ? (
                 <>
+                  <div>
+                    <label style={labelStyle}>SIZES</label>
+                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 6 }}>
+                      {ALL_SIZES.map(s => (
+                        <button key={s} type="button" onClick={() => toggleSize(s)} style={{
+                          width: 44, height: 36, borderRadius: 6,
+                          border: `1px solid ${form.sizes?.includes(s) ? accent : 'rgba(255,255,255,0.15)'}`,
+                          background: form.sizes?.includes(s) ? `${accent}22` : 'transparent',
+                          color: form.sizes?.includes(s) ? accent : 'rgba(250,248,245,0.5)',
+                          fontSize: 11, fontFamily: 'DM Sans', cursor: 'pointer', fontWeight: 600,
+                        }}>{s}</button>
+                      ))}
+                    </div>
+                    <div style={{ fontSize: 10, color: 'rgba(250,248,245,0.3)', fontFamily: 'DM Sans' }}>
+                      Guides the fitting consultation — each size can have its own photos below.
+                    </div>
+                  </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                     <div>
                       <label style={labelStyle}>PROCESS TIME</label>

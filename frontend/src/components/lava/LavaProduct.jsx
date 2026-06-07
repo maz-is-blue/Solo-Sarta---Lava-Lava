@@ -44,6 +44,7 @@ export default function LavaProduct() {
   const [loadingProduct, setLoadingProduct] = useState(true)
 
   const [selectedSize, setSelectedSize] = useState(null)
+  const [selectedImg, setSelectedImg] = useState(0)
   const [selectedColor, setSelectedColor] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [added, setAdded] = useState(false)
@@ -58,6 +59,17 @@ export default function LavaProduct() {
       .finally(() => setLoadingProduct(false))
     getProducts({ brand: 'lava' }).then(r => setAllProducts(r.data)).catch(() => {})
   }, [slug])
+
+  const displayImages = useMemo(() => {
+    if (!product) return []
+    const si = product.size_images || {}
+    if (selectedSize && si[selectedSize]?.length) return si[selectedSize]
+    if (product.images?.length) return product.images
+    if (product.image_url) return [product.image_url]
+    return []
+  }, [selectedSize, product])
+
+  useEffect(() => { setSelectedImg(0) }, [selectedSize])
 
   const related = useMemo(() => {
     if (!product) return []
@@ -115,18 +127,18 @@ export default function LavaProduct() {
         <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr', gap: mobile ? 32 : 64, alignItems: 'start' }}>
           {/* Left: Image */}
           <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }}>
-            <LavaGlass style={{ overflow: 'hidden', marginBottom: 20 }}>
+            <LavaGlass style={{ overflow: 'hidden', marginBottom: 12 }}>
               <div style={{
                 height: 520, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
                 background: `linear-gradient(135deg, ${palette[0]}25, ${palette[1]}15, ${palette[2]}25)`
               }}>
                 <div style={{
                   position: 'absolute', width: 280, height: 280, borderRadius: '50%',
-                  background: `radial-gradient(circle, ${palette[selectedColor]}50, transparent 70%)`,
+                  background: `radial-gradient(circle, ${palette[0]}50, transparent 70%)`,
                   filter: 'blur(50px)'
                 }} />
-                {product.image_url
-                  ? <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }} />
+                {displayImages[selectedImg]
+                  ? <img src={displayImages[selectedImg]} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }} />
                   : <ProductSilhouette type={product.silhouette} palette={palette} width={200} height={320} />
                 }
                 {product.tag && (
@@ -140,21 +152,40 @@ export default function LavaProduct() {
                 )}
               </div>
             </LavaGlass>
-            {/* Color thumbnails */}
-            <div style={{ display: 'flex', gap: 12 }}>
-              {palette.map((c, i) => (
-                <button
-                  key={i}
-                  onClick={() => setSelectedColor(i)}
-                  style={{
-                    flex: 1, height: 72, borderRadius: 12, border: selectedColor === i ? `2px solid ${c}` : '2px solid transparent',
-                    background: `linear-gradient(135deg, ${c}60, ${palette[(i+1)%3]}40)`,
-                    cursor: 'pointer', transition: 'all 0.2s ease',
-                    boxShadow: selectedColor === i ? `0 4px 16px ${c}60` : 'none'
-                  }}
-                />
-              ))}
-            </div>
+            {displayImages.length > 1 ? (
+              <div style={{ display: 'flex', gap: 8 }}>
+                {displayImages.map((url, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedImg(idx)}
+                    style={{
+                      flex: 1, height: 72, borderRadius: 10, padding: 0, overflow: 'hidden',
+                      border: `2px solid ${selectedImg === idx ? palette[0] : 'transparent'}`,
+                      cursor: 'pointer', transition: 'all 0.2s ease',
+                      opacity: selectedImg === idx ? 1 : 0.5,
+                      boxShadow: selectedImg === idx ? `0 4px 16px ${palette[0]}40` : 'none',
+                    }}
+                  >
+                    <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div style={{ display: 'flex', gap: 12 }}>
+                {palette.map((c, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedColor(i)}
+                    style={{
+                      flex: 1, height: 72, borderRadius: 12, border: selectedColor === i ? `2px solid ${c}` : '2px solid transparent',
+                      background: `linear-gradient(135deg, ${c}60, ${palette[(i+1)%3]}40)`,
+                      cursor: 'pointer', transition: 'all 0.2s ease',
+                      boxShadow: selectedColor === i ? `0 4px 16px ${c}60` : 'none'
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </motion.div>
 
           {/* Right: Details */}
