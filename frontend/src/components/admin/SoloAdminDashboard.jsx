@@ -128,14 +128,12 @@ export default function SoloAdminDashboard() {
 
   const SIDEBAR_W = 220
 
-  const tabBtn = (tab, label) => (
-    <button onClick={() => { setActiveTab(tab); setSidebarOpen(false) }} style={{
-      flex: 1, padding: '8px 4px', background: activeTab === tab ? 'rgba(201,169,110,0.15)' : 'transparent',
-      border: 'none', borderBottom: `2px solid ${activeTab === tab ? ACCENT : 'transparent'}`,
-      cursor: 'pointer', fontSize: 9, letterSpacing: 1.5, fontFamily: 'DM Sans',
-      color: activeTab === tab ? ACCENT : 'rgba(250,248,245,0.4)', transition: 'all 0.2s',
-    }}>{label}</button>
-  )
+  const NAV_ITEMS = [
+    { tab: 'content',  label: 'Content' },
+    { tab: 'products', label: 'Products' },
+    { tab: 'orders',   label: 'Orders' },
+    { tab: 'videos',   label: 'Videos' },
+  ]
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#141009', fontFamily: 'DM Sans', color: '#FAF8F5' }}>
@@ -157,34 +155,50 @@ export default function SoloAdminDashboard() {
               <div style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, fontSize: 22, color: ACCENT }}>Solo Sarto</div>
             </div>
 
-            {/* Tab switcher */}
-            <div style={{ display: 'flex', borderBottom: '1px solid rgba(201,169,110,0.1)' }}>
-              {tabBtn('content', 'CONTENT')}
-              {tabBtn('products', 'PRODUCTS')}
-              {tabBtn('orders', 'ORDERS')}
-              {tabBtn('videos', 'VIDEOS')}
-            </div>
-
-            {/* Sub-nav for content tab */}
-            {activeTab === 'content' && (
-              <nav style={{ flex: 1, padding: '12px 0' }}>
-                {SECTIONS.map(s => (
-                  <button key={s.key} onClick={() => { setActiveSection(s.key); setSidebarOpen(false) }} style={{
-                    width: '100%', textAlign: 'left', padding: '11px 20px',
-                    background: activeSection === s.key ? 'rgba(201,169,110,0.1)' : 'transparent',
-                    border: 'none', cursor: 'pointer',
-                    borderLeft: `2px solid ${activeSection === s.key ? ACCENT : 'transparent'}`,
-                    fontSize: 11, letterSpacing: 1.5,
-                    color: activeSection === s.key ? ACCENT : 'rgba(250,248,245,0.5)',
-                    transition: 'all 0.2s',
-                  }}>
-                    {s.label.toUpperCase()}
+            {/* Vertical nav */}
+            <nav style={{ flex: 1, padding: '8px 0' }}>
+              {NAV_ITEMS.map(({ tab, label }) => (
+                <div key={tab}>
+                  <button
+                    onClick={() => { setActiveTab(tab); setSidebarOpen(false) }}
+                    style={{
+                      width: '100%', textAlign: 'left', padding: '12px 20px',
+                      background: activeTab === tab ? 'rgba(201,169,110,0.12)' : 'transparent',
+                      border: 'none', cursor: 'pointer',
+                      borderLeft: `2px solid ${activeTab === tab ? ACCENT : 'transparent'}`,
+                      fontSize: 11, letterSpacing: 1.5, fontFamily: 'DM Sans',
+                      color: activeTab === tab ? ACCENT : 'rgba(250,248,245,0.5)',
+                      transition: 'all 0.2s',
+                    }}
+                  >
+                    {label.toUpperCase()}
                   </button>
-                ))}
-              </nav>
-            )}
 
-            <div style={{ flex: activeTab !== 'content' ? 1 : 0 }} />
+                  {/* Content sub-sections */}
+                  {tab === 'content' && activeTab === 'content' && (
+                    <div>
+                      {SECTIONS.map(s => (
+                        <button
+                          key={s.key}
+                          onClick={() => { setActiveSection(s.key); setSidebarOpen(false) }}
+                          style={{
+                            width: '100%', textAlign: 'left', padding: '9px 20px 9px 32px',
+                            background: activeSection === s.key ? 'rgba(201,169,110,0.07)' : 'transparent',
+                            border: 'none', cursor: 'pointer',
+                            borderLeft: `2px solid ${activeSection === s.key ? ACCENT : 'transparent'}`,
+                            fontSize: 10, letterSpacing: 1.2, fontFamily: 'DM Sans',
+                            color: activeSection === s.key ? ACCENT : 'rgba(250,248,245,0.35)',
+                            transition: 'all 0.2s',
+                          }}
+                        >
+                          {s.label.toUpperCase()}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </nav>
 
             {/* Bottom */}
             <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(201,169,110,0.1)', display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -224,13 +238,11 @@ export default function SoloAdminDashboard() {
             )}
             <div>
               <div style={{ fontSize: 9, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', marginBottom: 2 }}>
-                {activeTab === 'content' ? 'EDITING' : activeTab === 'products' ? 'MANAGING' : activeTab === 'videos' ? 'MANAGING' : 'TRACKING'}
+                {NAV_ITEMS.find(n => n.tab === activeTab)?.label.toUpperCase()}
               </div>
               <div style={{ fontSize: 16, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5' }}>
                 {activeTab === 'content' ? SECTIONS.find(s => s.key === activeSection)?.label
-                  : activeTab === 'products' ? 'Products'
-                  : activeTab === 'videos' ? 'Hero Videos'
-                  : 'Orders'}
+                  : NAV_ITEMS.find(n => n.tab === activeTab)?.label}
               </div>
             </div>
           </div>
