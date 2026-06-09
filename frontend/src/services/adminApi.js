@@ -58,11 +58,14 @@ export const createAdminVideo = (data) =>
 export const deleteAdminVideo = (id) =>
   adminApi.delete(`/videos/${id}`)
 
-export const uploadVideo = (file) => {
+export const uploadVideo = (file, onProgress) => {
   const fd = new FormData()
   fd.append('file', file)
   return adminApi.post('/media/upload-video', fd, {
     headers: { 'Content-Type': 'multipart/form-data' },
+    onUploadProgress: onProgress
+      ? e => onProgress(e.total ? Math.round((e.loaded * 100) / e.total) : 0)
+      : undefined,
   })
 }
 

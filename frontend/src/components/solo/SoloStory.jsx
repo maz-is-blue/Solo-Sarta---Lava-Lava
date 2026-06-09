@@ -24,7 +24,7 @@ export default function SoloStory() {
 
   const PILLARS = [
     { title: get('solo.story.pillar1_title', 'Singularity'), body: get('solo.story.pillar1_body', 'We have never made two identical pieces. Every pattern is drawn by hand for one person, then destroyed.') },
-    { title: get('solo.story.pillar2_title', 'Time'), body: get('solo.story.pillar2_body', 'A Solo Sarto commission takes between eight and twenty-four weeks. This is not a flaw — it is the point.') },
+    { title: get('solo.story.pillar2_title', 'Time'), body: get('solo.story.pillar2_body', 'A Solo Sarto commission takes between two and five weeks. This is not a flaw — it is the point.') },
     { title: get('solo.story.pillar3_title', 'Silence'), body: get('solo.story.pillar3_body', 'No seasonal collections. No lookbooks. No fast fashion. We work when we are ready, for clients who are ready to wait.') },
     { title: get('solo.story.pillar4_title', 'Craft'), body: get('solo.story.pillar4_body', 'Eleven master tailors who trained in Naples, Paris, and Dhaka. Between them, over 300 years of accumulated knowledge.') },
   ]
@@ -49,9 +49,7 @@ export default function SoloStory() {
           }}>
             {get('solo.story.headline', 'A needle, a thread, and a refusal to rush.')}
           </h1>
-          <p style={{ fontSize: 16, color: 'rgba(250,248,245,0.55)', fontFamily: 'DM Sans', lineHeight: 1.9, maxWidth: 580 }}>
-            {get('solo.story.intro', 'Solo Sarto began in a small room in 2018 with a single tailor, a borrowed machine, and a conviction: that the most extraordinary thing a garment could be was irreplaceable.')}
-          </p>
+
         </motion.section>
 
         {/* Founding */}

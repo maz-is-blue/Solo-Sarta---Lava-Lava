@@ -10,8 +10,6 @@ import { useContent } from '../../context/ContentContext'
 const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.7 } }
 
 const TIMELINE = [
-  { year: '2018', title: 'Solo Sarto opens its doors', body: 'Bespoke couture for those who know. Eleven master tailors. A private atelier in Mumbai.' },
-  { year: '2021', title: 'The first riot', body: 'A collection too colorful for couture, too careful for fast fashion. We put it away. Then we didn\'t.' },
   { year: '2024', title: 'Lava Lava is born', body: 'The diffusion line drops. Drop 01. Color, louder. Sold out in 72 hours. We knew.' },
   { year: '2026', title: 'Drop 04 · Solar Bloom', body: '12 pieces. 200–400 editions each. Sell out in 48h. The world is catching up to the feeling.' },
 ]

@@ -415,45 +415,46 @@ export default function LavaHome() {
         </motion.div>
       </section>
 
-      {/* ── COLOR STORY ─────────────────────────────────────── */}
+      {/* ── FEATURED PRODUCTS ───────────────────────────────── */}
       <section style={{ padding: mobile ? '56px 20px' : '80px 72px' }}>
         <motion.div {...fadeUp} style={{ marginBottom: 48, textAlign: 'center' }}>
           <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.7)', fontFamily: 'DM Sans', marginBottom: 8 }}>
-            {get('lava.home.palette_label', 'THE PALETTE')}
+            {get('lava.home.featured_label', 'DROP 04')}
           </div>
           <h2 style={{ fontSize: 38, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400, color: '#fff' }}>
-            {get('lava.home.palette_heading', 'The Solar Bloom Palette')}
+            {get('lava.home.featured_heading', 'Pieces from the Drop')}
           </h2>
         </motion.div>
-        <motion.div {...fadeUp} style={{ display: 'flex', gap: 28, justifyContent: 'center', flexWrap: 'wrap' }}>
-          {[
-            ['#E8906A', 'Solar'],
-            ['#D96A8A', 'Coral Daze'],
-            ['#D99AB4', 'Sunset Rose'],
-            ['#8B6FB8', 'Lilac Pulse'],
-            ['#A990CC', 'Cosmic Plum'],
-          ].map(([color, name]) => (
-            <div key={name} style={{ textAlign: 'center' }}>
-              <div style={{
-                width: 100, height: 100, borderRadius: '50%', background: color,
-                margin: '0 auto 14px',
-                boxShadow: `0 8px 32px ${color}70, 0 0 0 4px rgba(255,255,255,0.25)`,
-                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                cursor: 'default'
-              }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = 'scale(1.12) translateY(-4px)'
-                  e.currentTarget.style.boxShadow = `0 16px 48px ${color}90, 0 0 0 4px rgba(255,255,255,0.4)`
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = 'scale(1)'
-                  e.currentTarget.style.boxShadow = `0 8px 32px ${color}70, 0 0 0 4px rgba(255,255,255,0.25)`
-                }}
-              />
-              <div style={{ fontSize: 13, fontFamily: 'DM Sans', color: '#fff', fontWeight: 500, marginBottom: 3 }}>{name}</div>
-              <div style={{ fontSize: 11, fontFamily: 'DM Sans', color: 'rgba(255,255,255,0.55)', letterSpacing: 1 }}>{color}</div>
+        <motion.div {...fadeUp} style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: mobile ? 16 : 24, maxWidth: 1100, margin: '0 auto' }}>
+          {products.slice(0, 4).map(p => (
+            <div
+              key={p.id}
+              onClick={() => navigate(`/lava/product/${p.slug}`)}
+              style={{ cursor: 'pointer', borderRadius: 20, overflow: 'hidden', background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.35)', transition: 'transform 0.25s ease, box-shadow 0.25s ease' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = `0 20px 48px rgba(0,0,0,0.18)` }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
+            >
+              <div style={{ background: `linear-gradient(145deg, ${p.palette[0]}, ${p.palette[1]}, ${p.palette[2]})`, height: mobile ? 140 : 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <ProductSilhouette type={p.silhouette} palette={['rgba(255,255,255,0.7)', 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0.35)']} width={mobile ? 70 : 90} height={mobile ? 110 : 140} />
+              </div>
+              <div style={{ padding: mobile ? '12px 14px' : '16px 18px' }}>
+                {p.tag && <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(255,255,255,0.65)', fontFamily: 'DM Sans', marginBottom: 4 }}>{p.tag.toUpperCase()}</div>}
+                <div style={{ fontSize: mobile ? 13 : 15, fontFamily: 'Cormorant Garamond', fontWeight: 600, color: '#fff', marginBottom: 4, lineHeight: 1.2 }}>{p.name}</div>
+                <div style={{ fontSize: mobile ? 11 : 12, fontFamily: 'DM Sans', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}>{p.sub}</div>
+                <div style={{ fontSize: mobile ? 13 : 14, fontFamily: 'DM Sans', fontWeight: 600, color: '#fff' }}>₹{p.price.toLocaleString()}</div>
+              </div>
             </div>
           ))}
+        </motion.div>
+        <motion.div {...fadeUp} style={{ textAlign: 'center', marginTop: 36 }}>
+          <button
+            onClick={() => navigate('/lava/collection')}
+            style={{ padding: '14px 40px', borderRadius: 999, background: 'rgba(255,255,255,0.22)', border: '1.5px solid rgba(255,255,255,0.55)', color: '#fff', fontSize: 13, fontFamily: 'DM Sans', letterSpacing: 2, cursor: 'pointer', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', transition: 'background 0.2s ease' }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.35)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.22)'}
+          >
+            VIEW ALL PIECES
+          </button>
         </motion.div>
       </section>
 

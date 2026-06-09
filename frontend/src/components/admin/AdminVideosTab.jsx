@@ -1,13 +1,16 @@
-import { useState, useEffect } from 'react'
-import { getAdminVideos, createAdminVideo, deleteAdminVideo } from '../../services/adminApi'
+import { useState, useEffect, useRef } from 'react'
+import { getAdminVideos, createAdminVideo, deleteAdminVideo, uploadVideo } from '../../services/adminApi'
 
 export default function AdminVideosTab({ brand, accent }) {
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
   const [urlInput, setUrlInput] = useState('')
   const [adding, setAdding] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
   const [error, setError] = useState('')
   const [deleteId, setDeleteId] = useState(null)
+  const fileRef = useRef(null)
 
   useEffect(() => { load() }, [brand])
 
@@ -31,6 +34,22 @@ export default function AdminVideosTab({ brand, accent }) {
     setAdding(false)
   }
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    setUploading(true); setUploadProgress(0); setError('')
+    try {
+      const up = await uploadVideo(file, pct => setUploadProgress(pct))
+      const r = await createAdminVideo({ brand, url: up.data.url, sort_order: videos.length })
+      setVideos(prev => [...prev, r.data])
+    } catch (err) {
+      const msg = err.response?.data?.message || err.response?.data?.errors?.file?.[0]
+      setError(msg || 'Upload failed. Make sure the server has been configured for large uploads.')
+    }
+    setUploading(false); setUploadProgress(0)
+    e.target.value = ''
+  }
+
   const handleDelete = async (id) => {
     try {
       await deleteAdminVideo(id)
@@ -52,18 +71,6 @@ export default function AdminVideosTab({ brand, accent }) {
         </div>
       </div>
 
-      {/* How to get a URL */}
-      <div style={{
-        background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
-        borderRadius: 8, padding: '16px 20px', marginBottom: 20,
-        fontSize: 12, color: 'rgba(250,248,245,0.4)', fontFamily: 'DM Sans', lineHeight: 1.8,
-      }}>
-        <div style={{ fontSize: 10, letterSpacing: 1.5, color: 'rgba(250,248,245,0.25)', marginBottom: 8 }}>HOW TO GET A VIDEO URL</div>
-        1. Go to <span style={{ color: accent }}>cloudinary.com</span> (free) → Upload your video → copy the URL<br />
-        2. Or use Google Drive: share the file → copy link → paste below<br />
-        3. Any direct MP4 / WebM link works
-      </div>
-
       {error && <div style={{ marginBottom: 16, fontSize: 12, color: '#E8906A', fontFamily: 'DM Sans' }}>{error}</div>}
 
       {/* Add video */}
@@ -72,16 +79,53 @@ export default function AdminVideosTab({ brand, accent }) {
         borderRadius: 8, padding: '20px 24px', marginBottom: 28,
       }}>
         <div style={{ fontSize: 10, letterSpacing: 1.5, color: 'rgba(250,248,245,0.4)', fontFamily: 'DM Sans', marginBottom: 14 }}>ADD VIDEO</div>
+
+        {/* Upload from device */}
+        <div style={{ marginBottom: 16 }}>
+          <label style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '10px 20px', borderRadius: 6,
+            border: `1px solid ${uploading ? 'rgba(255,255,255,0.1)' : accent}`,
+            color: uploading ? 'rgba(250,248,245,0.4)' : accent,
+            fontSize: 11, fontFamily: 'DM Sans', fontWeight: 600, letterSpacing: 0.5,
+            cursor: uploading ? 'not-allowed' : 'pointer',
+            background: 'transparent', transition: 'all 0.2s',
+          }}>
+            {uploading ? `Uploading... ${uploadProgress}%` : '↑ Upload from device'}
+            <input
+              ref={fileRef}
+              type="file"
+              accept="video/mp4,video/webm,video/quicktime"
+              disabled={uploading}
+              style={{ display: 'none' }}
+              onChange={handleFileUpload}
+            />
+          </label>
+          {uploading && (
+            <div style={{ marginTop: 8, height: 3, background: 'rgba(255,255,255,0.08)', borderRadius: 2, width: 200 }}>
+              <div style={{ height: '100%', borderRadius: 2, background: accent, width: `${uploadProgress}%`, transition: 'width 0.2s' }} />
+            </div>
+          )}
+        </div>
+
+        {/* Divider */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.07)' }} />
+          <span style={{ fontSize: 10, color: 'rgba(250,248,245,0.25)', fontFamily: 'DM Sans', letterSpacing: 1 }}>OR PASTE URL</span>
+          <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.07)' }} />
+        </div>
+
+        {/* URL input */}
         <div style={{ display: 'flex', gap: 8 }}>
           <input
             value={urlInput}
             onChange={e => setUrlInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addByUrl())}
-            placeholder="Paste video URL here..."
+            placeholder="https://... (Cloudinary, CDN, direct MP4 link)"
             style={{
               flex: 1, background: 'rgba(255,255,255,0.05)',
               border: '1px solid rgba(255,255,255,0.12)', borderRadius: 6,
-              padding: '11px 14px', fontSize: 13, fontFamily: 'DM Sans',
+              padding: '10px 14px', fontSize: 13, fontFamily: 'DM Sans',
               color: '#FAF8F5', outline: 'none',
             }}
           />
@@ -89,14 +133,14 @@ export default function AdminVideosTab({ brand, accent }) {
             onClick={addByUrl}
             disabled={adding || !urlInput.trim()}
             style={{
-              padding: '11px 24px', borderRadius: 6, border: 'none',
+              padding: '10px 20px', borderRadius: 6, border: 'none',
               background: accent, color: '#1A1A1A',
               fontSize: 11, fontFamily: 'DM Sans', fontWeight: 700,
               cursor: adding || !urlInput.trim() ? 'not-allowed' : 'pointer',
               opacity: adding || !urlInput.trim() ? 0.6 : 1, whiteSpace: 'nowrap',
             }}
           >
-            {adding ? 'Adding...' : 'Add Video'}
+            {adding ? 'Adding...' : 'Add'}
           </button>
         </div>
       </div>
