@@ -26,7 +26,6 @@ export default function SoloStory() {
     { title: get('solo.story.pillar1_title', 'Singularity'), body: get('solo.story.pillar1_body', 'We have never made two identical pieces. Every pattern is drawn by hand for one person, then destroyed.') },
     { title: get('solo.story.pillar2_title', 'Time'), body: get('solo.story.pillar2_body', 'A Solo Sarto commission takes between two and five weeks. This is not a flaw — it is the point.') },
     { title: get('solo.story.pillar3_title', 'Silence'), body: get('solo.story.pillar3_body', 'No seasonal collections. No lookbooks. No fast fashion. We work when we are ready, for clients who are ready to wait.') },
-    { title: get('solo.story.pillar4_title', 'Craft'), body: get('solo.story.pillar4_body', 'Eleven master tailors who trained in Naples, Paris, and Dhaka. Between them, over 300 years of accumulated knowledge.') },
   ]
 
   return (
@@ -47,7 +46,7 @@ export default function SoloStory() {
             fontSize: 68, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300,
             lineHeight: 1.05, maxWidth: 800, marginBottom: 32, color: '#FAF8F5'
           }}>
-            {get('solo.story.headline', 'A needle, a thread, and a refusal to rush.')}
+            {get('solo.story.headline', 'Bespoke Fantasy')}
           </h1>
 
         </motion.section>
@@ -65,10 +64,7 @@ export default function SoloStory() {
               {get('solo.story.begin_headline', 'Shiyam started alone. On purpose.')}
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.6)', fontFamily: 'DM Sans', lineHeight: 1.9, marginBottom: 20 }}>
-              {get('solo.story.begin_body', 'Shiyam trained under two of the most exacting tailors in South Asia before breaking away to form something quieter and more demanding: a private atelier with no ready-to-wear line, no discounts, and no compromises.')}
-            </p>
-            <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.5)', fontFamily: 'DM Sans', lineHeight: 1.9 }}>
-              {get('solo.story.begin_note', 'The name — Solo Sarto — is Italian for "single tailor." It was always the intention to remain small.')}
+              {get('solo.story.begin_body', 'With a foundation built on artistic excellence and a rich history of collaborating with top fashion designers and artists, Shiyam brings her unique vision and refined skills to create timeless designs. Specializing in exquisite evening wear and bespoke wedding dresses, she aims to craft your perfect look for every cherished moment.')}
             </p>
           </motion.div>
           <motion.div

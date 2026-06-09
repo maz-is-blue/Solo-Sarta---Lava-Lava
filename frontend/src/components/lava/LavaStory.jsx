@@ -41,8 +41,11 @@ export default function LavaStory() {
           <h1 style={{ fontSize: 68, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, lineHeight: 1.1, marginBottom: 24 }}>
             {get('lava.story.headline', 'Born backstage, raised on color.')}
           </h1>
+          <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.65)', fontFamily: 'DM Sans', fontWeight: 300, lineHeight: 1.8, marginBottom: 24 }}>
+            {get('lava.story.intro', 'At Lava Lava, we believe in the quiet power of exceptional tailoring. We work hand-in-hand with master artisans whose dedication to their craft ensures that every piece is a true work of art.')}
+          </p>
           <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.65)', fontFamily: 'DM Sans', fontWeight: 300, lineHeight: 1.8 }}>
-            {get('lava.story.intro', "Lava Lava is a diffusion line born from Solo Sarto — a private atelier of 11 master tailors. We took what we couldn't show on the couture floor and gave it its own stage.")}
+            {get('lava.story.intro2', 'We also honor the true essence of exclusivity. To maintain the uniqueness of your style, we produce our collections in strictly limited numbers, with a maximum of just five garments for each size.')}
           </p>
         </motion.div>
       </section>
