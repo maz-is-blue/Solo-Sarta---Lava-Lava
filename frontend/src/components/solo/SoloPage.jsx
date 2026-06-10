@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { formatPrice } from '../../utils/price'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
@@ -166,6 +166,118 @@ function SoloProductCard({ product, lang, t }) {
             {added ? `✓` : '+'}
           </button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function CollectionSlider({ products, lang, t, mobile }) {
+  const [active, setActive] = useState(0)
+  const total = products.length
+  const paused = useRef(false)
+  const touchStart = useRef(null)
+
+  const go = useCallback((dir) => {
+    setActive(prev => (prev + dir + total) % total)
+  }, [total])
+
+  useEffect(() => {
+    const timer = setInterval(() => { if (!paused.current) go(1) }, 4000)
+    return () => clearInterval(timer)
+  }, [go])
+
+  const CARD_W = mobile ? 260 : 320
+  const STEP = mobile ? 270 : 360
+
+  return (
+    <div
+      style={{ position: 'relative', userSelect: 'none' }}
+      onMouseEnter={() => { paused.current = true }}
+      onMouseLeave={() => { paused.current = false }}
+      onTouchStart={e => { touchStart.current = e.touches[0].clientX }}
+      onTouchEnd={e => {
+        if (touchStart.current === null) return
+        const dx = e.changedTouches[0].clientX - touchStart.current
+        if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1)
+        touchStart.current = null
+      }}
+    >
+      {/* Track */}
+      <div style={{ position: 'relative', height: mobile ? 400 : 500, overflow: 'hidden' }}>
+        {products.map((p, i) => {
+          let d = i - active
+          if (d > total / 2) d -= total
+          if (d < -total / 2) d += total
+          const abs = Math.abs(d)
+          const scale = abs === 0 ? 1 : abs === 1 ? 0.78 : abs === 2 ? 0.60 : 0.46
+          const opacity = abs === 0 ? 1 : abs === 1 ? 0.65 : abs === 2 ? 0.28 : 0
+          const tx = d * STEP
+          return (
+            <div
+              key={p.id}
+              onClick={() => d !== 0 && go(Math.sign(d))}
+              style={{
+                position: 'absolute',
+                left: `calc(50% + ${tx}px)`,
+                top: '50%',
+                transform: `translate(-50%, -50%) scale(${scale})`,
+                transformOrigin: 'center center',
+                transition: 'transform 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.55s ease',
+                width: CARD_W,
+                zIndex: 20 - abs * 4,
+                opacity,
+                pointerEvents: abs <= 2 ? 'auto' : 'none',
+                cursor: d !== 0 ? 'pointer' : 'default',
+              }}
+            >
+              <SoloProductCard product={p} lang={lang} t={t} />
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Nav arrows */}
+      {[{ dir: -1, side: 'left', arrow: '←' }, { dir: 1, side: 'right', arrow: '→' }].map(({ dir, side, arrow }) => (
+        <button
+          key={side}
+          onClick={() => go(dir)}
+          style={{
+            position: 'absolute', [side]: mobile ? 8 : 28, top: '45%',
+            transform: 'translateY(-50%)',
+            background: 'rgba(26,22,18,0.75)', backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(201,169,110,0.3)', borderRadius: '50%',
+            width: 44, height: 44, cursor: 'pointer',
+            color: '#C9A96E', fontSize: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 30, transition: 'background 0.2s, border-color 0.2s',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = 'rgba(201,169,110,0.18)'
+            e.currentTarget.style.borderColor = 'rgba(201,169,110,0.6)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = 'rgba(26,22,18,0.75)'
+            e.currentTarget.style.borderColor = 'rgba(201,169,110,0.3)'
+          }}
+        >
+          {arrow}
+        </button>
+      ))}
+
+      {/* Dots */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 24 }}>
+        {products.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setActive(i)}
+            style={{
+              width: i === active ? 24 : 6, height: 6, padding: 0, borderRadius: 999,
+              background: i === active ? '#C9A96E' : 'rgba(201,169,110,0.25)',
+              border: 'none', cursor: 'pointer',
+              transition: 'all 0.35s ease',
+            }}
+          />
+        ))}
       </div>
     </div>
   )
@@ -362,31 +474,35 @@ export default function SoloPage() {
         </motion.div>
       </section>
 
-      {/* Collection grid */}
-      <section style={{ padding: mobile ? '0 24px 48px' : '0 80px 80px', position: 'relative', zIndex: 1 }}>
+      {/* Collection grid / slider */}
+      <section style={{ padding: mobile ? '0 0 48px' : '0 0 80px', position: 'relative', zIndex: 1 }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          style={{ marginBottom: 48 }}
+          style={{ marginBottom: 48, padding: mobile ? '0 24px' : '0 80px' }}
         >
           <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>{get('solo.home.collection_label', "AUTUMN / WINTER '26")}</div>
           <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>{get('solo.home.collection_heading', 'The Collection')}</h2>
         </motion.div>
-        <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)', gap: mobile ? 16 : 24 }}>
-          {products.map((p, i) => (
-            <motion.div
-              key={p.id}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-            >
-              <SoloProductCard product={p} lang={lang} t={t} />
-            </motion.div>
-          ))}
-        </div>
+        {products.length > 3 ? (
+          <CollectionSlider products={products} lang={lang} t={t} mobile={mobile} />
+        ) : (
+          <div style={{ padding: mobile ? '0 24px' : '0 80px', display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)', gap: mobile ? 16 : 24 }}>
+            {products.map((p, i) => (
+              <motion.div
+                key={p.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+              >
+                <SoloProductCard product={p} lang={lang} t={t} />
+              </motion.div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Footer band */}
