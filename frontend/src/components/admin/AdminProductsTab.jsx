@@ -438,7 +438,7 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
                     {!p.active && <span style={{ marginLeft: 8, fontSize: 9, letterSpacing: 1.5, color: '#E8906A', border: '1px solid #E8906A', borderRadius: 999, padding: '2px 8px' }}>HIDDEN</span>}
                   </div>
                   <div style={{ fontSize: 12, color: 'rgba(250,248,245,0.4)', fontFamily: 'DM Sans' }}>
-                    {p.cat}{p.sub_cat ? ` › ${p.sub_cat}` : ''} · ₹{Number(p.price).toLocaleString()}
+                    {p.cat}{p.sub_cat ? ` › ${p.sub_cat}` : ''} · ${Number(p.price).toLocaleString()}
                     {brand === 'solo' && p.code && ` · ${p.code}`}
                     {brand === 'lava' && p.sizes?.length > 0 && ` · ${p.sizes.join(', ')}`}
                     {p.images?.length > 1 && ` · ${p.images.length} photos`}
@@ -500,7 +500,7 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
                   <input style={inputStyle} value={form.name} onChange={e => set('name', e.target.value)} placeholder="e.g. The Halo Slip" />
                 </div>
                 <div>
-                  <label style={labelStyle}>PRICE (₹) *</label>
+                  <label style={labelStyle}>PRICE ($) *</label>
                   <input style={inputStyle} type="number" value={form.price} onChange={e => set('price', e.target.value)} placeholder="3499" />
                 </div>
               </div>

@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProductSilhouette from './ProductSilhouette'
 import LavaGlass from './LavaGlass'
+import { useLanguage } from '../../context/LanguageContext'
 
 export default function CollectionCard({ product, onAdd }) {
   const [added, setAdded] = useState(false)
+  const { t } = useLanguage()
 
   const handleAdd = (e) => {
     e.preventDefault()
@@ -52,7 +54,7 @@ export default function CollectionCard({ product, onAdd }) {
           <div style={{ fontSize: 16, fontWeight: 500, fontFamily: 'DM Sans', marginBottom: 2 }}>{product.name}</div>
           <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans', marginBottom: 12 }}>{product.sub}</div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: 16, fontWeight: 600, fontFamily: 'DM Sans' }}>₹{product.price.toLocaleString()}</span>
+            <span style={{ fontSize: 16, fontWeight: 600, fontFamily: 'DM Sans' }}>{t('currency')}{product.price.toLocaleString()}</span>
             <button
               onClick={handleAdd}
               style={{

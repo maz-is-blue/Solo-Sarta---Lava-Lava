@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useMobile } from '../hooks/useMobile'
 import { submitOrder } from '../services/api'
+import { useLanguage } from '../context/LanguageContext'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
 
@@ -74,6 +75,7 @@ export default function CheckoutPage() {
   const { state } = useLocation()
   const { cartItems, clearCart } = useCart()
   const mobile = useMobile()
+  const { t } = useLanguage()
 
   // Determine context: 'solo', 'lava', or 'both' passed via navigate state
   const brand = state?.brand ?? 'both'
@@ -314,7 +316,7 @@ export default function CheckoutPage() {
                       <div style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 15, color: '#FAF8F5' }}>{item.name}</div>
                       <div style={{ fontSize: 11, color: 'rgba(250,248,245,0.35)', fontFamily: 'DM Sans' }}>{item.size}</div>
                     </div>
-                    <div style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'Cormorant Garamond', whiteSpace: 'nowrap' }}>₹{(item.price * item.qty).toLocaleString()}</div>
+                    <div style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'Cormorant Garamond', whiteSpace: 'nowrap' }}>{t('currency')}{(item.price * item.qty).toLocaleString()}</div>
                   </div>
                 ))}
               </div>
@@ -329,7 +331,7 @@ export default function CheckoutPage() {
                       <div style={{ fontFamily: 'DM Sans', fontWeight: 500, fontSize: 14, color: '#FAF8F5' }}>{item.name}</div>
                       <div style={{ fontSize: 11, color: 'rgba(250,248,245,0.35)', fontFamily: 'DM Sans' }}>Size {item.size} · Qty {item.qty}</div>
                     </div>
-                    <div style={{ fontSize: 14, color: '#A990CC', fontFamily: 'DM Sans', fontWeight: 600, whiteSpace: 'nowrap' }}>₹{(item.price * item.qty).toLocaleString()}</div>
+                    <div style={{ fontSize: 14, color: '#A990CC', fontFamily: 'DM Sans', fontWeight: 600, whiteSpace: 'nowrap' }}>{t('currency')}{(item.price * item.qty).toLocaleString()}</div>
                   </div>
                 ))}
               </div>
@@ -338,7 +340,7 @@ export default function CheckoutPage() {
             <div style={{ borderTop: '1px solid rgba(250,248,245,0.08)', marginTop: 20, paddingTop: 20 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                 <span style={{ fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2, color: 'rgba(250,248,245,0.4)' }}>TOTAL</span>
-                <span style={{ fontFamily: 'Cormorant Garamond', fontSize: 24, color: '#FAF8F5' }}>₹{grandTotal.toLocaleString()}</span>
+                <span style={{ fontFamily: 'Cormorant Garamond', fontSize: 24, color: '#FAF8F5' }}>{t('currency')}{grandTotal.toLocaleString()}</span>
               </div>
               <div style={{ fontSize: 11, color: 'rgba(250,248,245,0.25)', fontFamily: 'DM Sans', lineHeight: 1.6, marginBottom: 24 }}>
                 {relevantSolo.length > 0 ? 'Final Solo Sarto price confirmed after consultation. ' : ''}

@@ -2,10 +2,12 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useCart } from '../context/CartContext'
 import { useMobile } from '../hooks/useMobile'
+import { useLanguage } from '../context/LanguageContext'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
 
 function SoloItem({ item, onRemove }) {
+  const { t } = useLanguage()
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -32,7 +34,7 @@ function SoloItem({ item, onRemove }) {
       </div>
       <div style={{ textAlign: 'right', marginLeft: 20, flexShrink: 0 }}>
         <div style={{ fontSize: 17, color: '#C9A96E', fontFamily: 'Cormorant Garamond', marginBottom: 12 }}>
-          ₹{item.price.toLocaleString()}
+          {t('currency')}{item.price.toLocaleString()}
         </div>
         <button
           onClick={() => onRemove(item.slug, item.size)}
@@ -52,6 +54,7 @@ function SoloItem({ item, onRemove }) {
 }
 
 function LavaItem({ item, onRemove }) {
+  const { t } = useLanguage()
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -75,7 +78,7 @@ function LavaItem({ item, onRemove }) {
       </div>
       <div style={{ textAlign: 'right', marginLeft: 20, flexShrink: 0 }}>
         <div style={{ fontSize: 16, color: '#A990CC', fontFamily: 'DM Sans', fontWeight: 600, marginBottom: 12 }}>
-          ₹{(item.price * item.qty).toLocaleString()}
+          {t('currency')}{(item.price * item.qty).toLocaleString()}
         </div>
         <button
           onClick={() => onRemove(item.slug, item.size)}
@@ -96,6 +99,7 @@ function LavaItem({ item, onRemove }) {
 
 export default function BagPage() {
   const { cartItems, removeItem, cart } = useCart()
+  const { t } = useLanguage()
   const navigate = useNavigate()
   const mobile = useMobile()
 
@@ -199,7 +203,7 @@ export default function BagPage() {
                 <div style={{ marginTop: 28, paddingTop: 20, borderTop: '1px solid rgba(201,169,110,0.15)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
                     <span style={{ fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2, color: 'rgba(250,248,245,0.4)' }}>ESTIMATED TOTAL</span>
-                    <span style={{ fontFamily: 'Cormorant Garamond', fontSize: 22, color: '#C9A96E' }}>₹{soloTotal.toLocaleString()}</span>
+                    <span style={{ fontFamily: 'Cormorant Garamond', fontSize: 22, color: '#C9A96E' }}>{t('currency')}{soloTotal.toLocaleString()}</span>
                   </div>
                   <button
                     onClick={() => navigate('/checkout', { state: { brand: 'solo' } })}
@@ -241,7 +245,7 @@ export default function BagPage() {
                   <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
                       <span style={{ fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2, color: 'rgba(250,248,245,0.4)' }}>SUBTOTAL</span>
-                      <span style={{ fontFamily: 'DM Sans', fontSize: 20, fontWeight: 600, color: '#A990CC' }}>₹{lavaTotal.toLocaleString()}</span>
+                      <span style={{ fontFamily: 'DM Sans', fontSize: 20, fontWeight: 600, color: '#A990CC' }}>{t('currency')}{lavaTotal.toLocaleString()}</span>
                     </div>
                     <button
                       onClick={() => navigate('/checkout', { state: { brand: 'lava' } })}

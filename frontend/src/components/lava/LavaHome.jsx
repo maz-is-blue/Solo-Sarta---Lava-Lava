@@ -238,10 +238,10 @@ export default function LavaHome() {
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontSize: 22, fontWeight: 700, fontFamily: 'DM Sans', color: '#1a0020' }}>
-                    ₹{featured.price.toLocaleString()}
+                    {t('currency')}{featured.price.toLocaleString()}
                   </div>
                   <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.35)', fontFamily: 'DM Sans' }}>
-                    or 3× ₹{Math.round(featured.price / 3).toLocaleString()}
+                    or 3× {t('currency')}{Math.round(featured.price / 3).toLocaleString()}
                   </div>
                 </div>
               </div>
@@ -441,7 +441,7 @@ export default function LavaHome() {
                 {p.tag && <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(255,255,255,0.65)', fontFamily: 'DM Sans', marginBottom: 4 }}>{p.tag.toUpperCase()}</div>}
                 <div style={{ fontSize: mobile ? 13 : 15, fontFamily: 'Cormorant Garamond', fontWeight: 600, color: '#fff', marginBottom: 4, lineHeight: 1.2 }}>{p.name}</div>
                 <div style={{ fontSize: mobile ? 11 : 12, fontFamily: 'DM Sans', color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}>{p.sub}</div>
-                <div style={{ fontSize: mobile ? 13 : 14, fontFamily: 'DM Sans', fontWeight: 600, color: '#fff' }}>₹{p.price.toLocaleString()}</div>
+                <div style={{ fontSize: mobile ? 13 : 14, fontFamily: 'DM Sans', fontWeight: 600, color: '#fff' }}>{t('currency')}{p.price.toLocaleString()}</div>
               </div>
             </div>
           ))}
@@ -585,7 +585,7 @@ function WarmCollectionCard({ product, onAdd, navigate, t, lang }) {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontSize: 13, color: 'rgba(0,0,0,0.5)', fontFamily: 'DM Sans' }}>
-            ₹{product.price.toLocaleString()}
+            {t('currency')}{product.price.toLocaleString()}
           </span>
           <button
             onClick={handleAdd}

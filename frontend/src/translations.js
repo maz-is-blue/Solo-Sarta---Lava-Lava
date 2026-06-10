@@ -56,6 +56,8 @@ export const TRANSLATIONS = {
     your_bag: 'Your Bag',
     checkout_btn: 'Proceed to Checkout',
     empty_bag: 'Your bag is empty',
+    // currency
+    currency: '$',
     // language toggle
     lang_label: 'عربي',
   },
@@ -116,6 +118,8 @@ export const TRANSLATIONS = {
     your_bag: 'حقيبتك',
     checkout_btn: 'إتمام الطلب',
     empty_bag: 'حقيبتك فارغة',
+    // currency
+    currency: 'جنيه',
     // language toggle
     lang_label: 'EN',
   },

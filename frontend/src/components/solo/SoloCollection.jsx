@@ -34,7 +34,7 @@ function Silhouette({ uid }) {
   )
 }
 
-function PieceCard({ product, lang }) {
+function PieceCard({ product, lang, t }) {
   const [hovered, setHovered] = useState(false)
   const navigate = useNavigate()
   const displayName = (lang === 'ar' && product.name_ar) ? product.name_ar : product.name
@@ -69,7 +69,7 @@ function PieceCard({ product, lang }) {
           {displayName}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'DM Sans' }}>₹{product.price.toLocaleString()}</span>
+          <span style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'DM Sans' }}>{t('currency')}{product.price.toLocaleString()}</span>
           <span style={{ fontSize: 10, letterSpacing: 1.5, color: hovered ? '#C9A96E' : 'rgba(250,248,245,0.3)', fontFamily: 'DM Sans', transition: 'color 0.25s ease' }}>
             VIEW →
           </span>
@@ -165,7 +165,7 @@ export default function SoloCollection() {
             >
               {filtered.map((p, i) => (
                 <motion.div key={p.id} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: i * 0.07 }}>
-                  <PieceCard product={p} lang={lang} />
+                  <PieceCard product={p} lang={lang} t={t} />
                 </motion.div>
               ))}
             </motion.div>
