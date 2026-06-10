@@ -94,34 +94,37 @@ function SoloProductCard({ product, lang, t }) {
       <div style={{ position: 'absolute', top: 16, left: 16, fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>
         {product.code}
       </div>
-      {/* Silhouette area */}
+      {/* Product image / placeholder */}
       <div style={{
-        height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: 'linear-gradient(135deg, rgba(201,169,110,0.05), rgba(201,169,110,0.02))'
+        height: 240, position: 'relative', overflow: 'hidden',
+        background: 'linear-gradient(135deg, #2A2420 0%, #201C18 100%)'
       }}>
-        <GownSilhouette />
+        {product.image_url
+          ? <img
+              src={product.image_url}
+              alt={product.name}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease', transform: hovered ? 'scale(1.04)' : 'scale(1)' }}
+            />
+          : <div className="shimmer" style={{ position: 'absolute', inset: 0 }} />
+        }
       </div>
-      {/* Hover reveal */}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        padding: '20px 20px',
-        background: 'linear-gradient(0deg, rgba(28,24,20,0.98) 0%, rgba(28,24,20,0.7) 100%)',
-        transform: hovered ? 'translateY(0)' : 'translateY(100%)',
-        transition: 'transform 0.35s ease'
-      }}>
-        <div style={{ fontSize: 12, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', letterSpacing: 1, marginBottom: 4 }}>{product.cat.toUpperCase()}</div>
-        <div style={{ fontSize: 17, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5', marginBottom: 4 }}>{displayName}</div>
-        <div style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>₹{product.price.toLocaleString()}</div>
-        <button
-          onClick={() => { addItem('solo', product, 'Bespoke'); setAdded(true); setTimeout(() => setAdded(false), 2000) }}
-          style={{
-            padding: '8px 20px', borderRadius: 2, border: '1px solid #C9A96E', cursor: 'pointer',
-            background: added ? '#C9A96E' : 'transparent', color: added ? '#1A1A1A' : '#C9A96E',
-            fontSize: 11, fontFamily: 'DM Sans', letterSpacing: 1.5, transition: 'all 0.25s ease'
-          }}
-        >
-          {added ? `✓ ${t('added')}` : t('add_atelier_bag')}
-        </button>
+      {/* Card info */}
+      <div style={{ padding: '16px 20px 20px' }}>
+        <div style={{ fontSize: 10, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', letterSpacing: 1, marginBottom: 4 }}>{product.cat?.toUpperCase()}</div>
+        <div style={{ fontSize: 17, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5', marginBottom: 8 }}>{displayName}</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'DM Sans' }}>₹{product.price.toLocaleString()}</span>
+          <button
+            onClick={e => { e.stopPropagation(); addItem('solo', product, 'Bespoke'); setAdded(true); setTimeout(() => setAdded(false), 2000) }}
+            style={{
+              padding: '7px 16px', borderRadius: 2, border: '1px solid rgba(201,169,110,0.4)', cursor: 'pointer',
+              background: added ? '#C9A96E' : 'transparent', color: added ? '#1A1A1A' : '#C9A96E',
+              fontSize: 10, fontFamily: 'DM Sans', letterSpacing: 1.5, transition: 'all 0.25s ease'
+            }}
+          >
+            {added ? `✓` : '+'}
+          </button>
+        </div>
       </div>
     </div>
   )
