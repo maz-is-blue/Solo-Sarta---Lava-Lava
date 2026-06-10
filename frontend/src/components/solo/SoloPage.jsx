@@ -96,14 +96,14 @@ function SoloProductCard({ product, lang, t }) {
       </div>
       {/* Product image / placeholder */}
       <div style={{
-        aspectRatio: '3/4', position: 'relative', overflow: 'hidden',
+        aspectRatio: '4/5', position: 'relative', overflow: 'hidden',
         background: 'linear-gradient(135deg, #2A2420 0%, #201C18 100%)'
       }}>
         {product.image_url
           ? <img
               src={product.image_url}
               alt={product.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%', display: 'block', transition: 'transform 0.5s ease', transform: hovered ? 'scale(1.04)' : 'scale(1)' }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center', display: 'block', transition: 'transform 0.5s ease', transform: hovered ? 'scale(1.04)' : 'scale(1)' }}
             />
           : <div className="shimmer" style={{ position: 'absolute', inset: 0 }} />
         }
