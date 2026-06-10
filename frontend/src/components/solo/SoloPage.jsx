@@ -96,7 +96,7 @@ function SoloProductCard({ product, lang, t }) {
       </div>
       {/* Product image / placeholder */}
       <div style={{
-        aspectRatio: '4/5', position: 'relative', overflow: 'hidden',
+        aspectRatio: '1/1', position: 'relative', overflow: 'hidden',
         background: 'linear-gradient(135deg, #2A2420 0%, #201C18 100%)'
       }}>
         {product.image_url
