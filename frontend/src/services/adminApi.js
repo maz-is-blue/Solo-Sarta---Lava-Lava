@@ -5,6 +5,8 @@ const adminApi = axios.create({
   headers: { 'Content-Type': 'application/json' }
 })
 
+const authToken = () => localStorage.getItem('ss_admin_token')
+
 adminApi.interceptors.request.use(config => {
   const token = localStorage.getItem('ss_admin_token')
   if (token) config.headers.Authorization = `Bearer ${token}`
@@ -38,7 +40,10 @@ export const deleteAdminProduct = (id) =>
 export const uploadMedia = (file) => {
   const fd = new FormData()
   fd.append('file', file)
-  return adminApi.post('/media/upload', fd, { headers: { 'Content-Type': undefined } })
+  const token = authToken()
+  return axios.post('/api/admin/media/upload', fd, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  })
 }
 
 export const getAdminOrders = (params = {}) =>
@@ -59,8 +64,9 @@ export const deleteAdminVideo = (id) =>
 export const uploadVideo = (file, onProgress) => {
   const fd = new FormData()
   fd.append('file', file)
-  return adminApi.post('/media/upload-video', fd, {
-    headers: { 'Content-Type': undefined },
+  const token = authToken()
+  return axios.post('/api/admin/media/upload-video', fd, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
     onUploadProgress: onProgress
       ? e => onProgress(e.total ? Math.round((e.loaded * 100) / e.total) : 0)
       : undefined,
