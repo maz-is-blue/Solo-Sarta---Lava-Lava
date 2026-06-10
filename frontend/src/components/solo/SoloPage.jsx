@@ -103,7 +103,7 @@ function SoloProductCard({ product, lang, t }) {
           ? <img
               src={product.image_url}
               alt={product.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease', transform: hovered ? 'scale(1.04)' : 'scale(1)' }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%', display: 'block', transition: 'transform 0.5s ease', transform: hovered ? 'scale(1.04)' : 'scale(1)' }}
             />
           : <div className="shimmer" style={{ position: 'absolute', inset: 0 }} />
         }
