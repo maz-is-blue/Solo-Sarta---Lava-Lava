@@ -4,7 +4,8 @@ import { getAdminProducts, createAdminProduct, updateAdminProduct, deleteAdminPr
 import { LAVA_CATS, LAVA_CAT_NAMES } from '../../constants/lavaCategories'
 import { SOLO_CATS } from '../../constants/soloCategories'
 
-const LAVA_TAGS = ['', 'Featured', 'New', 'Limited', 'Restock']
+const LAVA_TAGS = ['', 'Featured', 'New', 'Limited', 'Restock', 'Sale']
+const OFFER_TAGS = ['Featured', 'New', 'Limited', 'Restock', 'Sale']
 const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL']
 
 function emptyForm(brand) {
@@ -258,8 +259,11 @@ function SizePhotosSection({ sizes, sizeImages, onChangeSizeImages, accent, uplo
   )
 }
 
-export default function AdminProductsTab({ brand, accent, gradient }) {
-  const [products, setProducts] = useState([])
+export default function AdminProductsTab({ brand, accent, gradient, offersOnly = false }) {
+  const [allProducts, setAllProducts] = useState([])
+  const products = offersOnly
+    ? allProducts.filter(p => p.tag && OFFER_TAGS.includes(p.tag))
+    : allProducts
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
@@ -274,14 +278,15 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
   const load = () => {
     setLoading(true)
     getAdminProducts(brand)
-      .then(r => setProducts(r.data))
+      .then(r => setAllProducts(r.data))
       .catch(() => setError('Failed to load products'))
       .finally(() => setLoading(false))
   }
 
   const openAdd = () => {
     setEditingId(null)
-    setForm(emptyForm(brand))
+    const base = emptyForm(brand)
+    setForm(offersOnly ? { ...base, tag: 'Sale' } : base)
     setError('')
     setShowForm(true)
   }
@@ -353,10 +358,10 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
       const payload = { ...form, brand, price: parseInt(form.price, 10), price_egp: form.price_egp ? parseInt(form.price_egp, 10) : null }
       if (editingId) {
         const r = await updateAdminProduct(editingId, payload)
-        setProducts(prev => prev.map(p => p.id === editingId ? r.data : p))
+        setAllProducts(prev => prev.map(p => p.id === editingId ? r.data : p))
       } else {
         const r = await createAdminProduct(payload)
-        setProducts(prev => [r.data, ...prev])
+        setAllProducts(prev => [r.data, ...prev])
       }
       closeForm()
     } catch (e) {
@@ -369,7 +374,7 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
   const handleDelete = async (id) => {
     try {
       await deleteAdminProduct(id)
-      setProducts(prev => prev.filter(p => p.id !== id))
+      setAllProducts(prev => prev.filter(p => p.id !== id))
     } catch { setError('Failed to hide product.') }
     setDeleteId(null)
   }
@@ -387,8 +392,9 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
         <div>
-          <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(250,248,245,0.35)', fontFamily: 'DM Sans', marginBottom: 4 }}>MANAGE</div>
-          <div style={{ fontSize: 22, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5' }}>Products</div>
+          <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(250,248,245,0.35)', fontFamily: 'DM Sans', marginBottom: 4 }}>{offersOnly ? 'OFFERS' : 'MANAGE'}</div>
+          <div style={{ fontSize: 22, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5' }}>{offersOnly ? 'Discounts & Limited Editions' : 'Products'}</div>
+          {offersOnly && <div style={{ fontSize: 11, color: 'rgba(250,248,245,0.35)', fontFamily: 'DM Sans', marginTop: 4 }}>Showing tagged products only. Set a tag (Sale, Limited, New…) to feature a product here.</div>}
         </div>
         <button onClick={openAdd} style={{
           padding: '10px 22px', borderRadius: 6, border: 'none', cursor: 'pointer',
@@ -406,7 +412,7 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
         <div style={{ color: 'rgba(250,248,245,0.3)', fontFamily: 'DM Sans', fontSize: 13 }}>Loading products...</div>
       ) : products.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '60px 0', color: 'rgba(250,248,245,0.25)', fontFamily: 'DM Sans', fontSize: 13 }}>
-          No products yet. Add your first one.
+          {offersOnly ? 'No offers yet. Go to Products and set a tag (Sale, Limited, New…) on any product to show it here.' : 'No products yet. Add your first one.'}
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>

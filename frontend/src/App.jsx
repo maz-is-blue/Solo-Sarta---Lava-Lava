@@ -13,6 +13,7 @@ import LavaCollection from './components/lava/LavaCollection'
 import LavaProduct from './components/lava/LavaProduct'
 import LavaStory from './components/lava/LavaStory'
 import LavaContact from './components/lava/LavaContact'
+import LavaOffers from './components/lava/LavaOffers'
 import BagPage from './components/BagPage'
 import CheckoutPage from './components/CheckoutPage'
 import AdminLogin from './components/admin/AdminLogin'
@@ -39,6 +40,7 @@ export default function App() {
             <Route path="/lava/product/:slug" element={<LavaProduct />} />
             <Route path="/lava/story" element={<LavaStory />} />
             <Route path="/lava/contact" element={<LavaContact />} />
+            <Route path="/lava/offers" element={<LavaOffers />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/solo" element={<SoloAdminDashboard />} />
             <Route path="/admin/lava" element={<LavaAdminDashboard />} />

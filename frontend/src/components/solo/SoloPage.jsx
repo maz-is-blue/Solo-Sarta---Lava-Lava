@@ -218,11 +218,12 @@ function CollectionSlider({ products, lang, t, mobile }) {
               onClick={() => d !== 0 && go(Math.sign(d))}
               style={{
                 position: 'absolute',
-                left: `calc(50% + ${tx}px)`,
+                left: '50%',
                 top: '50%',
-                transform: `translate(-50%, -50%) scale(${scale})`,
+                transform: `translate(calc(-50% + ${tx}px), -50%) scale(${scale})`,
                 transformOrigin: 'center center',
-                transition: 'transform 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.55s ease',
+                willChange: 'transform',
+                transition: 'transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.6s ease',
                 width: CARD_W,
                 zIndex: 20 - abs * 4,
                 opacity,

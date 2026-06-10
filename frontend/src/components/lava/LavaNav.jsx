@@ -50,6 +50,7 @@ export default function LavaNav() {
   const { lang, setLang, isRTL, t } = useLanguage()
 
   const NAV_LINKS = [
+    { label: 'OFFERS', path: '/lava/offers', highlight: true },
     { label: t('lava_story'), path: '/lava/story' },
     { label: t('lava_contact'), path: '/lava/contact' },
   ]
@@ -133,8 +134,21 @@ export default function LavaNav() {
           )}
 
           {/* Desktop: other links */}
-          {!mobile && NAV_LINKS.map(({ label, path }) => {
+          {!mobile && NAV_LINKS.map(({ label, path, highlight }) => {
             const active = pathname === path
+            if (highlight) return (
+              <span key={path} onClick={() => navigate(path)}
+                style={{
+                  ...linkStyle(active),
+                  background: 'linear-gradient(90deg,#E8906A,#D96A8A,#8B6FB8)',
+                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                  borderBottom: active ? '1px solid #D96A8A' : '1px solid transparent',
+                  fontWeight: 700,
+                }}
+              >
+                {label}
+              </span>
+            )
             return (
               <span key={path} onClick={() => navigate(path)}
                 style={linkStyle(active)}
@@ -300,12 +314,19 @@ export default function LavaNav() {
               )}
             </div>
 
-            {NAV_LINKS.map(({ label, path }) => {
+            {NAV_LINKS.map(({ label, path, highlight }) => {
               const active = pathname === path
               return (
                 <div key={path} onClick={() => navigate(path)} style={{ padding: '17px 22px', borderTop: '1px solid rgba(255,255,255,0.07)', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: active ? 'rgba(255,255,255,0.06)' : 'transparent' }}>
-                  <span style={{ fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2.5, color: active ? '#fff' : 'rgba(255,255,255,0.65)' }}>
-                    {label.toUpperCase()}
+                  <span style={{
+                    fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2.5,
+                    color: highlight ? 'transparent' : active ? '#fff' : 'rgba(255,255,255,0.65)',
+                    background: highlight ? 'linear-gradient(90deg,#E8906A,#D96A8A,#8B6FB8)' : 'none',
+                    WebkitBackgroundClip: highlight ? 'text' : 'unset',
+                    WebkitTextFillColor: highlight ? 'transparent' : 'unset',
+                    fontWeight: highlight ? 700 : 500,
+                  }}>
+                    {label}
                   </span>
                   <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}>{isRTL ? '←' : '→'}</span>
                 </div>

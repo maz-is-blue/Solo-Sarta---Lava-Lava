@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { formatPrice } from '../../utils/price'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
@@ -362,15 +362,26 @@ export default function LavaHome() {
           </div>
         </motion.div>
 
-        {/* Product grid */}
-        <motion.div
-          {...fadeUp}
-          style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 12 : 20 }}
-        >
-          {filtered.slice(0, 8).map(p => (
-            <WarmCollectionCard key={p.id} product={p} onAdd={() => addItem('lava', p, (p.sizes||[])[1]||'M')} navigate={navigate} t={t} lang={lang} />
-          ))}
-        </motion.div>
+        {/* Product grid / slider */}
+        {filtered.length > 3 ? (
+          <LavaCollectionSlider
+            products={filtered.slice(0, 12)}
+            onAdd={p => addItem('lava', p, (p.sizes||[])[1]||'M')}
+            navigate={navigate}
+            t={t}
+            lang={lang}
+            mobile={mobile}
+          />
+        ) : (
+          <motion.div
+            {...fadeUp}
+            style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 12 : 20 }}
+          >
+            {filtered.map(p => (
+              <WarmCollectionCard key={p.id} product={p} onAdd={() => addItem('lava', p, (p.sizes||[])[1]||'M')} navigate={navigate} t={t} lang={lang} />
+            ))}
+          </motion.div>
+        )}
 
         {/* View all */}
         <motion.div {...fadeUp} style={{ textAlign: 'center', marginTop: 48 }}>
@@ -508,6 +519,120 @@ export default function LavaHome() {
       </section>
 
       <LavaFooter />
+    </div>
+  )
+}
+
+/* Coverflow slider for Lava Lava collection */
+function LavaCollectionSlider({ products, onAdd, navigate, t, lang, mobile }) {
+  const [active, setActive] = useState(0)
+  const total = products.length
+  const paused = useRef(false)
+  const touchStart = useRef(null)
+
+  const go = useCallback((dir) => {
+    setActive(prev => (prev + dir + total) % total)
+  }, [total])
+
+  useEffect(() => {
+    const timer = setInterval(() => { if (!paused.current) go(1) }, 4000)
+    return () => clearInterval(timer)
+  }, [go])
+
+  const CARD_W = mobile ? 260 : 300
+  const STEP = mobile ? 275 : 340
+
+  return (
+    <div
+      style={{ position: 'relative', userSelect: 'none' }}
+      onMouseEnter={() => { paused.current = true }}
+      onMouseLeave={() => { paused.current = false }}
+      onTouchStart={e => { touchStart.current = e.touches[0].clientX }}
+      onTouchEnd={e => {
+        if (touchStart.current === null) return
+        const dx = e.changedTouches[0].clientX - touchStart.current
+        if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1)
+        touchStart.current = null
+      }}
+    >
+      {/* Track */}
+      <div style={{ position: 'relative', height: mobile ? 360 : 440, overflow: 'hidden' }}>
+        {products.map((p, i) => {
+          let d = i - active
+          if (d > total / 2) d -= total
+          if (d < -total / 2) d += total
+          const abs = Math.abs(d)
+          const scale = abs === 0 ? 1 : abs === 1 ? 0.78 : abs === 2 ? 0.60 : 0.46
+          const opacity = abs === 0 ? 1 : abs === 1 ? 0.65 : abs === 2 ? 0.28 : 0
+          const tx = d * STEP
+          return (
+            <div
+              key={p.id}
+              onClick={() => d !== 0 && go(Math.sign(d))}
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: `translate(calc(-50% + ${tx}px), -50%) scale(${scale})`,
+                transformOrigin: 'center center',
+                willChange: 'transform',
+                transition: 'transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.6s ease',
+                width: CARD_W,
+                zIndex: 20 - abs * 4,
+                opacity,
+                pointerEvents: abs <= 2 ? 'auto' : 'none',
+                cursor: d !== 0 ? 'pointer' : 'default',
+              }}
+            >
+              <WarmCollectionCard
+                product={p}
+                onAdd={() => onAdd(p)}
+                navigate={navigate}
+                t={t}
+                lang={lang}
+              />
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Nav arrows */}
+      {[{ dir: -1, side: 'left', arrow: '←' }, { dir: 1, side: 'right', arrow: '→' }].map(({ dir, side, arrow }) => (
+        <button
+          key={side}
+          onClick={() => go(dir)}
+          style={{
+            position: 'absolute', [side]: mobile ? 8 : 20, top: '45%',
+            transform: 'translateY(-50%)',
+            background: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(255,255,255,0.5)', borderRadius: '50%',
+            width: 42, height: 42, cursor: 'pointer',
+            color: '#fff', fontSize: 16,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 30, transition: 'background 0.2s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.45)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.25)'}
+        >
+          {arrow}
+        </button>
+      ))}
+
+      {/* Dots */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 24 }}>
+        {products.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setActive(i)}
+            style={{
+              width: i === active ? 24 : 6, height: 6, padding: 0, borderRadius: 999,
+              background: i === active ? '#fff' : 'rgba(255,255,255,0.4)',
+              border: 'none', cursor: 'pointer',
+              transition: 'all 0.35s ease',
+            }}
+          />
+        ))}
+      </div>
     </div>
   )
 }

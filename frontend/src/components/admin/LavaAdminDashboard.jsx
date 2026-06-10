@@ -131,6 +131,7 @@ export default function LavaAdminDashboard() {
   const NAV_ITEMS = [
     { tab: 'content',  label: 'Content' },
     { tab: 'products', label: 'Products' },
+    { tab: 'offers',   label: 'Offers' },
     { tab: 'orders',   label: 'Orders' },
   ]
 
@@ -284,6 +285,10 @@ export default function LavaAdminDashboard() {
 
         {activeTab === 'products' && (
           <AdminProductsTab brand="lava" accent={ACCENT} gradient={GRADIENT} />
+        )}
+
+        {activeTab === 'offers' && (
+          <AdminProductsTab brand="lava" accent={ACCENT} gradient={GRADIENT} offersOnly />
         )}
 
         {activeTab === 'orders' && (
