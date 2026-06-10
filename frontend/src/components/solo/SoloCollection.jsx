@@ -57,10 +57,10 @@ function PieceCard({ product, lang }) {
       <div style={{ position: 'absolute', top: 16, left: 16, fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>{product.code}</div>
       <div style={{ position: 'absolute', top: 16, right: 16, fontSize: 10, letterSpacing: 1.5, color: 'rgba(250,248,245,0.25)', fontFamily: 'DM Sans' }}>{product.cat?.toUpperCase()}</div>
 
-      <div style={{ height: 220, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, rgba(201,169,110,0.06), rgba(201,169,110,0.02))', overflow: 'hidden', position: 'relative' }}>
+      <div style={{ aspectRatio: '1/1', background: 'linear-gradient(135deg, #2A2420 0%, #201C18 100%)', overflow: 'hidden', position: 'relative' }}>
         {product.image_url
-          ? <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }} />
-          : <Silhouette uid={product.id} />
+          ? <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center', position: 'absolute', inset: 0, transition: 'transform 0.5s ease', transform: hovered ? 'scale(1.04)' : 'scale(1)' }} />
+          : <div className="shimmer" style={{ position: 'absolute', inset: 0 }} />
         }
       </div>
 
