@@ -135,11 +135,22 @@ export default function SoloPiece() {
           >
             <div style={{
               background: 'linear-gradient(135deg, #2E2822, #201C18)',
-              border: '1px solid rgba(201,169,110,0.15)',
               borderRadius: 4, padding: '64px 48px',
               display: 'flex', flexDirection: 'column', alignItems: 'center',
-              position: 'relative', overflow: 'hidden', width: '100%', maxWidth: 420
+              position: 'relative', overflow: 'visible', width: '100%', maxWidth: 420
             }}>
+              {/* Corner ornaments */}
+              {[
+                { top: -1,    left: -1,  d: 'M20,1 L1,1 L1,20' },
+                { top: -1,    right: -1, d: 'M1,1 L20,1 L20,20' },
+                { bottom: -1, left: -1,  d: 'M1,1 L1,20 L20,20' },
+                { bottom: -1, right: -1, d: 'M20,1 L20,20 L1,20' },
+              ].map((c, i) => (
+                <svg key={i} width={22} height={22} viewBox="0 0 22 22"
+                  style={{ position: 'absolute', top: c.top, bottom: c.bottom, left: c.left, right: c.right, pointerEvents: 'none', zIndex: 2 }}>
+                  <path d={c.d} fill="none" stroke="#C9A96E" strokeWidth="1.2" opacity="0.45" />
+                </svg>
+              ))}
               <div style={{
                 position: 'absolute', width: 400, height: 400, top: '-20%', left: '50%', transform: 'translateX(-50%)',
                 background: 'radial-gradient(circle, rgba(201,169,110,0.1) 0%, transparent 70%)',
@@ -151,16 +162,16 @@ export default function SoloPiece() {
                 : <LargeSilhouette />
               }
               {displayImages.length > 1 && (
-                <div style={{ display: 'flex', gap: 8, marginBottom: 24, justifyContent: 'center' }}>
-                  {displayImages.map((url, idx) => (
+                <div style={{ display: 'flex', gap: 7, marginTop: 20, marginBottom: 12, justifyContent: 'center', alignItems: 'center' }}>
+                  {displayImages.map((_, idx) => (
                     <button key={idx} onClick={() => setSelectedImg(idx)} style={{
-                      width: 52, height: 52, borderRadius: 3, padding: 0, overflow: 'hidden',
-                      border: `1px solid ${selectedImg === idx ? '#C9A96E' : 'rgba(201,169,110,0.15)'}`,
-                      cursor: 'pointer', opacity: selectedImg === idx ? 1 : 0.55,
-                      transition: 'all 0.2s',
-                    }}>
-                      <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </button>
+                      width: selectedImg === idx ? 40 : 14,
+                      height: 1.5,
+                      borderRadius: 2,
+                      background: selectedImg === idx ? '#C9A96E' : 'rgba(201,169,110,0.28)',
+                      border: 'none', padding: 0, cursor: 'pointer',
+                      transition: 'width 0.35s ease, background 0.35s ease',
+                    }} />
                   ))}
                 </div>
               )}

@@ -145,7 +145,12 @@ class SiteContentSeeder extends Seeder {
             ['lava', 'story', 'timeline4_year',  '2026',                                                      'Timeline 4 — Year',     'text'],
             ['lava', 'story', 'timeline4_title', 'Drop 04 · Solar Bloom',                                     'Timeline 4 — Title',    'text'],
             ['lava', 'story', 'timeline4_body',  '12 pieces. 200–400 editions each. Sell out in 48h. The world is catching up to the feeling.', 'Timeline 4 — Body', 'textarea'],
+            ['lava', 'story', 'intro2',          'We also honor the true essence of exclusivity. To maintain the uniqueness of your style, we produce our collections in strictly limited numbers.', 'Intro Paragraph 2', 'textarea'],
+            ['lava', 'story', 'est_label',       'EST.',                                                      'Origin Label',          'text'],
+            ['lava', 'story', 'est_year',        '2026',                                                      'Origin Year',           'text'],
+            ['lava', 'story', 'est_body',        'We started in 2026. Color, louder. Made for the fearless.','Origin Body',           'textarea'],
             ['lava', 'story', 'cta',             'Now go be seen.',                                           'CTA Text',              'text'],
+            ['lava', 'story', 'cta_btn',         'SHOP THE COLLECTION',                                       'CTA Button Label',      'text'],
 
             // ─── LAVA LAVA — CONTACT ────────────────────────────────────────
             ['lava', 'contact', 'eyebrow',       'REACH OUT',                                                 'Eyebrow Label',         'text'],

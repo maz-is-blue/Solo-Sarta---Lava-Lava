@@ -9,17 +9,28 @@ import { useContent } from '../../context/ContentContext'
 
 const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.7 } }
 
-
-const PILLARS = [
-  { icon: '✦', title: 'Color is a verb', body: 'We start with the palette. Every season, we pick five colors that feel like a feeling. The garments follow.' },
-  { icon: '◈', title: 'Drape over decoration', body: 'Fabric first. Always. We spend more time on the hand of a cloth than on any embellishment.' },
-  { icon: '◉', title: 'Slow at the seam', body: '12 pieces per drop. 200–400 editions. We make less. We mean it more.' },
-]
-
 export default function LavaStory() {
   const navigate = useNavigate()
   const mobile = useMobile()
   const { get } = useContent()
+
+  const pillars = [
+    {
+      icon:  get('lava.story.pillar1_icon',  '✦'),
+      title: get('lava.story.pillar1_title', 'Color is a verb'),
+      body:  get('lava.story.pillar1_body',  'We start with the palette. Every season, we pick five colors that feel like a feeling. The garments follow.'),
+    },
+    {
+      icon:  get('lava.story.pillar2_icon',  '◈'),
+      title: get('lava.story.pillar2_title', 'Drape over decoration'),
+      body:  get('lava.story.pillar2_body',  'Fabric first. Always. We spend more time on the hand of a cloth than on any embellishment.'),
+    },
+    {
+      icon:  get('lava.story.pillar3_icon',  '◉'),
+      title: get('lava.story.pillar3_title', 'Slow at the seam'),
+      body:  get('lava.story.pillar3_body',  '12 pieces per drop. 200–400 editions. We make less. We mean it more.'),
+    },
+  ]
 
   return (
     <div style={{ background: 'linear-gradient(180deg, #0f0018 0%, #050010 100%)', minHeight: '100vh', color: '#fff' }}>
@@ -33,15 +44,17 @@ export default function LavaStory() {
           filter: 'blur(80px)'
         }} />
         <motion.div {...fadeUp} style={{ maxWidth: 720, position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 20 }}>{get('lava.story.eyebrow', 'OUR STORY')}</div>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 20 }}>
+            {get('lava.story.eyebrow', 'OUR STORY')}
+          </div>
           <h1 style={{ fontSize: 68, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, lineHeight: 1.1, marginBottom: 24 }}>
             {get('lava.story.headline', 'Born backstage, raised on color.')}
           </h1>
           <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.65)', fontFamily: 'DM Sans', fontWeight: 300, lineHeight: 1.8, marginBottom: 24 }}>
-            {get('lava.story.intro', 'At Lava Lava, we believe in the quiet power of exceptional tailoring. We work hand-in-hand with master artisans whose dedication to their craft ensures that every piece is a true work of art.')}
+            {get('lava.story.intro', 'Lava Lava is a diffusion line born from Solo Sarto — a private atelier of 11 master tailors. We took what we couldn\'t show on the couture floor and gave it its own stage.')}
           </p>
           <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.65)', fontFamily: 'DM Sans', fontWeight: 300, lineHeight: 1.8 }}>
-            {get('lava.story.intro2', 'We also honor the true essence of exclusivity. To maintain the uniqueness of your style, we produce our collections in strictly limited numbers, with a maximum of just five garments for each size.')}
+            {get('lava.story.intro2', 'We also honor the true essence of exclusivity. To maintain the uniqueness of your style, we produce our collections in strictly limited numbers.')}
           </p>
         </motion.div>
       </section>
@@ -59,18 +72,24 @@ export default function LavaStory() {
               <ProductSilhouette type="slip" palette={['#E8906A', '#D99AB4', '#8B6FB8']} width={140} height={220} />
             </div>
             <div style={{ marginTop: 24, textAlign: 'center' }}>
-              <div style={{ fontSize: 11, letterSpacing: 2, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 8 }}>SOLAR BLOOM · DROP 04</div>
-              <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans' }}>12 pieces · 200–400 editions each</div>
+              <div style={{ fontSize: 11, letterSpacing: 2, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 8 }}>
+                {get('lava.story.about_label', 'SOLAR BLOOM · DROP 04')}
+              </div>
+              <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans' }}>
+                {get('lava.story.about_meta', '12 pieces · 200–400 editions each')}
+              </div>
             </div>
           </LavaGlass>
         </motion.div>
         <motion.div {...fadeUp} transition={{ delay: 0.2 }}>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 20 }}>{get('lava.story.brand_code_label', 'THE BRAND CODE')}</div>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 20 }}>
+            {get('lava.story.brand_code_label', 'THE BRAND CODE')}
+          </div>
           <h2 style={{ fontSize: 36, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', marginBottom: 40 }}>
-            Three things we hold.
+            {get('lava.story.brand_code_sub', 'Three things we hold.')}
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-            {PILLARS.map((p) => (
+            {pillars.map((p) => (
               <div key={p.title} style={{ display: 'flex', gap: 20 }}>
                 <div style={{ fontSize: 20, color: '#D99AB4', flexShrink: 0, paddingTop: 2 }}>{p.icon}</div>
                 <div>
@@ -86,10 +105,14 @@ export default function LavaStory() {
       {/* Origin */}
       <section style={{ padding: mobile ? '48px 20px' : '80px 80px', textAlign: 'center' }}>
         <motion.div {...fadeUp}>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 20 }}>EST.</div>
-          <h2 style={{ fontSize: mobile ? 72 : 120, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, color: '#fff', lineHeight: 1, marginBottom: 24 }}>2026</h2>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 20 }}>
+            {get('lava.story.est_label', 'EST.')}
+          </div>
+          <h2 style={{ fontSize: mobile ? 72 : 120, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, color: '#fff', lineHeight: 1, marginBottom: 24 }}>
+            {get('lava.story.est_year', '2026')}
+          </h2>
           <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans', fontWeight: 300, maxWidth: 480, margin: '0 auto', lineHeight: 1.8 }}>
-            We started in 2026. Color, louder. Made for the fearless.
+            {get('lava.story.est_body', 'We started in 2026. Color, louder. Made for the fearless.')}
           </p>
         </motion.div>
       </section>
@@ -106,10 +129,7 @@ export default function LavaStory() {
           filter: 'blur(60px)', pointerEvents: 'none'
         }} />
         <motion.div {...fadeUp} style={{ position: 'relative', zIndex: 1 }}>
-          <p style={{
-            fontSize: 56, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300,
-            marginBottom: 40, lineHeight: 1.2
-          }}>
+          <p style={{ fontSize: 56, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, marginBottom: 40, lineHeight: 1.2 }}>
             {get('lava.story.cta', 'Now go be seen.')}
           </p>
           <button
@@ -123,7 +143,7 @@ export default function LavaStory() {
             onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
             onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
           >
-            SHOP DROP 04
+            {get('lava.story.cta_btn', 'SHOP THE COLLECTION')}
           </button>
         </motion.div>
       </section>
