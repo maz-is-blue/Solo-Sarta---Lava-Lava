@@ -157,28 +157,6 @@ export default function SoloPage() {
       {/* Hero */}
       <section style={{ paddingTop: mobile ? 80 : 100, minHeight: '100vh', position: 'relative', zIndex: 1, overflow: 'hidden' }}>
 
-        {/* Background video */}
-        {videos.length > 0 && (
-          <>
-            <video
-              key={videos[currentVideo % videos.length].id}
-              autoPlay
-              muted
-              playsInline
-              loop={videos.length === 1}
-              onEnded={videos.length > 1 ? () => setCurrentVideo(c => (c + 1) % videos.length) : undefined}
-              style={{
-                position: 'absolute', inset: 0, width: '100%', height: '100%',
-                objectFit: 'cover', zIndex: 0,
-              }}
-              src={videos[currentVideo % videos.length].url}
-            />
-            <div style={{
-              position: 'absolute', inset: 0, zIndex: 1,
-              background: 'linear-gradient(135deg, rgba(14,10,8,0.88) 0%, rgba(26,20,16,0.65) 55%, rgba(14,10,8,0.75) 100%)',
-            }} />
-          </>
-        )}
 
         {/* Content grid */}
         <div style={{
@@ -244,33 +222,48 @@ export default function SoloPage() {
           </div>
         </motion.div>
 
-        {/* Right: decorative card — hidden when video is playing */}
-        {!videos.length && (
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9, delay: 0.15 }}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 80px 80px 40px', position: 'relative' }}
-          >
+        {/* Right: portrait video or decorative card */}
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, delay: 0.15 }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? '0 24px 40px' : '80px 80px 80px 40px', position: 'relative' }}
+        >
+          {videos.length > 0 ? (
+            <div style={{
+              position: 'relative', borderRadius: 4, overflow: 'hidden',
+              width: '100%', maxWidth: 340,
+              aspectRatio: '9/16',
+              border: '1px solid rgba(201,169,110,0.15)',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
+            }}>
+              <video
+                key={videos[currentVideo % videos.length].id}
+                autoPlay
+                muted
+                playsInline
+                loop={videos.length === 1}
+                onEnded={videos.length > 1 ? () => setCurrentVideo(c => (c + 1) % videos.length) : undefined}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                src={videos[currentVideo % videos.length].url}
+              />
+            </div>
+          ) : (
             <div style={{
               background: 'linear-gradient(135deg, #302A24 0%, #201C18 100%)',
               border: '1px solid rgba(201,169,110,0.15)',
               borderRadius: 4, padding: '48px 40px', width: '100%', maxWidth: 440,
               position: 'relative', overflow: 'hidden'
             }}>
-              {/* Background glow */}
               <div style={{
                 position: 'absolute', width: 300, height: 300, top: -80, right: -60,
                 background: 'radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%)',
                 filter: 'blur(40px)', pointerEvents: 'none'
               }} />
-              {/* Look label */}
               <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 24 }}>LOOK 01</div>
-              {/* Gown silhouette */}
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
                 <GownSilhouette color1="#C9A96E" color2="#E8D5A3" />
               </div>
-              {/* Quote card */}
               <div style={{
                 background: 'rgba(201,169,110,0.06)', border: '1px solid rgba(201,169,110,0.12)',
                 padding: '16px 20px', borderRadius: 2, marginBottom: 24
@@ -280,13 +273,12 @@ export default function SoloPage() {
                 </p>
                 <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>{get('solo.home.mid_attr', '— MAISON NOTES')}</div>
               </div>
-              {/* Needle motif */}
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <NeedleMotif />
               </div>
             </div>
-          </motion.div>
-        )}
+          )}
+        </motion.div>
         </div>{/* end content grid */}
       </section>
 
