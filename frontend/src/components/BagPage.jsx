@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { formatPrice } from '../utils/price'
 import { motion } from 'framer-motion'
 import { useCart } from '../context/CartContext'
 import { useMobile } from '../hooks/useMobile'
@@ -34,7 +35,7 @@ function SoloItem({ item, onRemove }) {
       </div>
       <div style={{ textAlign: 'right', marginLeft: 20, flexShrink: 0 }}>
         <div style={{ fontSize: 17, color: '#C9A96E', fontFamily: 'Cormorant Garamond', marginBottom: 12 }}>
-          {t('currency')}{item.price.toLocaleString()}
+          {formatPrice(item.price, item.price_egp)}
         </div>
         <button
           onClick={() => onRemove(item.slug, item.size)}
@@ -78,7 +79,7 @@ function LavaItem({ item, onRemove }) {
       </div>
       <div style={{ textAlign: 'right', marginLeft: 20, flexShrink: 0 }}>
         <div style={{ fontSize: 16, color: '#A990CC', fontFamily: 'DM Sans', fontWeight: 600, marginBottom: 12 }}>
-          {t('currency')}{(item.price * item.qty).toLocaleString()}
+          {formatPrice(item.price * item.qty, item.price_egp ? item.price_egp * item.qty : null)}
         </div>
         <button
           onClick={() => onRemove(item.slug, item.size)}
@@ -109,6 +110,8 @@ export default function BagPage() {
 
   const soloTotal = soloItems.reduce((sum, i) => sum + i.price * i.qty, 0)
   const lavaTotal = lavaItems.reduce((sum, i) => sum + i.price * i.qty, 0)
+  const soloTotalEgp = soloItems.every(i => i.price_egp) ? soloItems.reduce((sum, i) => sum + i.price_egp * i.qty, 0) : null
+  const lavaTotalEgp = lavaItems.every(i => i.price_egp) ? lavaItems.reduce((sum, i) => sum + i.price_egp * i.qty, 0) : null
 
   const pad = mobile ? '24px' : '80px'
 
@@ -203,7 +206,7 @@ export default function BagPage() {
                 <div style={{ marginTop: 28, paddingTop: 20, borderTop: '1px solid rgba(201,169,110,0.15)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
                     <span style={{ fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2, color: 'rgba(250,248,245,0.4)' }}>ESTIMATED TOTAL</span>
-                    <span style={{ fontFamily: 'Cormorant Garamond', fontSize: 22, color: '#C9A96E' }}>{t('currency')}{soloTotal.toLocaleString()}</span>
+                    <span style={{ fontFamily: 'Cormorant Garamond', fontSize: 22, color: '#C9A96E' }}>{formatPrice(soloTotal, soloTotalEgp)}</span>
                   </div>
                   <button
                     onClick={() => navigate('/checkout', { state: { brand: 'solo' } })}
@@ -245,7 +248,7 @@ export default function BagPage() {
                   <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
                       <span style={{ fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2, color: 'rgba(250,248,245,0.4)' }}>SUBTOTAL</span>
-                      <span style={{ fontFamily: 'DM Sans', fontSize: 20, fontWeight: 600, color: '#A990CC' }}>{t('currency')}{lavaTotal.toLocaleString()}</span>
+                      <span style={{ fontFamily: 'DM Sans', fontSize: 20, fontWeight: 600, color: '#A990CC' }}>{formatPrice(lavaTotal, lavaTotalEgp)}</span>
                     </div>
                     <button
                       onClick={() => navigate('/checkout', { state: { brand: 'lava' } })}

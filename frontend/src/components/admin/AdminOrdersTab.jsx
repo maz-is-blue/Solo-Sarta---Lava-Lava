@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { formatPrice } from '../../utils/price'
 import { getAdminOrders, updateAdminOrder } from '../../services/adminApi'
 
 const STATUSES = ['all', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled']
@@ -60,7 +61,7 @@ function OrderRow({ order, accent, onUpdated }) {
         <span style={{ fontFamily: 'DM Sans', fontSize: 12, color: 'rgba(250,248,245,0.45)' }}>
           {new Date(order.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' })}
         </span>
-        <span style={{ fontFamily: 'DM Sans', fontSize: 13, color: '#FAF8F5', fontWeight: 500 }}>${total.toLocaleString()}</span>
+        <span style={{ fontFamily: 'DM Sans', fontSize: 13, color: '#FAF8F5', fontWeight: 500 }}>{formatPrice(total)}</span>
         <StatusBadge status={order.status} />
         <span style={{ color: 'rgba(250,248,245,0.4)', fontSize: 16, transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}>⌄</span>
       </button>
@@ -97,13 +98,13 @@ function OrderRow({ order, accent, onUpdated }) {
                     </div>
                   </div>
                   <div style={{ fontSize: 13, color: accent, fontFamily: 'DM Sans', fontWeight: 500, whiteSpace: 'nowrap' }}>
-                    ${(item.price * (item.qty || 1)).toLocaleString()}
+                    {formatPrice((item.price * (item.qty || 1)))}
                   </div>
                 </div>
               ))}
               <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 8, marginTop: 4, display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ fontSize: 11, letterSpacing: 1.5, color: 'rgba(250,248,245,0.4)', fontFamily: 'DM Sans' }}>TOTAL</span>
-                <span style={{ fontSize: 16, color: '#FAF8F5', fontFamily: 'DM Sans', fontWeight: 600 }}>${total.toLocaleString()}</span>
+                <span style={{ fontSize: 16, color: '#FAF8F5', fontFamily: 'DM Sans', fontWeight: 600 }}>{formatPrice(total)}</span>
               </div>
             </div>
           </div>

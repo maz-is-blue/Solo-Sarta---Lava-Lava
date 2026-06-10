@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { formatPrice } from '../../utils/price'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useMobile } from '../../hooks/useMobile'
 import { motion } from 'framer-motion'
@@ -209,10 +210,10 @@ export default function LavaProduct() {
 
             {/* Price */}
             <div style={{ marginBottom: 8 }}>
-              <span style={{ fontSize: 32, fontWeight: 600, fontFamily: 'DM Sans' }}>{t('currency')}{product.price.toLocaleString()}</span>
+              <span style={{ fontSize: 32, fontWeight: 600, fontFamily: 'DM Sans' }}>{formatPrice(product.price, product.price_egp)}</span>
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 28 }}>
-              or 3 installments of {t('currency')}{installment.toLocaleString()}
+              or 3 installments of {formatPrice(installment, product.price_egp ? Math.round(product.price_egp / 3) : null)}
             </p>
 
             {/* Story */}
@@ -299,7 +300,7 @@ export default function LavaProduct() {
 
             {/* Shipping info */}
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 28, display: 'flex', gap: 16 }}>
-              <span>✦ Free shipping on orders over {t('currency')}3,000</span>
+              <span>✦ Free shipping on orders over {formatPrice(3000)}</span>
               <span>✦ Easy 14-day returns</span>
             </div>
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { formatPrice } from '../../utils/price'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useCart } from '../../context/CartContext'
@@ -153,7 +154,7 @@ function SoloProductCard({ product, lang, t }) {
         <div style={{ fontSize: 10, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', letterSpacing: 1, marginBottom: 4 }}>{product.cat?.toUpperCase()}</div>
         <div style={{ fontSize: 17, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5', marginBottom: 8 }}>{displayName}</div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'DM Sans' }}>{t('currency')}{product.price.toLocaleString()}</span>
+          <span style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'DM Sans' }}>{formatPrice(product.price, product.price_egp)}</span>
           <button
             onClick={e => { e.stopPropagation(); addItem('solo', product, 'Bespoke'); setAdded(true); setTimeout(() => setAdded(false), 2000) }}
             style={{

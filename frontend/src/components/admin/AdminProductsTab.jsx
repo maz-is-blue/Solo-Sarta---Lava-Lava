@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { formatPrice } from '../../utils/price'
 import { getAdminProducts, createAdminProduct, updateAdminProduct, deleteAdminProduct, uploadMedia } from '../../services/adminApi'
 import { LAVA_CATS, LAVA_CAT_NAMES } from '../../constants/lavaCategories'
 import { SOLO_CATS } from '../../constants/soloCategories'
@@ -8,17 +9,17 @@ const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL']
 
 function emptyForm(brand) {
   if (brand === 'solo') {
-    return { name: '', price: '', cat: '', code: '', process_time: '', fabric: '', product_desc: '', product_desc_ar: '', name_ar: '', images: [], sizes: [], size_images: {}, active: true }
+    return { name: '', price: '', price_egp: '', cat: '', code: '', process_time: '', fabric: '', product_desc: '', product_desc_ar: '', name_ar: '', images: [], sizes: [], size_images: {}, active: true }
   }
-  return { name: '', price: '', cat: '', sub_cat: '', tag: '', sub: '', sub_ar: '', drop: '05', sizes: ['S', 'M', 'L'], size_images: {}, story: '', story_ar: '', details: '', details_ar: '', care: '', care_ar: '', fit: '', fit_ar: '', name_ar: '', images: [], active: true }
+  return { name: '', price: '', price_egp: '', cat: '', sub_cat: '', tag: '', sub: '', sub_ar: '', drop: '05', sizes: ['S', 'M', 'L'], size_images: {}, story: '', story_ar: '', details: '', details_ar: '', care: '', care_ar: '', fit: '', fit_ar: '', name_ar: '', images: [], active: true }
 }
 
 function formFromProduct(p, brand) {
   const images = p.images?.length ? p.images : (p.image_url ? [p.image_url] : [])
   if (brand === 'solo') {
-    return { name: p.name || '', price: p.price || '', cat: p.cat || '', code: p.code || '', process_time: p.process_time || '', fabric: p.fabric || '', product_desc: p.product_desc || '', product_desc_ar: p.product_desc_ar || '', name_ar: p.name_ar || '', images, sizes: p.sizes || [], size_images: p.size_images || {}, active: p.active !== false }
+    return { name: p.name || '', price: p.price || '', price_egp: p.price_egp || '', cat: p.cat || '', code: p.code || '', process_time: p.process_time || '', fabric: p.fabric || '', product_desc: p.product_desc || '', product_desc_ar: p.product_desc_ar || '', name_ar: p.name_ar || '', images, sizes: p.sizes || [], size_images: p.size_images || {}, active: p.active !== false }
   }
-  return { name: p.name || '', price: p.price || '', cat: p.cat || '', sub_cat: p.sub_cat || '', tag: p.tag || '', sub: p.sub || '', sub_ar: p.sub_ar || '', drop: p.drop || '05', sizes: p.sizes || [], size_images: p.size_images || {}, story: p.story || '', story_ar: p.story_ar || '', details: p.details || '', details_ar: p.details_ar || '', care: p.care || '', care_ar: p.care_ar || '', fit: p.fit || '', fit_ar: p.fit_ar || '', name_ar: p.name_ar || '', images, active: p.active !== false }
+  return { name: p.name || '', price: p.price || '', price_egp: p.price_egp || '', cat: p.cat || '', sub_cat: p.sub_cat || '', tag: p.tag || '', sub: p.sub || '', sub_ar: p.sub_ar || '', drop: p.drop || '05', sizes: p.sizes || [], size_images: p.size_images || {}, story: p.story || '', story_ar: p.story_ar || '', details: p.details || '', details_ar: p.details_ar || '', care: p.care || '', care_ar: p.care_ar || '', fit: p.fit || '', fit_ar: p.fit_ar || '', name_ar: p.name_ar || '', images, active: p.active !== false }
 }
 
 function ImageUploader({ images, onChange, accent, uploading, onUpload }) {
@@ -349,7 +350,7 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
     }
     setSaving(true); setError('')
     try {
-      const payload = { ...form, brand, price: parseInt(form.price, 10) }
+      const payload = { ...form, brand, price: parseInt(form.price, 10), price_egp: form.price_egp ? parseInt(form.price_egp, 10) : null }
       if (editingId) {
         const r = await updateAdminProduct(editingId, payload)
         setProducts(prev => prev.map(p => p.id === editingId ? r.data : p))
@@ -438,7 +439,7 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
                     {!p.active && <span style={{ marginLeft: 8, fontSize: 9, letterSpacing: 1.5, color: '#E8906A', border: '1px solid #E8906A', borderRadius: 999, padding: '2px 8px' }}>HIDDEN</span>}
                   </div>
                   <div style={{ fontSize: 12, color: 'rgba(250,248,245,0.4)', fontFamily: 'DM Sans' }}>
-                    {p.cat}{p.sub_cat ? ` › ${p.sub_cat}` : ''} · ${Number(p.price).toLocaleString()}
+                    {p.cat}{p.sub_cat ? ` › ${p.sub_cat}` : ''} · {formatPrice(Number(p.price), p.price_egp ? Number(p.price_egp) : null)}
                     {brand === 'solo' && p.code && ` · ${p.code}`}
                     {brand === 'lava' && p.sizes?.length > 0 && ` · ${p.sizes.join(', ')}`}
                     {p.images?.length > 1 && ` · ${p.images.length} photos`}
@@ -494,7 +495,7 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
               {/* Name + Price */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 160px', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 140px 140px', gap: 14 }}>
                 <div>
                   <label style={labelStyle}>PRODUCT NAME *</label>
                   <input style={inputStyle} value={form.name} onChange={e => set('name', e.target.value)} placeholder="e.g. The Halo Slip" />
@@ -502,6 +503,10 @@ export default function AdminProductsTab({ brand, accent, gradient }) {
                 <div>
                   <label style={labelStyle}>PRICE ($) *</label>
                   <input style={inputStyle} type="number" value={form.price} onChange={e => set('price', e.target.value)} placeholder="3499" />
+                </div>
+                <div>
+                  <label style={labelStyle}>PRICE (جنيه)</label>
+                  <input style={inputStyle} type="number" value={form.price_egp} onChange={e => set('price_egp', e.target.value)} placeholder="150000" />
                 </div>
               </div>
 

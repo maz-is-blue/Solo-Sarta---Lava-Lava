@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { formatPrice } from '../../utils/price'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
@@ -69,7 +70,7 @@ function PieceCard({ product, lang, t }) {
           {displayName}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'DM Sans' }}>{t('currency')}{product.price.toLocaleString()}</span>
+          <span style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'DM Sans' }}>{formatPrice(product.price, product.price_egp)}</span>
           <span style={{ fontSize: 10, letterSpacing: 1.5, color: hovered ? '#C9A96E' : 'rgba(250,248,245,0.3)', fontFamily: 'DM Sans', transition: 'color 0.25s ease' }}>
             VIEW →
           </span>

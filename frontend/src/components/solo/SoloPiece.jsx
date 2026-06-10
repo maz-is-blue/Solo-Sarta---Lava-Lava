@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
+import { formatPrice } from '../../utils/price'
 import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import SoloNav from './SoloNav'
@@ -181,7 +182,7 @@ export default function SoloPiece() {
               {(lang === 'ar' && product.name_ar) ? product.name_ar : product.name}
             </h1>
             <div style={{ fontSize: 26, color: '#C9A96E', fontFamily: 'Cormorant Garamond', marginBottom: 32 }}>
-              {t('currency')}{product.price.toLocaleString()}
+              {formatPrice(product.price, product.price_egp)}
             </div>
             <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.65)', fontFamily: 'DM Sans', lineHeight: 1.9, marginBottom: 32, maxWidth: 440 }}>
               {(lang === 'ar' && product.product_desc_ar) ? product.product_desc_ar : product.product_desc}
@@ -309,7 +310,7 @@ export default function SoloPiece() {
                 >
                   <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.45)', fontFamily: 'DM Sans', marginBottom: 8 }}>{p.code}</div>
                   <div style={{ fontSize: 17, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', marginBottom: 6 }}>{p.name}</div>
-                  <div style={{ fontSize: 13, color: '#C9A96E', fontFamily: 'DM Sans' }}>{t('currency')}{p.price.toLocaleString()}</div>
+                  <div style={{ fontSize: 13, color: '#C9A96E', fontFamily: 'DM Sans' }}>{formatPrice(p.price, p.price_egp)}</div>
                 </div>
               ))}
             </div>
