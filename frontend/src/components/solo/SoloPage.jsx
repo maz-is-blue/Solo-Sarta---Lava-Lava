@@ -9,39 +9,79 @@ import { useMobile } from '../../hooks/useMobile'
 import { useContent } from '../../context/ContentContext'
 import { useLanguage } from '../../context/LanguageContext'
 
-function GownSilhouette({ color1 = '#C9A96E', color2 = '#E8D5A3' }) {
+function TailorAnimation() {
   return (
-    <svg width="120" height="200" viewBox="0 0 120 200" style={{ overflow: 'visible' }}>
-      <defs>
-        <linearGradient id="gownGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor={color1} stopOpacity="0.7" />
-          <stop offset="100%" stopColor={color2} stopOpacity="0.5" />
-        </linearGradient>
-        <filter id="gownGlow">
-          <feGaussianBlur stdDeviation="6" result="blur" />
-          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-      </defs>
-      {/* Sketch lines for couture feel */}
-      <path d="M45,20 Q42,12 60,8 Q78,12 75,20 L85,80 Q60,90 35,80 Z" fill="none" stroke={color1} strokeWidth="0.8" opacity="0.4" />
-      <path d="M35,80 Q10,130 20,195 Q60,200 100,195 Q110,130 85,80" fill="none" stroke={color1} strokeWidth="0.8" opacity="0.4" />
-      {/* Main silhouette */}
-      <path
-        d="M45,20 Q42,12 60,8 Q78,12 75,20 L85,80 Q100,130 95,195 Q60,200 25,195 Q20,130 35,80 Z"
-        fill="url(#gownGrad)" opacity="0.85" filter="url(#gownGlow)"
-      />
-      {/* Straps */}
-      <line x1="52" y1="8" x2="48" y2="20" stroke={color1} strokeWidth="1.5" opacity="0.6" />
-      <line x1="68" y1="8" x2="72" y2="20" stroke={color1} strokeWidth="1.5" opacity="0.6" />
-      {/* Waist line */}
-      <path d="M38,78 Q60,86 82,78" fill="none" stroke={color1} strokeWidth="0.8" opacity="0.5" />
-      {/* Sparkles */}
-      {[40, 75, 55, 85, 30].map((x, i) => (
-        <circle key={i} cx={x} cy={40 + i * 30} r={1} fill={color1} opacity={0.5}
-          style={{ animation: `sparkle ${1.8 + i * 0.3}s ${i * 0.4}s ease-in-out infinite` }}
-        />
-      ))}
-    </svg>
+    <div style={{
+      background: 'linear-gradient(135deg, #2E2822, #211D19)',
+      border: '1px solid rgba(201,169,110,0.1)',
+      borderRadius: 4, height: 400,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      position: 'relative', overflow: 'hidden',
+    }}>
+      <div style={{
+        position: 'absolute', width: 350, height: 350,
+        top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
+        background: 'radial-gradient(circle, rgba(201,169,110,0.07) 0%, transparent 70%)',
+        filter: 'blur(50px)',
+      }} />
+      <svg width="240" height="240" viewBox="0 0 240 240" style={{ overflow: 'visible' }}>
+        <defs>
+          <style>{`
+            .ta-outer { transform-origin: 120px 120px; animation: taRot 45s linear infinite; }
+            .ta-inner { transform-origin: 120px 120px; animation: taRot 28s linear infinite reverse; }
+            .ta-needle { transform-origin: 120px 120px; animation: taRot 10s linear infinite; }
+            .ta-stitch { stroke-dasharray: 8 5; animation: taStitch 1.8s linear infinite; }
+            .ta-pulse { animation: taPulse 2.5s ease-in-out infinite; }
+            @keyframes taRot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            @keyframes taStitch { from { stroke-dashoffset: 52; } to { stroke-dashoffset: 0; } }
+            @keyframes taPulse { 0%,100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+          `}</style>
+        </defs>
+        <g className="ta-outer">
+          <circle cx="120" cy="120" r="108" fill="none" stroke="rgba(201,169,110,0.10)" strokeWidth="0.8" />
+          {[...Array(48)].map((_, i) => {
+            const a = (i * 7.5) * Math.PI / 180
+            const r1 = i % 4 === 0 ? 97 : 100
+            return (
+              <line key={i}
+                x1={120 + r1 * Math.cos(a)} y1={120 + r1 * Math.sin(a)}
+                x2={120 + 107 * Math.cos(a)} y2={120 + 107 * Math.sin(a)}
+                stroke={`rgba(201,169,110,${i % 4 === 0 ? 0.45 : 0.2})`}
+                strokeWidth={i % 4 === 0 ? 1.2 : 0.6}
+              />
+            )
+          })}
+        </g>
+        <g className="ta-inner">
+          <circle cx="120" cy="120" r="70" fill="none" stroke="rgba(201,169,110,0.15)" strokeWidth="0.8" strokeDasharray="3 9" />
+        </g>
+        <circle cx="120" cy="120" r="46" fill="none" stroke="rgba(201,169,110,0.30)" strokeWidth="1" className="ta-stitch" />
+        <g className="ta-needle">
+          <rect x="119" y="30" width="2" height="72" rx="1" fill="#C9A96E" opacity="0.75" />
+          <polygon points="120,16 117.5,32 122.5,32" fill="#C9A96E" opacity="0.9" />
+          <ellipse cx="120" cy="38" rx="2.5" ry="4" fill="none" stroke="#C9A96E" strokeWidth="1.2" opacity="0.65" />
+          <line x1="120" y1="102" x2="120" y2="118" stroke="rgba(201,169,110,0.3)" strokeWidth="1" strokeDasharray="2 2" />
+        </g>
+        <circle cx="120" cy="120" r="6" fill="none" stroke="#C9A96E" strokeWidth="1" opacity="0.4" className="ta-pulse" />
+        <circle cx="120" cy="120" r="2.5" fill="#C9A96E" opacity="0.8" />
+        {[0, 90, 180, 270].map((deg, i) => {
+          const a = deg * Math.PI / 180
+          return (
+            <circle key={i}
+              cx={120 + 70 * Math.cos(a)} cy={120 + 70 * Math.sin(a)}
+              r="2.5" fill="#C9A96E"
+              style={{ animation: `taPulse 2s ${i * 0.5}s ease-in-out infinite` }}
+            />
+          )
+        })}
+        <line x1="48" y1="120" x2="74" y2="120" stroke="rgba(201,169,110,0.15)" strokeWidth="0.8" />
+        <line x1="166" y1="120" x2="192" y2="120" stroke="rgba(201,169,110,0.15)" strokeWidth="0.8" />
+        <line x1="120" y1="48" x2="120" y2="74" stroke="rgba(201,169,110,0.15)" strokeWidth="0.8" />
+        <line x1="120" y1="166" x2="120" y2="192" stroke="rgba(201,169,110,0.15)" strokeWidth="0.8" />
+      </svg>
+      <div style={{ position: 'absolute', bottom: 24, left: 24, fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>AW/26 — ATELIER</div>
+      <div style={{ position: 'absolute', top: 24, right: 24, fontSize: 9, letterSpacing: 2, color: 'rgba(201,169,110,0.25)', fontFamily: 'DM Sans', textAlign: 'right', lineHeight: 1.8 }}>BESPOKE<br/>COUTURE</div>
+    </div>
   )
 }
 
@@ -263,10 +303,7 @@ export default function SoloPage() {
                 background: 'radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%)',
                 filter: 'blur(40px)', pointerEvents: 'none'
               }} />
-              <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 24 }}>LOOK 01</div>
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
-                <GownSilhouette color1="#C9A96E" color2="#E8D5A3" />
-              </div>
+              <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 32 }}>LOOK 01</div>
               <div style={{
                 background: 'rgba(201,169,110,0.06)', border: '1px solid rgba(201,169,110,0.12)',
                 padding: '16px 20px', borderRadius: 2, marginBottom: 24
@@ -293,18 +330,7 @@ export default function SoloPage() {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <div style={{
-            background: 'linear-gradient(135deg, #2E2822, #211D19)', border: '1px solid rgba(201,169,110,0.1)',
-            borderRadius: 4, height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{
-              position: 'absolute', width: 300, height: 300, top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
-              background: 'radial-gradient(circle, rgba(201,169,110,0.1) 0%, transparent 70%)',
-              filter: 'blur(40px)'
-            }} />
-            <GownSilhouette color1="#C9A96E" color2="#FAF8F5" />
-            <div style={{ position: 'absolute', bottom: 24, left: 24, fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>AW/26 — ATELIER</div>
-          </div>
+          <TailorAnimation />
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
