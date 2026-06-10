@@ -203,7 +203,7 @@ export default function SoloPage() {
             {get('solo.home.headline', 'Crafted for those who wear their story.')}
           </h1>
           <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.6)', fontFamily: 'DM Sans', lineHeight: 1.8, maxWidth: 420, marginBottom: 40 }}>
-            {get('solo.home.subtext', 'A private atelier of 11 master tailors. Bespoke couture since 2018.')}
+            {get('solo.home.subtext', 'Bespoke Fantasy')}
           </p>
           <div style={{ display: 'flex', gap: 16, marginBottom: 56 }}>
             <button

@@ -162,14 +162,19 @@ export default function SoloContact() {
             <div>
               <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 24 }}>{get('solo.contact.atelier_label', 'THE ATELIER')}</div>
               {[
-                ['Email', get('solo.contact.email', 'studio@solosarto.com')],
+                ['Email', get('solo.contact.email', 'solosarto.lavalava@gmail.com')],
+                ['Location', get('solo.contact.location', 'Cairo, Egypt')],
                 ['Hours', get('solo.contact.hours', 'Mon–Sat, 10am–6pm')],
+                ['Instagram', '@solosarto'],
                 ['Appointments', get('solo.contact.appointments', 'By arrangement only')],
                 ['Response time', get('solo.contact.response_time', 'Within 48 hours')],
               ].map(([k, v]) => (
                 <div key={k} style={{ borderBottom: '1px solid rgba(201,169,110,0.1)', padding: '14px 0', display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: 12, color: 'rgba(250,248,245,0.35)', fontFamily: 'DM Sans', letterSpacing: 1 }}>{k.toUpperCase()}</span>
-                  <span style={{ fontSize: 13, color: 'rgba(250,248,245,0.7)', fontFamily: 'DM Sans' }}>{v}</span>
+                  {k === 'Instagram'
+                    ? <a href="https://www.instagram.com/solosarto?igsh=MWxubXljb3NvaDlzbQ==" target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: '#C9A96E', fontFamily: 'DM Sans', textDecoration: 'none' }}>{v}</a>
+                    : <span style={{ fontSize: 13, color: 'rgba(250,248,245,0.7)', fontFamily: 'DM Sans' }}>{v}</span>
+                  }
                 </div>
               ))}
             </div>

@@ -9,10 +9,6 @@ import { useContent } from '../../context/ContentContext'
 
 const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.7 } }
 
-const TIMELINE = [
-  { year: '2024', title: 'Lava Lava is born', body: 'The diffusion line drops. Drop 01. Color, louder. Sold out in 72 hours. We knew.' },
-  { year: '2026', title: 'Drop 04 · Solar Bloom', body: '12 pieces. 200–400 editions each. Sell out in 48h. The world is catching up to the feeling.' },
-]
 
 const PILLARS = [
   { icon: '✦', title: 'Color is a verb', body: 'We start with the palette. Every season, we pick five colors that feel like a feeling. The garments follow.' },
@@ -87,52 +83,15 @@ export default function LavaStory() {
         </motion.div>
       </section>
 
-      {/* Timeline */}
-      <section style={{ padding: mobile ? '48px 20px' : '80px 80px', position: 'relative' }}>
-        <motion.div {...fadeUp} style={{ textAlign: 'center', marginBottom: 64 }}>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>{get('lava.story.history_label', 'THE HISTORY')}</div>
-          <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>{get('lava.story.history_heading', 'How we got here')}</h2>
+      {/* Origin */}
+      <section style={{ padding: mobile ? '48px 20px' : '80px 80px', textAlign: 'center' }}>
+        <motion.div {...fadeUp}>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.4)', fontFamily: 'DM Sans', marginBottom: 20 }}>EST.</div>
+          <h2 style={{ fontSize: mobile ? 72 : 120, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, color: '#fff', lineHeight: 1, marginBottom: 24 }}>2026</h2>
+          <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans', fontWeight: 300, maxWidth: 480, margin: '0 auto', lineHeight: 1.8 }}>
+            We started in 2026. Color, louder. Made for the fearless.
+          </p>
         </motion.div>
-        <div style={{ position: 'relative', maxWidth: 800, margin: '0 auto' }}>
-          {/* Center line */}
-          <div style={{
-            position: 'absolute', left: '50%', top: 0, bottom: 0, width: 1,
-            background: 'linear-gradient(180deg, transparent, rgba(217,154,180,0.4) 20%, rgba(139,111,184,0.4) 80%, transparent)',
-            transform: 'translateX(-50%)'
-          }} />
-          {TIMELINE.map((item, i) => {
-            const isLeft = i % 2 === 0
-            return (
-              <motion.div
-                key={item.year}
-                initial={{ opacity: 0, x: isLeft ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                style={{
-                  display: 'flex', justifyContent: isLeft ? 'flex-start' : 'flex-end',
-                  marginBottom: 48, position: 'relative'
-                }}
-              >
-                {/* Dot */}
-                <div style={{
-                  position: 'absolute', left: '50%', top: 20, transform: 'translateX(-50%)',
-                  width: 12, height: 12, borderRadius: '50%',
-                  background: `linear-gradient(135deg, #E8906A, #D99AB4)`,
-                  boxShadow: '0 0 12px rgba(217,154,180,0.5)'
-                }} />
-                <LavaGlass style={{
-                  width: '44%', padding: '24px 28px',
-                  marginLeft: isLeft ? 0 : 'auto', marginRight: isLeft ? 'auto' : 0
-                }}>
-                  <div style={{ fontSize: 24, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#D99AB4', marginBottom: 6 }}>{item.year}</div>
-                  <div style={{ fontSize: 15, fontWeight: 600, fontFamily: 'DM Sans', marginBottom: 8 }}>{item.title}</div>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', fontFamily: 'DM Sans', lineHeight: 1.7 }}>{item.body}</p>
-                </LavaGlass>
-              </motion.div>
-            )
-          })}
-        </div>
       </section>
 
       {/* Closing CTA */}
