@@ -542,7 +542,7 @@ function HeroShowcase({ products, navigate, t, lang, addItem }) {
           animate={{ opacity: [0.35, 0.7, 0.35] }}
           transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
           style={{
-            position: 'absolute', top: '15%', left: '50%', transform: 'translateX(-50%)',
+            position: 'absolute', top: '5%', left: '50%', transform: 'translateX(-50%)',
             width: 300, height: 360, borderRadius: '50%',
             background: 'radial-gradient(ellipse, rgba(232,144,106,0.5) 0%, rgba(139,111,184,0.3) 50%, transparent 72%)',
             filter: 'blur(50px)', pointerEvents: 'none',
@@ -551,7 +551,7 @@ function HeroShowcase({ products, navigate, t, lang, addItem }) {
         {MOCK.map((c, i) => (
           <div key={i} style={{
             position: 'absolute',
-            left: `calc(50% + ${c.x}px)`, top: `calc(50% + ${c.y - 30}px)`,
+            left: `calc(50% + ${c.x}px)`, top: `calc(50% + ${c.y - 80}px)`,
             transform: `translate(-50%, -50%) scale(${c.scale}) rotate(${c.rot}deg)`,
             animation: `lavaFloatPh ${c.dur} ${c.delay} ease-in-out infinite`,
             zIndex: c.z,
