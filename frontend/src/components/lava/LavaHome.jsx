@@ -499,8 +499,16 @@ function ProductHeroCard({ product, isActive, navigate, t, lang, addItem }) {
   )
 }
 
+function parsePal(raw) {
+  if (Array.isArray(raw) && raw.length >= 1) return raw
+  if (typeof raw === 'string') { try { const p = JSON.parse(raw); if (Array.isArray(p)) return p } catch {} }
+  return null
+}
+
 function HeroShowcase({ products, navigate, t, lang, addItem }) {
-  const safeProducts = products.filter(p => Array.isArray(p.palette) && p.palette.length >= 3)
+  const safeProducts = products
+    .map(p => { const pal = parsePal(p.palette); return pal ? { ...p, palette: [pal[0]||'#E8906A', pal[1]||'#D96A8A', pal[2]||'#8B6FB8'] } : null })
+    .filter(Boolean)
   const total = Math.min(safeProducts.length, 5)
   const [active, setActive] = useState(0)
   const paused = useRef(false)
@@ -519,13 +527,65 @@ function HeroShowcase({ products, navigate, t, lang, addItem }) {
   const activeProduct = safeProducts[active % Math.max(total, 1)] || null
   const STEP = 155
 
-  /* ── empty / loading state ── */
+  /* ── empty / loading state — show animated brand cards ── */
   if (!activeProduct) {
+    const MOCK = [
+      { pal: ['#E8906A','#D96A8A','#8B6FB8'], type: 'wrap',  x: 0,    y: 0,   rot: -4, scale: 1,    z: 3, dur: '3.6s', delay: '0s'   },
+      { pal: ['#D96A8A','#F2A07B','#C060A8'], type: 'slip',  x: 148,  y: 55,  rot:  7, scale: 0.82, z: 2, dur: '4.2s', delay: '0.5s' },
+      { pal: ['#8B6FB8','#A88AD4','#D96A8A'], type: 'midi',  x: -142, y: 70,  rot: -9, scale: 0.74, z: 1, dur: '3.9s', delay: '1s'   },
+    ]
     return (
-      <div style={{ width: 420, height: 480, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ textAlign: 'center', opacity: 0.4 }}>
-          <div style={{ fontSize: 48, fontFamily: 'Dancing Script', color: '#fff', marginBottom: 12 }}>Drop 04</div>
-          <div style={{ fontSize: 11, letterSpacing: 3, fontFamily: 'DM Sans', color: '#fff' }}>LOADING PIECES…</div>
+      <div style={{ position: 'relative', width: 460, height: 500 }}>
+        <style>{`@keyframes lavaFloatPh{0%,100%{transform:translateY(-9px)}50%{transform:translateY(9px)}}`}</style>
+        {/* Glow */}
+        <motion.div
+          animate={{ opacity: [0.35, 0.7, 0.35] }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute', top: '15%', left: '50%', transform: 'translateX(-50%)',
+            width: 300, height: 360, borderRadius: '50%',
+            background: 'radial-gradient(ellipse, rgba(232,144,106,0.5) 0%, rgba(139,111,184,0.3) 50%, transparent 72%)',
+            filter: 'blur(50px)', pointerEvents: 'none',
+          }}
+        />
+        {MOCK.map((c, i) => (
+          <div key={i} style={{
+            position: 'absolute',
+            left: `calc(50% + ${c.x}px)`, top: `calc(50% + ${c.y - 30}px)`,
+            transform: `translate(-50%, -50%) scale(${c.scale}) rotate(${c.rot}deg)`,
+            animation: `lavaFloatPh ${c.dur} ${c.delay} ease-in-out infinite`,
+            zIndex: c.z,
+          }}>
+            <div style={{
+              width: 190, height: 300, borderRadius: 24, overflow: 'hidden',
+              background: `linear-gradient(148deg, ${c.pal[0]}, ${c.pal[1]}, ${c.pal[2]})`,
+              border: `2px solid rgba(255,255,255,${i === 0 ? 0.65 : 0.38})`,
+              boxShadow: i === 0
+                ? `0 28px 64px ${c.pal[0]}55, 0 10px 28px rgba(0,0,0,0.15)`
+                : `0 8px 24px rgba(0,0,0,0.12)`,
+              display: 'flex', flexDirection: 'column',
+            }}>
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                <div style={{ position: 'absolute', width: 110, height: 110, borderRadius: '50%', background: 'rgba(255,255,255,0.28)', filter: 'blur(22px)' }} />
+                <ProductSilhouette type={c.type} palette={['rgba(255,255,255,0.88)','rgba(255,255,255,0.62)','rgba(255,255,255,0.38)']} width={84} height={140} />
+              </div>
+              <div style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(8px)', padding: '10px 14px' }}>
+                <div style={{ fontSize: 13, fontWeight: 700, fontFamily: 'DM Sans', color: '#1a0020', marginBottom: 2 }}>Drop 04</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: 11, color: 'rgba(0,0,0,0.45)', fontFamily: 'DM Sans', letterSpacing: 0.5 }}>LIMITED EDITION</span>
+                  {i === 0 && (
+                    <span style={{ fontSize: 10, fontWeight: 700, fontFamily: 'DM Sans', background: `linear-gradient(90deg, ${c.pal[0]}, ${c.pal[1]})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: 0.5 }}>
+                      SHOP ›
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+        {/* Label */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, textAlign: 'center' }}>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: 'rgba(255,255,255,0.5)', fontFamily: 'DM Sans' }}>DROP 04 · SOLAR BLOOM</div>
         </div>
       </div>
     )
