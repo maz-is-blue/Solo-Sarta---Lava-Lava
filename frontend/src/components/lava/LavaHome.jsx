@@ -178,7 +178,7 @@ export default function LavaHome() {
         </motion.div>
 
         {/* RIGHT: hero product showcase */}
-        {!mobile && products.length > 0 && (
+        {!mobile && (
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
@@ -507,7 +507,8 @@ function ProductHeroCard({ product, isActive, navigate, t, lang, addItem }) {
 }
 
 function HeroShowcase({ products, navigate, t, lang, addItem }) {
-  const total = Math.min(products.length, 5)
+  const safeProducts = products.filter(p => Array.isArray(p.palette) && p.palette.length >= 3)
+  const total = Math.min(safeProducts.length, 5)
   const [active, setActive] = useState(0)
   const paused = useRef(false)
   const touchStart = useRef(null)
@@ -522,8 +523,20 @@ function HeroShowcase({ products, navigate, t, lang, addItem }) {
     return () => clearInterval(timer)
   }, [go, total])
 
-  const activeProduct = products[active % products.length]
+  const activeProduct = safeProducts[active % Math.max(total, 1)] || null
   const STEP = 155
+
+  /* ── empty / loading state ── */
+  if (!activeProduct) {
+    return (
+      <div style={{ width: 420, height: 480, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ textAlign: 'center', opacity: 0.4 }}>
+          <div style={{ fontSize: 48, fontFamily: 'Dancing Script', color: '#fff', marginBottom: 12 }}>Drop 04</div>
+          <div style={{ fontSize: 11, letterSpacing: 3, fontFamily: 'DM Sans', color: '#fff' }}>LOADING PIECES…</div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
@@ -571,7 +584,7 @@ function HeroShowcase({ products, navigate, t, lang, addItem }) {
       ))}
 
       {/* Cards — same proven pattern as LavaCollectionSlider */}
-      {products.slice(0, total).map((p, i) => {
+      {safeProducts.slice(0, total).map((p, i) => {
         let d = i - active
         if (d > total / 2) d -= total
         if (d < -total / 2) d += total
