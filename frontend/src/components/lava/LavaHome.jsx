@@ -52,7 +52,6 @@ export default function LavaHome() {
   const { addItem } = useCart()
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
-  const [heroAdded, setHeroAdded] = useState(false)
   const [activeFilter, setActiveFilter] = useState('All')
   const mobile = useMobile()
   const { get } = useContent()
@@ -63,7 +62,6 @@ export default function LavaHome() {
     getProducts({ brand: 'lava' }).then(r => setProducts(r.data)).catch(() => {})
   }, [])
 
-  const featured = products[0] || null
   const categories = ['All', ...new Set(products.map(p => p.cat).filter(Boolean))]
   const filtered = activeFilter === 'All'
     ? products
@@ -74,13 +72,6 @@ export default function LavaHome() {
     if (!email) return
     try { await subscribeNewsletter(email, 'lava') } catch (_) {}
     setSubscribed(true)
-  }
-
-  const handleHeroAdd = () => {
-    if (!featured) return
-    addItem('lava', featured, (featured.sizes || [])[1] || 'M')
-    setHeroAdded(true)
-    setTimeout(() => setHeroAdded(false), 2000)
   }
 
   return (
@@ -186,108 +177,17 @@ export default function LavaHome() {
           </div>
         </motion.div>
 
-        {/* RIGHT: featured product card — hidden on mobile or when no products */}
-        {!mobile && featured && <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          style={{ position: 'relative', zIndex: 1 }}
-        >
-          <div style={{
-            background: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-            borderRadius: 32, overflow: 'hidden',
-            boxShadow: '0 32px 80px rgba(139,111,184,0.2), 0 8px 32px rgba(0,0,0,0.12)',
-            border: '1px solid rgba(255,255,255,0.9)'
-          }}>
-            {/* Badge */}
-            <div style={{ padding: '18px 24px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{
-                background: 'rgba(139,111,184,0.12)', color: '#8B6FB8',
-                fontSize: 11, fontWeight: 700, letterSpacing: 1.5,
-                padding: '5px 12px', borderRadius: 999, fontFamily: 'DM Sans'
-              }}>
-                ★ FEATURED
-              </span>
-              <span style={{ fontSize: 11, color: 'rgba(0,0,0,0.3)', fontFamily: 'DM Sans', letterSpacing: 1 }}>01 / 12</span>
-            </div>
-
-            {/* Silhouette area */}
-            <div style={{
-              height: 280, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: `linear-gradient(135deg, ${featured.palette[0]}25, ${featured.palette[1]}18, ${featured.palette[2]}25)`,
-              position: 'relative', margin: '12px 0 0'
-            }}>
-              <div style={{
-                position: 'absolute', width: 220, height: 220, borderRadius: '50%',
-                background: `radial-gradient(circle, ${featured.palette[0]}35 0%, transparent 70%)`,
-                filter: 'blur(40px)'
-              }} />
-              <ProductSilhouette type={featured.silhouette} palette={featured.palette} width={150} height={230} />
-            </div>
-
-            {/* Product info */}
-            <div style={{ padding: '20px 28px 28px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
-                <div>
-                  <div style={{ fontSize: 20, fontWeight: 700, fontFamily: 'DM Sans', color: '#1a0020', marginBottom: 3 }}>
-                    {featured.name}
-                  </div>
-                  <div style={{ fontSize: 13, color: 'rgba(0,0,0,0.45)', fontFamily: 'DM Sans' }}>
-                    Bias-cut · viscose · sunset rose
-                  </div>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: 22, fontWeight: 700, fontFamily: 'DM Sans', color: '#1a0020' }}>
-                    {formatPrice(featured.price, featured.price_egp)}
-                  </div>
-                  <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.35)', fontFamily: 'DM Sans' }}>
-                    or 3× {formatPrice(Math.round(featured.price / 3), featured.price_egp ? Math.round(featured.price_egp / 3) : null)}
-                  </div>
-                </div>
-              </div>
-
-              {/* Color dots + loved */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '14px 0' }}>
-                {featured.palette.map((c, i) => (
-                  <div key={i} style={{ width: 16, height: 16, borderRadius: '50%', background: c, border: '2px solid #fff', boxShadow: '0 2px 6px rgba(0,0,0,0.15)' }} />
-                ))}
-                <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)', fontFamily: 'DM Sans', marginLeft: 4 }}>
-                  2.4k loved this drop
-                </span>
-              </div>
-
-              {/* Add to bag + heart */}
-              <div style={{ display: 'flex', gap: 10 }}>
-                <button
-                  onClick={handleHeroAdd}
-                  style={{
-                    flex: 1, padding: '13px 0', borderRadius: 999, border: 'none', cursor: 'pointer',
-                    background: heroAdded
-                      ? 'linear-gradient(90deg, #22c55e, #16a34a)'
-                      : `linear-gradient(90deg, ${featured.palette[0]}, ${featured.palette[1]})`,
-                    color: '#fff', fontSize: 14, fontWeight: 700,
-                    fontFamily: 'DM Sans', letterSpacing: 0.5,
-                    transition: 'background 0.3s ease'
-                  }}
-                >
-                  {heroAdded ? t('added') : t('add_to_bag')}
-                </button>
-                <button style={{
-                  width: 48, height: 48, borderRadius: '50%', border: '1.5px solid rgba(0,0,0,0.15)',
-                  background: '#fff', cursor: 'pointer', fontSize: 18,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  flexShrink: 0, transition: 'border-color 0.2s ease'
-                }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor = featured.palette[0]}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(0,0,0,0.15)'}
-                >
-                  ♡
-                </button>
-              </div>
-            </div>
-          </div>
-        </motion.div>}
+        {/* RIGHT: hero product showcase */}
+        {!mobile && products.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.3 }}
+            style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+          >
+            <HeroShowcase products={products} navigate={navigate} t={t} lang={lang} addItem={addItem} />
+          </motion.div>
+        )}
       </section>
 
       {/* ── MARQUEE ─────────────────────────────────────────── */}
@@ -519,6 +419,196 @@ export default function LavaHome() {
       </section>
 
       <LavaFooter />
+    </div>
+  )
+}
+
+/* ── Hero product showcase (fan of floating cards) ─────────────────────── */
+function ProductHeroCard({ product, isActive, navigate, t, lang, addItem }) {
+  const [added, setAdded] = useState(false)
+
+  const handleAdd = (e) => {
+    e.stopPropagation()
+    addItem('lava', product, (product.sizes || [])[1] || 'M')
+    setAdded(true)
+    setTimeout(() => setAdded(false), 1800)
+  }
+
+  return (
+    <div style={{
+      width: 210, height: 330,
+      borderRadius: 28, overflow: 'hidden',
+      background: `linear-gradient(150deg, ${product.palette[0]}, ${product.palette[1]}, ${product.palette[2]})`,
+      border: `2px solid rgba(255,255,255,${isActive ? 0.65 : 0.35})`,
+      boxShadow: isActive
+        ? `0 32px 72px ${product.palette[0]}60, 0 12px 32px rgba(0,0,0,0.18)`
+        : `0 8px 24px rgba(0,0,0,0.12)`,
+      position: 'relative',
+      userSelect: 'none',
+    }}>
+      {/* Tag */}
+      {product.tag && (
+        <div style={{
+          position: 'absolute', top: 11, left: 11, zIndex: 2,
+          background: 'rgba(255,255,255,0.92)', color: '#8B6FB8',
+          fontSize: 9, fontWeight: 700, letterSpacing: 1.5,
+          padding: '4px 10px', borderRadius: 999, fontFamily: 'DM Sans',
+        }}>
+          {product.tag.toUpperCase()}
+        </div>
+      )}
+
+      {/* Heart */}
+      <div style={{
+        position: 'absolute', top: 11, right: 11, zIndex: 2,
+        width: 28, height: 28, borderRadius: '50%',
+        background: 'rgba(255,255,255,0.72)', backdropFilter: 'blur(6px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13,
+      }}>♡</div>
+
+      {/* Image / silhouette */}
+      <div
+        onClick={() => navigate(`/lava/product/${product.slug}`)}
+        style={{ height: 240, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', cursor: 'pointer' }}
+      >
+        <div style={{
+          position: 'absolute', width: 150, height: 150, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.28)', filter: 'blur(28px)',
+        }} />
+        {product.image_url
+          ? <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center', position: 'absolute', inset: 0 }} />
+          : <ProductSilhouette type={product.silhouette} palette={['rgba(255,255,255,0.88)', 'rgba(255,255,255,0.65)', 'rgba(255,255,255,0.42)']} width={100} height={165} />
+        }
+      </div>
+
+      {/* Footer */}
+      <div style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(10px)', padding: '11px 14px' }}>
+        <div style={{ fontSize: 14, fontWeight: 700, fontFamily: 'DM Sans', color: '#1a0020', marginBottom: 5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {(lang === 'ar' && product.name_ar) ? product.name_ar : product.name}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans', color: '#1a0020' }}>
+            {formatPrice(product.price, product.price_egp)}
+          </span>
+          {isActive && (
+            <button onClick={handleAdd} style={{
+              padding: '5px 14px', borderRadius: 999, border: 'none', cursor: 'pointer',
+              background: added ? '#22c55e' : `linear-gradient(90deg, ${product.palette[0]}, ${product.palette[1]})`,
+              color: '#fff', fontSize: 11, fontWeight: 700, fontFamily: 'DM Sans',
+              transition: 'background 0.3s', letterSpacing: 0.5,
+            }}>
+              {added ? '✓' : t('add')}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function HeroShowcase({ products, navigate, t, lang, addItem }) {
+  const total = Math.min(products.length, 5)
+  const [active, setActive] = useState(0)
+  const paused = useRef(false)
+  const touchStart = useRef(null)
+
+  const go = useCallback((dir) => {
+    setActive(prev => (prev + dir + total) % total)
+  }, [total])
+
+  useEffect(() => {
+    if (total < 2) return
+    const timer = setInterval(() => { if (!paused.current) go(1) }, 4000)
+    return () => clearInterval(timer)
+  }, [go, total])
+
+  const activeProduct = products[active % products.length]
+  const STEP = 155
+
+  return (
+    <div
+      style={{ position: 'relative', width: 520, height: 460, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      onMouseEnter={() => { paused.current = true }}
+      onMouseLeave={() => { paused.current = false }}
+      onTouchStart={e => { touchStart.current = e.touches[0].clientX }}
+      onTouchEnd={e => {
+        if (touchStart.current === null) return
+        const dx = e.changedTouches[0].clientX - touchStart.current
+        if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1)
+        touchStart.current = null
+      }}
+    >
+      {/* Breathing palette glow behind active card */}
+      <motion.div
+        animate={{ opacity: [0.45, 0.75, 0.45] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          position: 'absolute', width: 280, height: 380, borderRadius: '50%',
+          background: `radial-gradient(ellipse at 50% 55%, ${activeProduct.palette[0]}55 0%, ${activeProduct.palette[1]}28 50%, transparent 72%)`,
+          filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0,
+          transition: 'background 0.8s ease',
+        }}
+      />
+
+      {/* Decorative sparkles */}
+      {[
+        { top: '12%', left: '8%',  size: 6, delay: '0s',   dur: '2.4s' },
+        { top: '20%', right: '6%', size: 5, delay: '0.9s', dur: '3s' },
+        { top: '72%', left: '4%',  size: 4, delay: '1.5s', dur: '2.7s' },
+        { top: '65%', right: '5%', size: 7, delay: '0.4s', dur: '3.2s' },
+      ].map((s, i) => (
+        <div key={i} style={{
+          position: 'absolute', width: s.size, height: s.size, borderRadius: '50%',
+          background: '#fff', opacity: 0.55,
+          top: s.top, left: s.left, right: s.right,
+          animation: `sparkle ${s.dur} ${s.delay} ease-in-out infinite`,
+          pointerEvents: 'none', zIndex: 0,
+        }} />
+      ))}
+
+      {/* Cards */}
+      {products.slice(0, total).map((p, i) => {
+        let d = i - active
+        if (d > total / 2) d -= total
+        if (d < -total / 2) d += total
+        const abs = Math.abs(d)
+        const tx = d * STEP
+        const scale = abs === 0 ? 1 : abs === 1 ? 0.8 : abs === 2 ? 0.63 : 0.5
+        const opacity = abs === 0 ? 1 : abs === 1 ? 0.62 : abs === 2 ? 0.22 : 0
+        const rotate = d * 7
+        const zIndex = 20 - abs * 4
+
+        return (
+          <motion.div
+            key={p.id}
+            animate={{ x: tx, scale, opacity, rotate }}
+            transition={{ duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{ position: 'absolute', zIndex, cursor: abs > 0 ? 'pointer' : 'default' }}
+            onClick={() => abs > 0 && setActive(i)}
+          >
+            {/* Float animation wrapper — only on active */}
+            <motion.div
+              animate={abs === 0 ? { y: [-7, 7, -7] } : { y: 0 }}
+              transition={abs === 0 ? { duration: 3.8, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.3 }}
+            >
+              <ProductHeroCard product={p} isActive={abs === 0} navigate={navigate} t={t} lang={lang} addItem={addItem} />
+            </motion.div>
+          </motion.div>
+        )
+      })}
+
+      {/* Dot nav */}
+      {total > 1 && (
+        <div style={{ position: 'absolute', bottom: 0, display: 'flex', gap: 7, justifyContent: 'center', zIndex: 30 }}>
+          {Array.from({ length: total }).map((_, i) => (
+            <button key={i} onClick={() => setActive(i)} style={{
+              width: i === active ? 28 : 7, height: 7, borderRadius: 999, padding: 0, border: 'none', cursor: 'pointer',
+              background: i === active ? '#fff' : 'rgba(255,255,255,0.4)',
+              transition: 'all 0.35s ease',
+            }} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
