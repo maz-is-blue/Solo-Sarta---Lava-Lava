@@ -178,16 +178,9 @@ export default function LavaHome() {
         </motion.div>
 
         {/* RIGHT: hero product showcase */}
-        {!mobile && (
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9, delay: 0.3 }}
-            style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-          >
-            <HeroShowcase products={products} navigate={navigate} t={t} lang={lang} addItem={addItem} />
-          </motion.div>
-        )}
+        <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <HeroShowcase products={products} navigate={navigate} t={t} lang={lang} addItem={addItem} />
+        </div>
       </section>
 
       {/* ── MARQUEE ─────────────────────────────────────────── */}
