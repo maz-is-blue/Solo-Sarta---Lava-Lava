@@ -527,7 +527,7 @@ function HeroShowcase({ products, navigate, t, lang, addItem }) {
 
   return (
     <div
-      style={{ position: 'relative', width: 520, height: 460, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      style={{ position: 'relative', width: 520, height: 480, userSelect: 'none' }}
       onMouseEnter={() => { paused.current = true }}
       onMouseLeave={() => { paused.current = false }}
       onTouchStart={e => { touchStart.current = e.touches[0].clientX }}
@@ -538,35 +538,39 @@ function HeroShowcase({ products, navigate, t, lang, addItem }) {
         touchStart.current = null
       }}
     >
-      {/* Breathing palette glow behind active card */}
+      <style>{`@keyframes lavaFloat{0%,100%{transform:translateY(-8px)}50%{transform:translateY(8px)}}`}</style>
+
+      {/* Breathing palette glow */}
       <motion.div
-        animate={{ opacity: [0.45, 0.75, 0.45] }}
+        animate={{ opacity: [0.4, 0.75, 0.4] }}
         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
         style={{
-          position: 'absolute', width: 280, height: 380, borderRadius: '50%',
+          position: 'absolute',
+          top: 'calc(50% - 210px)', left: 'calc(50% - 160px)',
+          width: 320, height: 420, borderRadius: '50%',
           background: `radial-gradient(ellipse at 50% 55%, ${activeProduct.palette[0]}55 0%, ${activeProduct.palette[1]}28 50%, transparent 72%)`,
-          filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0,
+          filter: 'blur(55px)', pointerEvents: 'none', zIndex: 0,
           transition: 'background 0.8s ease',
         }}
       />
 
-      {/* Decorative sparkles */}
+      {/* Sparkles */}
       {[
-        { top: '12%', left: '8%',  size: 6, delay: '0s',   dur: '2.4s' },
-        { top: '20%', right: '6%', size: 5, delay: '0.9s', dur: '3s' },
-        { top: '72%', left: '4%',  size: 4, delay: '1.5s', dur: '2.7s' },
-        { top: '65%', right: '5%', size: 7, delay: '0.4s', dur: '3.2s' },
+        { top: '10%', left: '7%',   size: 6, delay: '0s',   dur: '2.4s' },
+        { top: '18%', left: '88%',  size: 5, delay: '0.9s', dur: '3s'   },
+        { top: '72%', left: '4%',   size: 4, delay: '1.5s', dur: '2.7s' },
+        { top: '63%', left: '91%',  size: 7, delay: '0.4s', dur: '3.2s' },
       ].map((s, i) => (
         <div key={i} style={{
           position: 'absolute', width: s.size, height: s.size, borderRadius: '50%',
-          background: '#fff', opacity: 0.55,
-          top: s.top, left: s.left, right: s.right,
+          background: '#fff', opacity: 0.5,
+          top: s.top, left: s.left,
           animation: `sparkle ${s.dur} ${s.delay} ease-in-out infinite`,
           pointerEvents: 'none', zIndex: 0,
         }} />
       ))}
 
-      {/* Cards */}
+      {/* Cards — same proven pattern as LavaCollectionSlider */}
       {products.slice(0, total).map((p, i) => {
         let d = i - active
         if (d > total / 2) d -= total
@@ -579,27 +583,32 @@ function HeroShowcase({ products, navigate, t, lang, addItem }) {
         const zIndex = 20 - abs * 4
 
         return (
-          <motion.div
+          <div
             key={p.id}
-            animate={{ x: tx, scale, opacity, rotate }}
-            transition={{ duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] }}
-            style={{ position: 'absolute', zIndex, cursor: abs > 0 ? 'pointer' : 'default' }}
             onClick={() => abs > 0 && setActive(i)}
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: `translate(calc(-50% + ${tx}px), -50%) scale(${scale}) rotate(${rotate}deg)`,
+              willChange: 'transform',
+              transition: 'transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.65s ease',
+              zIndex,
+              opacity,
+              pointerEvents: abs <= 2 ? 'auto' : 'none',
+              cursor: abs > 0 ? 'pointer' : 'default',
+            }}
           >
-            {/* Float animation wrapper — only on active */}
-            <motion.div
-              animate={abs === 0 ? { y: [-7, 7, -7] } : { y: 0 }}
-              transition={abs === 0 ? { duration: 3.8, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.3 }}
-            >
+            <div style={{ animation: abs === 0 ? 'lavaFloat 3.8s ease-in-out infinite' : 'none' }}>
               <ProductHeroCard product={p} isActive={abs === 0} navigate={navigate} t={t} lang={lang} addItem={addItem} />
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )
       })}
 
       {/* Dot nav */}
       {total > 1 && (
-        <div style={{ position: 'absolute', bottom: 0, display: 'flex', gap: 7, justifyContent: 'center', zIndex: 30 }}>
+        <div style={{ position: 'absolute', bottom: 4, left: 0, right: 0, display: 'flex', gap: 7, justifyContent: 'center', zIndex: 30 }}>
           {Array.from({ length: total }).map((_, i) => (
             <button key={i} onClick={() => setActive(i)} style={{
               width: i === active ? 28 : 7, height: 7, borderRadius: 999, padding: 0, border: 'none', cursor: 'pointer',
