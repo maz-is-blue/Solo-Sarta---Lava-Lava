@@ -387,23 +387,113 @@ export default function SoloPage() {
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? '0 24px 40px' : '80px 80px 80px 40px', position: 'relative' }}
         >
           {videos.length > 0 ? (
-            <div style={{
-              position: 'relative', borderRadius: 4, overflow: 'hidden',
-              width: '100%', maxWidth: 340,
-              aspectRatio: '9/16',
-              border: '1px solid rgba(201,169,110,0.15)',
-              boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
-            }}>
-              <video
-                key={videos[currentVideo % videos.length].id}
-                autoPlay
-                muted
-                playsInline
-                loop={videos.length === 1}
-                onEnded={videos.length > 1 ? () => setCurrentVideo(c => (c + 1) % videos.length) : undefined}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                src={videos[currentVideo % videos.length].url}
+            <div style={{ position: 'relative', width: '100%', maxWidth: 340, zIndex: 1 }}>
+              {/* Breathing atmospheric glow */}
+              <motion.div
+                animate={{ opacity: [0.3, 0.75, 0.3] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+                style={{
+                  position: 'absolute', inset: -40,
+                  background: 'radial-gradient(ellipse at 50% 45%, rgba(201,169,110,0.16) 0%, transparent 65%)',
+                  filter: 'blur(28px)', pointerEvents: 'none', zIndex: 0,
+                }}
               />
+
+              {/* Vertical label — left */}
+              <div style={{
+                position: 'absolute', left: -26, top: '50%',
+                transform: 'translateY(-50%) rotate(-90deg)',
+                fontSize: 8, letterSpacing: 4, fontFamily: 'DM Sans', fontWeight: 600,
+                color: 'rgba(201,169,110,0.35)', whiteSpace: 'nowrap', userSelect: 'none', zIndex: 3,
+              }}>SOLO · SARTO</div>
+
+              {/* Vertical label — right */}
+              <div style={{
+                position: 'absolute', right: -22, top: '50%',
+                transform: 'translateY(-50%) rotate(90deg)',
+                fontSize: 8, letterSpacing: 4, fontFamily: 'DM Sans',
+                color: 'rgba(201,169,110,0.22)', whiteSpace: 'nowrap', userSelect: 'none', zIndex: 3,
+              }}>AW · 26</div>
+
+              {/* Frame shell */}
+              <div style={{ position: 'relative', aspectRatio: '9/16', zIndex: 1 }}>
+
+                {/* Video clip */}
+                <div style={{
+                  position: 'absolute', inset: 0, borderRadius: 4, overflow: 'hidden',
+                  boxShadow: '0 28px 72px rgba(0,0,0,0.6)',
+                }}>
+                  <video
+                    key={videos[currentVideo % videos.length].id}
+                    autoPlay muted playsInline
+                    loop={videos.length === 1}
+                    onEnded={videos.length > 1 ? () => setCurrentVideo(c => (c + 1) % videos.length) : undefined}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    src={videos[currentVideo % videos.length].url}
+                  />
+                  {/* Shimmer sweep */}
+                  <motion.div
+                    animate={{ x: [-360, 460] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: 'linear', repeatDelay: 5 }}
+                    style={{
+                      position: 'absolute', top: 0, bottom: 0, left: 0, width: 100,
+                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.03) 30%, rgba(201,169,110,0.07) 50%, rgba(255,255,255,0.03) 70%, transparent)',
+                      pointerEvents: 'none', zIndex: 2,
+                    }}
+                  />
+                  {/* Slow scan line */}
+                  <motion.div
+                    animate={{ top: ['-2%', '102%'] }}
+                    transition={{ duration: 10, repeat: Infinity, ease: 'linear', repeatDelay: 3 }}
+                    style={{
+                      position: 'absolute', left: 0, right: 0, height: 1,
+                      background: 'linear-gradient(90deg, transparent, rgba(201,169,110,0.18) 15%, rgba(201,169,110,0.38) 50%, rgba(201,169,110,0.18) 85%, transparent)',
+                      pointerEvents: 'none', zIndex: 3,
+                    }}
+                  />
+                </div>
+
+                {/* Frame edge lines — draw in clockwise */}
+                <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                  transition={{ duration: 0.9, delay: 0.25, ease: 'easeOut' }}
+                  style={{ position: 'absolute', top: 0, left: 22, right: 22, height: 1, background: 'rgba(201,169,110,0.42)', transformOrigin: 'left', zIndex: 5, pointerEvents: 'none' }} />
+                <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }}
+                  transition={{ duration: 0.9, delay: 0.4, ease: 'easeOut' }}
+                  style={{ position: 'absolute', right: 0, top: 22, bottom: 22, width: 1, background: 'rgba(201,169,110,0.42)', transformOrigin: 'top', zIndex: 5, pointerEvents: 'none' }} />
+                <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                  transition={{ duration: 0.9, delay: 0.55, ease: 'easeOut' }}
+                  style={{ position: 'absolute', bottom: 0, left: 22, right: 22, height: 1, background: 'rgba(201,169,110,0.42)', transformOrigin: 'right', zIndex: 5, pointerEvents: 'none' }} />
+                <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }}
+                  transition={{ duration: 0.9, delay: 0.7, ease: 'easeOut' }}
+                  style={{ position: 'absolute', left: 0, top: 22, bottom: 22, width: 1, background: 'rgba(201,169,110,0.42)', transformOrigin: 'bottom', zIndex: 5, pointerEvents: 'none' }} />
+
+                {/* Diamond corner ornaments */}
+                {[
+                  { pos: { top: -8, left: -8 },
+                    diamond: 'M8,3 L13,8 L8,13 L3,8 Z', arms: 'M13,8 L30,8 M8,13 L8,30' },
+                  { pos: { top: -8, right: -8 },
+                    diamond: 'M32,3 L37,8 L32,13 L27,8 Z', arms: 'M27,8 L10,8 M32,13 L32,30' },
+                  { pos: { bottom: -8, left: -8 },
+                    diamond: 'M8,27 L13,32 L8,37 L3,32 Z', arms: 'M13,32 L30,32 M8,10 L8,27' },
+                  { pos: { bottom: -8, right: -8 },
+                    diamond: 'M32,27 L37,32 L32,37 L27,32 Z', arms: 'M27,32 L10,32 M32,10 L32,27' },
+                ].map((c, i) => (
+                  <motion.svg key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.15 + i * 0.1 }}
+                    width={40} height={40} viewBox="0 0 40 40"
+                    style={{ position: 'absolute', ...c.pos, zIndex: 6, pointerEvents: 'none' }}>
+                    <path d={c.diamond} fill="rgba(201,169,110,0.18)" stroke="#C9A96E" strokeWidth="1.2" strokeLinejoin="round" opacity="0.7" />
+                    <path d={c.arms} fill="none" stroke="#C9A96E" strokeWidth="1" opacity="0.55" />
+                  </motion.svg>
+                ))}
+              </div>
+
+              {/* Bottom label */}
+              <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                <div style={{ height: 1, width: 36, background: 'linear-gradient(90deg, transparent, rgba(201,169,110,0.3))' }} />
+                <span style={{ fontSize: 9, letterSpacing: 3, fontFamily: 'DM Sans', color: 'rgba(201,169,110,0.38)' }}>AW/26 · ATELIER</span>
+                <div style={{ height: 1, width: 36, background: 'linear-gradient(90deg, rgba(201,169,110,0.3), transparent)' }} />
+              </div>
             </div>
           ) : (
             <div style={{
