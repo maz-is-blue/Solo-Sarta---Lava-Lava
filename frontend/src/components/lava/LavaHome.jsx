@@ -551,7 +551,7 @@ function HeroShowcase({ products, navigate, t, lang, addItem }) {
         {MOCK.map((c, i) => (
           <div key={i} style={{
             position: 'absolute',
-            left: `calc(50% + ${c.x}px)`, top: `calc(50% + ${c.y - 80}px)`,
+            left: `calc(50% + ${c.x}px)`, top: `calc(50% + ${c.y - 150}px)`,
             transform: `translate(-50%, -50%) scale(${c.scale}) rotate(${c.rot}deg)`,
             animation: `lavaFloatPh ${c.dur} ${c.delay} ease-in-out infinite`,
             zIndex: c.z,
