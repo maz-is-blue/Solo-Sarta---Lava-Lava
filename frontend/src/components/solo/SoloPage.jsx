@@ -115,57 +115,69 @@ function SoloProductCard({ product, lang, t }) {
       onClick={() => navigate(`/solo/piece/${product.slug}`)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{
-        position: 'relative', cursor: 'pointer', overflow: 'hidden', borderRadius: 4,
-        background: 'linear-gradient(135deg, #2E2822 0%, #201C18 100%)',
-        border: '1px solid rgba(201,169,110,0.12)',
-        transition: 'transform 0.4s ease, box-shadow 0.4s ease',
-        transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
-        boxShadow: hovered ? '0 16px 48px rgba(0,0,0,0.6)' : '0 4px 16px rgba(0,0,0,0.4)',
-        minHeight: 280
-      }}
+      style={{ cursor: 'pointer' }}
     >
-      {/* Grain texture overlay */}
-      <div style={{
-        position: 'absolute', inset: 0, opacity: 0.04, pointerEvents: 'none',
-        backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")',
-        backgroundSize: 'cover'
-      }} />
-      {/* Product code */}
-      <div style={{ position: 'absolute', top: 16, left: 16, fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>
-        {product.code}
-      </div>
-      {/* Product image / placeholder */}
-      <div style={{
-        aspectRatio: '1/1', position: 'relative', overflow: 'hidden',
-        background: 'linear-gradient(135deg, #2A2420 0%, #201C18 100%)'
-      }}>
-        {product.image_url
-          ? <img
-              src={product.image_url}
-              alt={product.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center', display: 'block', transition: 'transform 0.5s ease', transform: hovered ? 'scale(1.04)' : 'scale(1)' }}
-            />
-          : <div className="shimmer" style={{ position: 'absolute', inset: 0 }} />
-        }
-      </div>
-      {/* Card info */}
-      <div style={{ padding: '16px 20px 20px' }}>
-        <div style={{ fontSize: 10, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', letterSpacing: 1, marginBottom: 4 }}>{product.cat?.toUpperCase()}</div>
-        <div style={{ fontSize: 17, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5', marginBottom: 8 }}>{displayName}</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 14, color: '#C9A96E', fontFamily: 'DM Sans' }}>{formatPrice(product.price, product.price_egp)}</span>
+      {/* Portrait image */}
+      <div style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden', background: '#1A1612', marginBottom: 14 }}>
+        {product.image_url ? (
+          <img
+            src={product.image_url}
+            alt={displayName}
+            style={{
+              width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center', display: 'block',
+              transform: hovered ? 'scale(1.05)' : 'scale(1)',
+              transition: 'transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)',
+            }}
+          />
+        ) : (
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(145deg, #211C17 0%, #1A1512 100%)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span style={{ fontSize: 28, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: 'rgba(201,169,110,0.18)' }}>
+              {product.code || 'SS'}
+            </span>
+          </div>
+        )}
+
+        {/* Quick-add on hover */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'rgba(10,8,6,0.42)',
+          display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+          paddingBottom: 18,
+          opacity: hovered ? 1 : 0,
+          transition: 'opacity 0.3s ease',
+          pointerEvents: hovered ? 'auto' : 'none',
+        }}>
           <button
             onClick={e => { e.stopPropagation(); addItem('solo', product, 'Bespoke'); setAdded(true); setTimeout(() => setAdded(false), 2000) }}
             style={{
-              padding: '7px 16px', borderRadius: 2, border: '1px solid rgba(201,169,110,0.4)', cursor: 'pointer',
-              background: added ? '#C9A96E' : 'transparent', color: added ? '#1A1A1A' : '#C9A96E',
-              fontSize: 10, fontFamily: 'DM Sans', letterSpacing: 1.5, transition: 'all 0.25s ease'
+              padding: '9px 24px',
+              border: '1px solid rgba(201,169,110,0.65)',
+              cursor: 'pointer',
+              background: added ? '#C9A96E' : 'rgba(16,12,8,0.72)',
+              backdropFilter: 'blur(8px)',
+              color: added ? '#1A1A1A' : '#C9A96E',
+              fontSize: 9, fontFamily: 'DM Sans', letterSpacing: 2.5,
+              transition: 'all 0.25s ease',
             }}
           >
-            {added ? `✓` : '+'}
+            {added ? '✓ ADDED' : 'QUICK ADD'}
           </button>
         </div>
+      </div>
+
+      {/* Info — editorial, clean */}
+      <div style={{ fontSize: 9, letterSpacing: 2.5, color: 'rgba(201,169,110,0.45)', fontFamily: 'DM Sans', marginBottom: 5 }}>
+        {product.cat?.toUpperCase()}
+      </div>
+      <div style={{ fontSize: 17, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5', lineHeight: 1.25, marginBottom: 5 }}>
+        {displayName}
+      </div>
+      <div style={{ fontSize: 12, color: '#C9A96E', fontFamily: 'DM Sans', letterSpacing: 0.5 }}>
+        {formatPrice(product.price, product.price_egp)}
       </div>
     </div>
   )
@@ -565,35 +577,85 @@ export default function SoloPage() {
         </motion.div>
       </section>
 
-      {/* Collection grid / slider */}
-      <section style={{ padding: mobile ? '0 0 48px' : '0 0 80px', position: 'relative', zIndex: 1 }}>
+      {/* ── COLLECTION ── editorial photo grid */}
+      <section style={{ padding: mobile ? '56px 20px 64px' : '96px 72px 104px', position: 'relative', zIndex: 1, background: '#1C1812' }}>
+        {/* Section heading */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          style={{ marginBottom: 48, padding: mobile ? '0 24px' : '0 80px' }}
+          style={{ textAlign: 'center', marginBottom: mobile ? 40 : 56 }}
         >
-          <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>{get('solo.home.collection_label', "AUTUMN / WINTER '26")}</div>
-          <h2 style={{ fontSize: 44, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 400 }}>{get('solo.home.collection_heading', 'The Collection')}</h2>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
+            <div style={{ width: 36, height: 1, background: '#C9A96E', opacity: 0.5 }} />
+            <span style={{ fontSize: 10, letterSpacing: 4, color: '#C9A96E', fontFamily: 'DM Sans' }}>
+              {get('solo.home.collection_label', "AUTUMN / WINTER '26")}
+            </span>
+            <div style={{ width: 36, height: 1, background: '#C9A96E', opacity: 0.5 }} />
+          </div>
+          <h2 style={{ fontSize: mobile ? 36 : 54, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, lineHeight: 1.05 }}>
+            {get('solo.home.collection_heading', 'New Arrivals')}
+          </h2>
         </motion.div>
-        {products.length > 3 ? (
-          <CollectionSlider products={products} lang={lang} t={t} mobile={mobile} />
-        ) : (
-          <div style={{ padding: mobile ? '0 24px' : '0 80px', display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)', gap: mobile ? 16 : 24 }}>
-            {products.map((p, i) => (
+
+        {/* 4-column editorial grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr 1fr' : 'repeat(4, 1fr)',
+          gap: mobile ? '20px 12px' : '32px 20px',
+        }}>
+          {(products.length > 0 ? products.slice(0, 8) : Array(4).fill(null)).map((p, i) => (
+            p ? (
               <motion.div
                 key={p.id}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
+                transition={{ duration: 0.5, delay: (i % 4) * 0.07 }}
               >
                 <SoloProductCard product={p} lang={lang} t={t} />
               </motion.div>
-            ))}
-          </div>
-        )}
+            ) : (
+              /* Skeleton placeholder while no products */
+              <div key={i} style={{ cursor: 'default' }}>
+                <div style={{
+                  aspectRatio: '3/4', background: 'linear-gradient(145deg, #211C17, #1A1512)',
+                  marginBottom: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <span style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 22, color: 'rgba(201,169,110,0.1)' }}>SS</span>
+                </div>
+                <div style={{ height: 9, width: '40%', background: 'rgba(201,169,110,0.07)', marginBottom: 8 }} />
+                <div style={{ height: 16, width: '75%', background: 'rgba(250,248,245,0.05)', marginBottom: 6 }} />
+                <div style={{ height: 12, width: '30%', background: 'rgba(201,169,110,0.06)' }} />
+              </div>
+            )
+          ))}
+        </div>
+
+        {/* View all */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          style={{ textAlign: 'center', marginTop: mobile ? 40 : 56 }}
+        >
+          <button
+            onClick={() => navigate('/solo/collection')}
+            style={{
+              padding: '12px 40px',
+              border: '1px solid rgba(201,169,110,0.35)',
+              cursor: 'pointer', background: 'transparent', color: '#C9A96E',
+              fontSize: 10, fontFamily: 'DM Sans', letterSpacing: 3,
+              transition: 'all 0.25s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,169,110,0.08)'; e.currentTarget.style.borderColor = '#C9A96E' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(201,169,110,0.35)' }}
+          >
+            VIEW ALL PIECES →
+          </button>
+        </motion.div>
       </section>
 
       {/* Footer band */}
