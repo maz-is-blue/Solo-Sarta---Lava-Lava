@@ -87,13 +87,8 @@ function PhotoFrame({ children, name }) {
         color: 'rgba(201,169,110,0.2)', whiteSpace: 'nowrap', userSelect: 'none', zIndex: 4,
       }}>AW · 26 · COLLECTION</div>
 
-      {/* Frame overlay */}
+      {/* Frame overlay — corners only */}
       <div style={{ position: 'absolute', inset: -OFF, zIndex: 3, pointerEvents: 'none' }}>
-        {/* Side lines */}
-        <div style={{ position: 'absolute', top: 0,    left: ARM,          right: ARM,          height: 1, background: 'rgba(201,169,110,0.38)' }} />
-        <div style={{ position: 'absolute', bottom: 0, left: ARM,          right: ARM,          height: 1, background: 'rgba(201,169,110,0.38)' }} />
-        <div style={{ position: 'absolute', left: 0,   top: ARM,           bottom: ARM,         width:  1, background: 'rgba(201,169,110,0.38)' }} />
-        <div style={{ position: 'absolute', right: 0,  top: ARM,           bottom: ARM,         width:  1, background: 'rgba(201,169,110,0.38)' }} />
 
         {/* Corner L-brackets — TL */}
         <svg width={ARM + 1} height={ARM + 1} viewBox={`0 0 ${ARM + 1} ${ARM + 1}`}
@@ -216,15 +211,14 @@ export default function SoloPiece() {
               </div>
             </PhotoFrame>
             {displayImages.length > 1 && (
-              <div style={{ display: 'flex', gap: 7, marginTop: 12, justifyContent: 'center' }}>
-                {displayImages.map((img, idx) => (
+              <div style={{ display: 'flex', gap: 6, marginTop: 16, justifyContent: 'center', alignItems: 'center' }}>
+                {displayImages.map((_, idx) => (
                   <button key={idx} onClick={() => setSelectedImg(idx)} style={{
-                    width: 52, height: 66, padding: 0, border: 'none',
-                    outline: selectedImg === idx ? '1.5px solid #C9A96E' : '1.5px solid transparent',
-                    outlineOffset: 2, overflow: 'hidden', background: '#211C17', cursor: 'pointer',
-                  }}>
-                    <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center', display: 'block' }} />
-                  </button>
+                    width: selectedImg === idx ? 28 : 13,
+                    height: 2, padding: 0, border: 'none', borderRadius: 1,
+                    background: selectedImg === idx ? '#C9A96E' : 'rgba(201,169,110,0.25)',
+                    cursor: 'pointer', transition: 'all 0.3s ease',
+                  }} />
                 ))}
               </div>
             )}
@@ -379,9 +373,7 @@ export default function SoloPiece() {
                 All Solo Sarto commissions are by appointment only. Our eleven master tailors take forty-two measurements across two sessions. Your piece is then hand-drafted and constructed over several weeks.
               </p>
             </Accordion>
-            <div style={{ borderTop: '1px solid rgba(201,169,110,0.1)' }} />
-
-            <p style={{ fontSize: 10.5, color: 'rgba(250,248,245,0.18)', fontFamily: 'DM Sans', lineHeight: 1.7, marginTop: 20 }}>
+            <p style={{ fontSize: 10.5, color: 'rgba(250,248,245,0.18)', fontFamily: 'DM Sans', lineHeight: 1.7, marginTop: 24 }}>
               Prices are indicative. Final cost confirmed after consultation. All pieces are non-returnable.
             </p>
           </motion.div>
@@ -415,23 +407,20 @@ export default function SoloPiece() {
               </div>
             </PhotoFrame>
 
-            {/* Thumbnail strip */}
+            {/* Pill navigation */}
             {displayImages.length > 1 && (
-              <div style={{ display: 'flex', gap: 8, marginTop: 14, maxWidth: '100%', overflowX: 'auto' }}>
-                {displayImages.map((img, idx) => (
+              <div style={{ display: 'flex', gap: 6, marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
+                {displayImages.map((_, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImg(idx)}
                     style={{
-                      flex: '0 0 auto', width: 60, height: 76,
-                      padding: 0, border: 'none',
-                      outline: selectedImg === idx ? '1.5px solid #C9A96E' : '1.5px solid transparent',
-                      outlineOffset: 2, overflow: 'hidden', background: '#211C17',
-                      cursor: 'pointer', transition: 'outline-color 0.2s',
+                      width: selectedImg === idx ? 30 : 14,
+                      height: 2, padding: 0, border: 'none', borderRadius: 1,
+                      background: selectedImg === idx ? '#C9A96E' : 'rgba(201,169,110,0.25)',
+                      cursor: 'pointer', transition: 'all 0.3s ease',
                     }}
-                  >
-                    <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center', display: 'block' }} />
-                  </button>
+                  />
                 ))}
               </div>
             )}
@@ -488,9 +477,6 @@ export default function SoloPiece() {
                 </div>
               </div>
             )}
-
-            {/* Divider */}
-            <div style={{ height: 1, background: 'rgba(201,169,110,0.1)', marginBottom: 28 }} />
 
             {/* CTAs */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
