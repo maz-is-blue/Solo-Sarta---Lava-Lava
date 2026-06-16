@@ -41,7 +41,7 @@ function LargeSilhouette() {
 function Accordion({ label, children }) {
   const [open, setOpen] = useState(false)
   return (
-    <div style={{ borderTop: '1px solid rgba(201,169,110,0.1)' }}>
+    <div>
       <button
         onClick={() => setOpen(o => !o)}
         style={{
@@ -194,7 +194,7 @@ export default function SoloPiece() {
         <div style={{ position: 'fixed', inset: 0, opacity: 0.025, pointerEvents: 'none', zIndex: 0, backgroundImage: GRAIN, backgroundSize: 'cover' }} />
         <SoloNav />
         <div style={{ paddingTop: 88, position: 'relative', zIndex: 1 }}>
-          <div style={{ padding: '14px 20px', borderBottom: '1px solid rgba(201,169,110,0.07)', fontSize: 10, color: 'rgba(201,169,110,0.4)', fontFamily: 'DM Sans', letterSpacing: 1.5 }}>
+          <div style={{ padding: '14px 20px', fontSize: 10, color: 'rgba(201,169,110,0.4)', fontFamily: 'DM Sans', letterSpacing: 1.5 }}>
             <span onClick={() => navigate('/solo/collection')} style={{ cursor: 'pointer' }}>← COLLECTION</span>
             <span style={{ margin: '0 8px', opacity: 0.4 }}>·</span>
             <span style={{ color: 'rgba(250,248,245,0.3)' }}>{displayName.toUpperCase()}</span>
@@ -274,7 +274,6 @@ export default function SoloPiece() {
               </div>
             </Accordion>
             <Accordion label="THE ATELIER"><p style={{ fontSize: 12, color: 'rgba(250,248,245,0.55)', fontFamily: 'DM Sans', lineHeight: 1.85 }}>All Solo Sarto commissions are by appointment only. Forty-two measurements, hand-drafted pattern, minimum two fittings.</p></Accordion>
-            <div style={{ borderTop: '1px solid rgba(201,169,110,0.1)' }} />
           </div>
         </div>
         <SoloFooter />
@@ -291,7 +290,7 @@ export default function SoloPiece() {
       <div style={{ paddingTop: 88, position: 'relative', zIndex: 1 }}>
 
         {/* Breadcrumb */}
-        <div style={{ padding: '14px 48px', display: 'flex', gap: 10, alignItems: 'center', borderBottom: '1px solid rgba(201,169,110,0.07)' }}>
+        <div style={{ padding: '14px 48px', display: 'flex', gap: 10, alignItems: 'center' }}>
           <span onClick={() => navigate('/solo/collection')} style={{ fontSize: 10, color: 'rgba(201,169,110,0.45)', fontFamily: 'DM Sans', letterSpacing: 1.5, cursor: 'pointer' }}
             onMouseEnter={e => e.currentTarget.style.color = '#C9A96E'}
             onMouseLeave={e => e.currentTarget.style.color = 'rgba(201,169,110,0.45)'}
@@ -314,7 +313,6 @@ export default function SoloPiece() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
             style={{
-              borderRight: '1px solid rgba(201,169,110,0.08)',
               position: 'sticky', top: 88,
               maxHeight: 'calc(100vh - 88px)', overflowY: 'auto',
               padding: '48px 40px 48px 56px',
@@ -386,7 +384,6 @@ export default function SoloPiece() {
             style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               padding: '56px 48px',
-              borderRight: '1px solid rgba(201,169,110,0.08)',
             }}
           >
             <PhotoFrame name={displayName}>
@@ -522,7 +519,7 @@ export default function SoloPiece() {
 
         {/* ── YOU MAY ALSO LIKE ── */}
         {otherPieces.length > 0 && (
-          <section style={{ padding: '56px 72px 80px', borderTop: '1px solid rgba(201,169,110,0.07)' }}>
+          <section style={{ padding: '56px 72px 80px' }}>
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 36 }}>
               <div>
                 <div style={{ fontSize: 10, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 8 }}>FROM THE ATELIER</div>
