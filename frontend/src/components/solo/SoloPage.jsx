@@ -183,6 +183,101 @@ function SoloProductCard({ product, lang, t }) {
   )
 }
 
+function EditorialSlider({ products, lang, t, mobile }) {
+  const containerRef = useRef(null)
+  const [offset, setOffset] = useState(0)
+  const [cardPx, setCardPx] = useState(0)
+  const GAP = mobile ? 12 : 20
+  const perPage = mobile ? 2 : 4
+  const total = products.length
+  const maxOffset = Math.max(0, total - perPage)
+  const paused = useRef(false)
+
+  useEffect(() => {
+    const measure = () => {
+      if (!containerRef.current) return
+      const w = containerRef.current.offsetWidth
+      setCardPx((w - GAP * (perPage - 1)) / perPage)
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [GAP, perPage])
+
+  useEffect(() => {
+    if (total <= perPage) return
+    const timer = setInterval(() => {
+      if (!paused.current) setOffset(o => o >= maxOffset ? 0 : o + 1)
+    }, 3500)
+    return () => clearInterval(timer)
+  }, [total, perPage, maxOffset])
+
+  const translateX = cardPx ? -(offset * (cardPx + GAP)) : 0
+
+  return (
+    <div ref={containerRef} style={{ position: 'relative' }}>
+      <div
+        style={{ overflow: 'hidden', padding: '4px 0 8px' }}
+        onMouseEnter={() => { paused.current = true }}
+        onMouseLeave={() => { paused.current = false }}
+      >
+        <div style={{
+          display: 'flex', gap: GAP,
+          transform: `translateX(${translateX}px)`,
+          transition: cardPx ? 'transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94)' : 'none',
+          willChange: 'transform',
+        }}>
+          {products.map(p => (
+            <div key={p.id} style={{ flex: `0 0 ${cardPx}px`, minWidth: 0 }}>
+              <SoloProductCard product={p} lang={lang} t={t} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Arrows */}
+      {maxOffset > 0 && [
+        { dir: -1, side: 'left', label: '←', disabled: offset === 0 },
+        { dir:  1, side: 'right', label: '→', disabled: offset >= maxOffset },
+      ].map(({ dir, side, label, disabled }) => (
+        <button
+          key={side}
+          onClick={() => setOffset(o => Math.max(0, Math.min(maxOffset, o + dir)))}
+          style={{
+            position: 'absolute', [side]: mobile ? -4 : -22, top: '38%',
+            transform: 'translateY(-50%)',
+            width: 40, height: 40, borderRadius: '50%',
+            border: '1px solid rgba(201,169,110,0.3)',
+            background: 'rgba(20,16,12,0.88)', backdropFilter: 'blur(8px)',
+            color: '#C9A96E', fontSize: 15, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            opacity: disabled ? 0.25 : 1,
+            transition: 'opacity 0.2s, border-color 0.2s',
+            zIndex: 10,
+          }}
+          onMouseEnter={e => !disabled && (e.currentTarget.style.borderColor = '#C9A96E')}
+          onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(201,169,110,0.3)')}
+        >
+          {label}
+        </button>
+      ))}
+
+      {/* Dot nav */}
+      {maxOffset > 0 && (
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 28 }}>
+          {Array.from({ length: maxOffset + 1 }).map((_, i) => (
+            <button key={i} onClick={() => setOffset(i)} style={{
+              width: i === offset ? 24 : 6, height: 6, padding: 0, borderRadius: 999,
+              background: i === offset ? '#C9A96E' : 'rgba(201,169,110,0.22)',
+              border: 'none', cursor: 'pointer', transition: 'all 0.35s ease',
+            }} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function CollectionSlider({ products, lang, t, mobile }) {
   const [active, setActive] = useState(0)
   const total = products.length
@@ -599,39 +694,27 @@ export default function SoloPage() {
           </h2>
         </motion.div>
 
-        {/* 4-column editorial grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: mobile ? '1fr 1fr' : 'repeat(4, 1fr)',
-          gap: mobile ? '20px 12px' : '32px 20px',
-        }}>
-          {(products.length > 0 ? products.slice(0, 8) : Array(4).fill(null)).map((p, i) => (
-            p ? (
-              <motion.div
-                key={p.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: (i % 4) * 0.07 }}
-              >
-                <SoloProductCard product={p} lang={lang} t={t} />
-              </motion.div>
-            ) : (
-              /* Skeleton placeholder while no products */
-              <div key={i} style={{ cursor: 'default' }}>
+        {/* Horizontal editorial slider */}
+        {products.length > 0 ? (
+          <EditorialSlider products={products} lang={lang} t={t} mobile={mobile} />
+        ) : (
+          /* Skeleton row while loading */
+          <div style={{ display: 'flex', gap: mobile ? 12 : 20 }}>
+            {Array(mobile ? 2 : 4).fill(null).map((_, i) => (
+              <div key={i} style={{ flex: 1 }}>
                 <div style={{
                   aspectRatio: '3/4', background: 'linear-gradient(145deg, #211C17, #1A1512)',
                   marginBottom: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
-                  <span style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 22, color: 'rgba(201,169,110,0.1)' }}>SS</span>
+                  <span style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 22, color: 'rgba(201,169,110,0.08)' }}>SS</span>
                 </div>
-                <div style={{ height: 9, width: '40%', background: 'rgba(201,169,110,0.07)', marginBottom: 8 }} />
-                <div style={{ height: 16, width: '75%', background: 'rgba(250,248,245,0.05)', marginBottom: 6 }} />
-                <div style={{ height: 12, width: '30%', background: 'rgba(201,169,110,0.06)' }} />
+                <div style={{ height: 8, width: '40%', background: 'rgba(201,169,110,0.06)', marginBottom: 8 }} />
+                <div style={{ height: 15, width: '70%', background: 'rgba(250,248,245,0.04)', marginBottom: 6 }} />
+                <div style={{ height: 11, width: '28%', background: 'rgba(201,169,110,0.05)' }} />
               </div>
-            )
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* View all */}
         <motion.div

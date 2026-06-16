@@ -11,15 +11,6 @@ import { useLanguage } from '../../context/LanguageContext'
 
 const GRAIN = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
 
-const PROCESS_STEPS = [
-  { n: '01', title: 'Discovery', desc: 'We meet to understand your life, not just your measurements.' },
-  { n: '02', title: 'Measurement', desc: 'Forty-two measurements taken across two sessions.' },
-  { n: '03', title: 'Design', desc: 'A hand-drawn pattern is drafted exclusively for you.' },
-  { n: '04', title: 'Creation', desc: 'Our master tailors begin cutting and stitching by hand.' },
-  { n: '05', title: 'Fitting', desc: 'At least two fittings to refine every seam and drape.' },
-  { n: '06', title: 'Delivery', desc: 'Your piece arrives in a hand-sewn cotton garment bag.' },
-]
-
 function LargeSilhouette() {
   return (
     <svg width="220" height="360" viewBox="0 0 120 200" style={{ overflow: 'visible' }}>
@@ -52,6 +43,35 @@ function LargeSilhouette() {
   )
 }
 
+function Accordion({ label, children, defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen)
+  return (
+    <div style={{ borderTop: '1px solid rgba(201,169,110,0.1)' }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: '100%', padding: '15px 0',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          background: 'none', border: 'none', cursor: 'pointer', color: '#FAF8F5',
+        }}
+      >
+        <span style={{ fontSize: 10, letterSpacing: 2.5, fontFamily: 'DM Sans' }}>{label}</span>
+        <span style={{
+          color: '#C9A96E', fontSize: 16, lineHeight: 1,
+          display: 'inline-block',
+          transform: open ? 'rotate(90deg)' : 'rotate(0deg)',
+          transition: 'transform 0.22s ease',
+        }}>›</span>
+      </button>
+      {open && (
+        <div style={{ paddingBottom: 18 }}>
+          {children}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function SoloPiece() {
   const { slug } = useParams()
   const navigate = useNavigate()
@@ -62,7 +82,6 @@ export default function SoloPiece() {
   const [product, setProduct] = useState(null)
   const [otherPieces, setOtherPieces] = useState([])
   const [loadingProduct, setLoadingProduct] = useState(true)
-
   const mobile = useMobile()
   const { lang, t } = useLanguage()
 
@@ -73,7 +92,7 @@ export default function SoloPiece() {
       .catch(() => setProduct(null))
       .finally(() => setLoadingProduct(false))
     getProducts({ brand: 'solo' })
-      .then(r => setOtherPieces(r.data.filter(p => p.slug !== slug).slice(0, 3)))
+      .then(r => setOtherPieces(r.data.filter(p => p.slug !== slug).slice(0, 4)))
       .catch(() => {})
   }, [slug])
 
@@ -90,7 +109,7 @@ export default function SoloPiece() {
 
   if (loadingProduct) {
     return (
-      <div style={{ background: '#2A2420', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ background: '#1C1812', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <SoloNav />
       </div>
     )
@@ -98,7 +117,7 @@ export default function SoloPiece() {
 
   if (!product) {
     return (
-      <div style={{ background: '#2A2420', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 24 }}>
+      <div style={{ background: '#1C1812', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 24 }}>
         <SoloNav />
         <p style={{ color: 'rgba(250,248,245,0.5)', fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 22 }}>This piece has moved on.</p>
         <button onClick={() => navigate('/solo/collection')} style={{ background: 'none', border: '1px solid rgba(201,169,110,0.4)', color: '#C9A96E', padding: '10px 24px', cursor: 'pointer', fontFamily: 'DM Sans', fontSize: 11, letterSpacing: 2 }}>
@@ -108,123 +127,167 @@ export default function SoloPiece() {
     )
   }
 
+  const displayName = (lang === 'ar' && product.name_ar) ? product.name_ar : product.name
+  const palette = Array.isArray(product.palette)
+    ? product.palette
+    : (() => { try { return JSON.parse(product.palette || '[]') } catch { return [] } })()
+
   return (
-    <div style={{ background: '#2A2420', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
-      <div style={{ position: 'fixed', inset: 0, opacity: 0.03, pointerEvents: 'none', zIndex: 0, backgroundImage: GRAIN, backgroundSize: 'cover' }} />
+    <div style={{ background: '#1C1812', minHeight: '100vh', color: '#FAF8F5', position: 'relative' }}>
+      <div style={{ position: 'fixed', inset: 0, opacity: 0.025, pointerEvents: 'none', zIndex: 0, backgroundImage: GRAIN, backgroundSize: 'cover' }} />
       <SoloNav />
 
       <div style={{ paddingTop: 88, position: 'relative', zIndex: 1 }}>
+
         {/* Breadcrumb */}
-        <div style={{ padding: '20px 80px', display: 'flex', gap: 12, alignItems: 'center' }}>
-          <span onClick={() => navigate('/solo/collection')} style={{ fontSize: 11, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', letterSpacing: 1.5, cursor: 'pointer' }}
+        <div style={{
+          padding: mobile ? '14px 20px' : '14px 72px',
+          display: 'flex', gap: 10, alignItems: 'center',
+          borderBottom: '1px solid rgba(201,169,110,0.07)',
+        }}>
+          <span
+            onClick={() => navigate('/solo/collection')}
+            style={{ fontSize: 10, color: 'rgba(201,169,110,0.45)', fontFamily: 'DM Sans', letterSpacing: 1.5, cursor: 'pointer' }}
             onMouseEnter={e => e.currentTarget.style.color = '#C9A96E'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(201,169,110,0.5)'}
-          >COLLECTION</span>
-          <span style={{ fontSize: 11, color: 'rgba(250,248,245,0.2)', fontFamily: 'DM Sans' }}>—</span>
-          <span style={{ fontSize: 11, color: 'rgba(250,248,245,0.4)', fontFamily: 'DM Sans', letterSpacing: 1 }}>{product.name.toUpperCase()}</span>
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(201,169,110,0.45)'}
+          >← COLLECTION</span>
+          <span style={{ color: 'rgba(201,169,110,0.18)', fontSize: 9 }}>·</span>
+          <span style={{ fontSize: 10, color: 'rgba(250,248,245,0.3)', fontFamily: 'DM Sans', letterSpacing: 1 }}>
+            {displayName.toUpperCase()}
+          </span>
         </div>
 
-        {/* Hero — two column */}
-        <section style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr', gap: 0, padding: mobile ? '24px 24px 48px' : '32px 80px 80px', alignItems: 'start' }}>
-          {/* Left — visual */}
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            style={{ display: 'flex', justifyContent: 'center', paddingRight: 40 }}
-          >
+        {/* ── MAIN: image + info ── */}
+        <section style={{
+          display: 'grid',
+          gridTemplateColumns: mobile ? '1fr' : '1fr 1fr',
+          alignItems: 'start',
+        }}>
+
+          {/* LEFT: image — sticky on scroll */}
+          <div style={{
+            position: mobile ? 'relative' : 'sticky',
+            top: 88,
+            padding: mobile ? '24px 20px 0' : '40px 0 40px 72px',
+          }}>
+            {/* Main image */}
             <div style={{
-              background: 'linear-gradient(135deg, #2E2822, #201C18)',
-              borderRadius: 4, padding: '64px 48px',
-              display: 'flex', flexDirection: 'column', alignItems: 'center',
-              position: 'relative', overflow: 'visible', width: '100%', maxWidth: 420
+              position: 'relative',
+              aspectRatio: '3/4',
+              overflow: 'hidden',
+              background: '#211C17',
+              maxWidth: mobile ? '100%' : 500,
             }}>
-              {/* Corner ornaments */}
-              {[
-                { top: -1,    left: -1,  d: 'M20,1 L1,1 L1,20' },
-                { top: -1,    right: -1, d: 'M1,1 L20,1 L20,20' },
-                { bottom: -1, left: -1,  d: 'M1,1 L1,20 L20,20' },
-                { bottom: -1, right: -1, d: 'M20,1 L20,20 L1,20' },
-              ].map((c, i) => (
-                <svg key={i} width={22} height={22} viewBox="0 0 22 22"
-                  style={{ position: 'absolute', top: c.top, bottom: c.bottom, left: c.left, right: c.right, pointerEvents: 'none', zIndex: 2 }}>
-                  <path d={c.d} fill="none" stroke="#C9A96E" strokeWidth="1.2" opacity="0.45" />
-                </svg>
-              ))}
-              <div style={{
-                position: 'absolute', width: 400, height: 400, top: '-20%', left: '50%', transform: 'translateX(-50%)',
-                background: 'radial-gradient(circle, rgba(201,169,110,0.1) 0%, transparent 70%)',
-                filter: 'blur(60px)', pointerEvents: 'none'
-              }} />
-              <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: displayImages.length ? 0 : 40 }}>{product.code}</div>
-              {displayImages[selectedImg]
-                ? <img src={displayImages[selectedImg]} alt={product.name} style={{ width: '100%', maxWidth: 320, borderRadius: 4, objectFit: 'cover', marginBottom: displayImages.length > 1 ? 12 : 24 }} />
-                : <LargeSilhouette />
-              }
-              {displayImages.length > 1 && (
-                <div style={{ display: 'flex', gap: 7, marginTop: 20, marginBottom: 12, justifyContent: 'center', alignItems: 'center' }}>
-                  {displayImages.map((_, idx) => (
-                    <button key={idx} onClick={() => setSelectedImg(idx)} style={{
-                      width: selectedImg === idx ? 40 : 14,
-                      height: 1.5,
-                      borderRadius: 2,
-                      background: selectedImg === idx ? '#C9A96E' : 'rgba(201,169,110,0.28)',
-                      border: 'none', padding: 0, cursor: 'pointer',
-                      transition: 'width 0.35s ease, background 0.35s ease',
-                    }} />
-                  ))}
+              {displayImages[selectedImg] ? (
+                <img
+                  src={displayImages[selectedImg]}
+                  alt={displayName}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center', display: 'block' }}
+                />
+              ) : (
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                  <div style={{
+                    position: 'absolute', width: 300, height: 300, top: '10%', left: '50%', transform: 'translateX(-50%)',
+                    background: 'radial-gradient(circle, rgba(201,169,110,0.1) 0%, transparent 70%)', filter: 'blur(60px)',
+                  }} />
+                  <LargeSilhouette />
                 </div>
               )}
-              <div style={{ marginTop: 8, fontSize: 11, letterSpacing: 2, color: 'rgba(250,248,245,0.2)', fontFamily: 'DM Sans' }}>
-                AW/26 — ATELIER
-              </div>
+              {product.code && (
+                <div style={{
+                  position: 'absolute', top: 14, left: 14,
+                  fontSize: 9, letterSpacing: 2.5, color: 'rgba(201,169,110,0.6)', fontFamily: 'DM Sans',
+                  background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(6px)', padding: '4px 9px',
+                }}>
+                  {product.code}
+                </div>
+              )}
             </div>
-          </motion.div>
 
-          {/* Right — details */}
+            {/* Thumbnail strip */}
+            {displayImages.length > 1 && (
+              <div style={{ display: 'flex', gap: 8, marginTop: 10, maxWidth: mobile ? '100%' : 500, overflowX: 'auto' }}>
+                {displayImages.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedImg(idx)}
+                    style={{
+                      flex: '0 0 auto', width: 64, height: 80,
+                      padding: 0, border: 'none',
+                      outline: selectedImg === idx ? '1.5px solid #C9A96E' : '1.5px solid transparent',
+                      outlineOffset: 2,
+                      overflow: 'hidden', background: '#211C17',
+                      cursor: 'pointer', transition: 'outline-color 0.2s',
+                    }}
+                  >
+                    <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center', display: 'block' }} />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div style={{ marginTop: 14, fontSize: 9, letterSpacing: 3, color: 'rgba(201,169,110,0.22)', fontFamily: 'DM Sans' }}>
+              AW/26 — SOLO SARTO ATELIER
+            </div>
+          </div>
+
+          {/* RIGHT: product info */}
           <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            style={{ paddingLeft: 40 }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            style={{ padding: mobile ? '32px 20px 48px' : '40px 72px 56px 52px' }}
           >
-            <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 16 }}>{product.cat.toUpperCase()}</div>
-            <h1 style={{ fontSize: 48, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, lineHeight: 1.1, marginBottom: 24 }}>
-              {(lang === 'ar' && product.name_ar) ? product.name_ar : product.name}
+            {/* Category */}
+            <div style={{ fontSize: 10, letterSpacing: 3.5, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 10, opacity: 0.8 }}>
+              {product.cat?.toUpperCase()}
+            </div>
+
+            {/* Name */}
+            <h1 style={{
+              fontSize: mobile ? 34 : 46, fontFamily: 'Cormorant Garamond', fontStyle: 'italic',
+              fontWeight: 300, lineHeight: 1.05, marginBottom: 14, color: '#FAF8F5',
+            }}>
+              {displayName}
             </h1>
-            <div style={{ fontSize: 26, color: '#C9A96E', fontFamily: 'Cormorant Garamond', marginBottom: 32 }}>
+
+            {/* Price */}
+            <div style={{ fontSize: 22, color: '#C9A96E', fontFamily: 'Cormorant Garamond', marginBottom: 20, letterSpacing: 0.5 }}>
               {formatPrice(product.price, product.price_egp)}
             </div>
-            <p style={{ fontSize: 15, color: 'rgba(250,248,245,0.65)', fontFamily: 'DM Sans', lineHeight: 1.9, marginBottom: 32, maxWidth: 440 }}>
+
+            {/* Description */}
+            <p style={{ fontSize: 13, color: 'rgba(250,248,245,0.55)', fontFamily: 'DM Sans', lineHeight: 1.9, marginBottom: 24, maxWidth: 430 }}>
               {(lang === 'ar' && product.product_desc_ar) ? product.product_desc_ar : product.product_desc}
             </p>
 
-            {/* Details grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 40, borderTop: '1px solid rgba(201,169,110,0.12)', paddingTop: 28 }}>
-              {[
-                [t('fabric_label'), product.fabric],
-                [t('process_label'), product.process_time],
-                [t('method_label'), 'Fully bespoke'],
-                [t('atelier_label'), 'By appointment'],
-              ].map(([k, v]) => (
-                <div key={k}>
-                  <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 6 }}>{k.toUpperCase()}</div>
-                  <div style={{ fontSize: 13, color: 'rgba(250,248,245,0.7)', fontFamily: 'DM Sans' }}>{v}</div>
+            {/* Palette swatches */}
+            {palette.length > 0 && (
+              <div style={{ marginBottom: 22 }}>
+                <div style={{ fontSize: 9, letterSpacing: 2.5, color: 'rgba(201,169,110,0.4)', fontFamily: 'DM Sans', marginBottom: 9 }}>PALETTE</div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {palette.map((c, i) => (
+                    <div key={i} style={{
+                      width: 22, height: 22, borderRadius: '50%', background: c,
+                      border: '1.5px solid rgba(201,169,110,0.25)',
+                      boxShadow: '0 0 0 2px rgba(0,0,0,0.4)',
+                    }} />
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
 
             {/* Size selector */}
             {product.sizes?.length > 0 && (
-              <div style={{ marginBottom: 28 }}>
-                <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.4)', fontFamily: 'DM Sans', marginBottom: 12 }}>SIZE GUIDE</div>
+              <div style={{ marginBottom: 24 }}>
+                <div style={{ fontSize: 9, letterSpacing: 2.5, color: 'rgba(201,169,110,0.4)', fontFamily: 'DM Sans', marginBottom: 10 }}>SIZE</div>
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                   {product.sizes.map(s => (
                     <button key={s} onClick={() => setSelectedSize(s === selectedSize ? null : s)} style={{
-                      width: 52, height: 44, borderRadius: 3,
+                      minWidth: 52, height: 40, padding: '0 12px',
                       border: `1px solid ${selectedSize === s ? '#C9A96E' : 'rgba(201,169,110,0.2)'}`,
-                      background: selectedSize === s ? 'rgba(201,169,110,0.12)' : 'transparent',
-                      color: selectedSize === s ? '#C9A96E' : 'rgba(250,248,245,0.45)',
+                      background: selectedSize === s ? 'rgba(201,169,110,0.1)' : 'transparent',
+                      color: selectedSize === s ? '#C9A96E' : 'rgba(250,248,245,0.4)',
                       fontSize: 11, fontFamily: 'DM Sans', cursor: 'pointer', letterSpacing: 1,
                       transition: 'all 0.2s ease',
                     }}>{s}</button>
@@ -233,100 +296,152 @@ export default function SoloPiece() {
               </div>
             )}
 
-            {/* CTAs */}
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            {/* Metadata */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px 20px', marginBottom: 28, fontSize: 11, color: 'rgba(250,248,245,0.3)', fontFamily: 'DM Sans' }}>
+              {product.cat && <span>Collection: <span style={{ color: 'rgba(250,248,245,0.55)' }}>{product.cat}</span></span>}
+              {product.silhouette && <span>Silhouette: <span style={{ color: 'rgba(250,248,245,0.55)' }}>{product.silhouette}</span></span>}
+              {product.code && <span>Article: <span style={{ color: 'rgba(250,248,245,0.55)' }}>{product.code}</span></span>}
+            </div>
+
+            {/* CTAs — stacked full width */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 18 }}>
               <button
                 onClick={() => navigate('/solo/contact')}
                 style={{
-                  padding: '14px 32px', borderRadius: 2, border: 'none', cursor: 'pointer',
+                  width: '100%', padding: '15px',
+                  border: 'none', cursor: 'pointer',
                   background: '#C9A96E', color: '#1A1A1A',
-                  fontSize: 11, fontWeight: 600, fontFamily: 'DM Sans', letterSpacing: 2
+                  fontSize: 10, fontWeight: 700, fontFamily: 'DM Sans', letterSpacing: 3,
+                  transition: 'background 0.2s',
                 }}
+                onMouseEnter={e => e.currentTarget.style.background = '#D4B47C'}
+                onMouseLeave={e => e.currentTarget.style.background = '#C9A96E'}
               >
-                {t('request_fitting')}
+                {t('request_fitting') || 'APPOINTMENT FOR FITTING'}
               </button>
               <button
                 onClick={() => { addItem('solo', product, selectedSize || 'Bespoke'); setAdded(true); setTimeout(() => setAdded(false), 2500) }}
                 style={{
-                  padding: '14px 32px', borderRadius: 2, cursor: 'pointer',
-                  border: '1px solid rgba(201,169,110,0.4)',
-                  background: added ? 'rgba(201,169,110,0.1)' : 'transparent',
-                  color: added ? '#C9A96E' : 'rgba(250,248,245,0.7)',
-                  fontSize: 11, fontFamily: 'DM Sans', letterSpacing: 2, transition: 'all 0.25s ease'
+                  width: '100%', padding: '15px',
+                  cursor: 'pointer',
+                  border: '1px solid rgba(201,169,110,0.3)',
+                  background: added ? 'rgba(201,169,110,0.08)' : 'transparent',
+                  color: added ? '#C9A96E' : 'rgba(250,248,245,0.55)',
+                  fontSize: 10, fontFamily: 'DM Sans', letterSpacing: 3,
+                  transition: 'all 0.25s ease',
                 }}
+                onMouseEnter={e => { if (!added) { e.currentTarget.style.borderColor = '#C9A96E'; e.currentTarget.style.color = '#C9A96E' } }}
+                onMouseLeave={e => { if (!added) { e.currentTarget.style.borderColor = 'rgba(201,169,110,0.3)'; e.currentTarget.style.color = 'rgba(250,248,245,0.55)' } }}
               >
-                {added ? `✓ ${t('added_to_bag')}` : t('add_to_bag_btn')}
+                {added ? `✓ ${t('added_to_bag') || 'ADDED TO BAG'}` : t('add_to_bag_btn') || 'ADD TO BAG'}
               </button>
             </div>
 
-            <p style={{ fontSize: 12, color: 'rgba(250,248,245,0.25)', fontFamily: 'DM Sans', marginTop: 20, lineHeight: 1.6 }}>
+            <p style={{ fontSize: 11, color: 'rgba(250,248,245,0.2)', fontFamily: 'DM Sans', lineHeight: 1.65, marginBottom: 28 }}>
               Prices are indicative. Final cost confirmed after consultation.<br />
               All pieces are non-returnable — made only for you.
             </p>
+
+            {/* Accordion sections */}
+            <Accordion label="FEATURES OF THE PIECE">
+              <p style={{ fontSize: 12, color: 'rgba(250,248,245,0.55)', fontFamily: 'DM Sans', lineHeight: 1.85 }}>
+                {product.product_desc || 'Bespoke, hand-crafted in our Cairo atelier. Each detail is considered, each seam finished by hand.'}
+              </p>
+            </Accordion>
+
+            <Accordion label="DETAILS & DIMENSIONS">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 24px' }}>
+                {[
+                  [t('fabric_label') || 'FABRIC', product.fabric],
+                  [t('process_label') || 'LEAD TIME', product.process_time],
+                  ['METHOD', 'Fully bespoke'],
+                  ['FITTINGS', 'Minimum two sessions'],
+                ].filter(([, v]) => v).map(([k, v]) => (
+                  <div key={k}>
+                    <div style={{ fontSize: 9, letterSpacing: 2, color: 'rgba(201,169,110,0.38)', fontFamily: 'DM Sans', marginBottom: 4 }}>{k}</div>
+                    <div style={{ fontSize: 12, color: 'rgba(250,248,245,0.6)', fontFamily: 'DM Sans' }}>{v}</div>
+                  </div>
+                ))}
+              </div>
+            </Accordion>
+
+            <Accordion label="THE ATELIER">
+              <p style={{ fontSize: 12, color: 'rgba(250,248,245,0.55)', fontFamily: 'DM Sans', lineHeight: 1.85 }}>
+                All Solo Sarto commissions are by appointment only. Our eleven master tailors take forty-two measurements across two sessions. Your piece is then hand-drafted and constructed over several weeks.
+              </p>
+            </Accordion>
+
+            <div style={{ borderTop: '1px solid rgba(201,169,110,0.1)' }} />
           </motion.div>
         </section>
 
-        {/* Process */}
-        <section style={{ padding: mobile ? '40px 24px' : '64px 80px', borderTop: '1px solid rgba(201,169,110,0.1)' }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 12 }}>THE PROCESS</div>
-            <h2 style={{ fontSize: 38, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300, marginBottom: 48 }}>
-              From first meeting to final fitting.
-            </h2>
-          </motion.div>
-          <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: mobile ? 20 : 32 }}>
-            {PROCESS_STEPS.map((step, i) => (
-              <motion.div
-                key={step.n}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                style={{ borderTop: '1px solid rgba(201,169,110,0.2)', paddingTop: 24 }}
-              >
-                <div style={{ fontSize: 11, letterSpacing: 2, color: 'rgba(201,169,110,0.4)', fontFamily: 'DM Sans', marginBottom: 10 }}>{step.n}</div>
-                <div style={{ fontSize: 18, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', marginBottom: 10 }}>{step.title}</div>
-                <p style={{ fontSize: 13, color: 'rgba(250,248,245,0.5)', fontFamily: 'DM Sans', lineHeight: 1.7 }}>{step.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        {/* Other pieces */}
+        {/* ── YOU MAY ALSO LIKE ── */}
         {otherPieces.length > 0 && (
-          <section style={{ padding: mobile ? '0 24px 56px' : '0 80px 80px', borderTop: '1px solid rgba(201,169,110,0.08)' }}>
-            <div style={{ paddingTop: 48, marginBottom: 36 }}>
-              <div style={{ fontSize: 11, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 8 }}>FROM THE ATELIER</div>
-              <h3 style={{ fontSize: 34, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300 }}>Other pieces you may consider</h3>
+          <section style={{ padding: mobile ? '40px 20px 56px' : '56px 72px 80px', borderTop: '1px solid rgba(201,169,110,0.07)' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 36 }}>
+              <div>
+                <div style={{ fontSize: 10, letterSpacing: 3, color: '#C9A96E', fontFamily: 'DM Sans', marginBottom: 8 }}>FROM THE ATELIER</div>
+                <h3 style={{ fontSize: mobile ? 28 : 36, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontWeight: 300 }}>
+                  You May Also Like
+                </h3>
+              </div>
+              <button
+                onClick={() => navigate('/solo/collection')}
+                style={{
+                  background: 'none', border: 'none', color: 'rgba(201,169,110,0.4)', cursor: 'pointer',
+                  fontSize: 10, fontFamily: 'DM Sans', letterSpacing: 2, display: mobile ? 'none' : 'block',
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = '#C9A96E'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(201,169,110,0.4)'}
+              >
+                VIEW ALL →
+              </button>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)', gap: mobile ? 12 : 24 }}>
-              {otherPieces.map(p => (
-                <div
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: mobile ? '1fr 1fr' : `repeat(${Math.min(otherPieces.length, 4)}, 1fr)`,
+              gap: mobile ? '20px 12px' : 24,
+            }}>
+              {otherPieces.map((p, i) => (
+                <motion.div
                   key={p.id}
-                  onClick={() => navigate(`/solo/piece/${p.slug}`)}
-                  style={{
-                    cursor: 'pointer', borderRadius: 3, overflow: 'hidden',
-                    background: 'linear-gradient(135deg, #2E2822, #201C18)',
-                    border: '1px solid rgba(201,169,110,0.1)',
-                    padding: '24px',
-                    transition: 'border-color 0.2s ease'
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(201,169,110,0.35)'}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(201,169,110,0.1)'}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.07 }}
+                  onClick={() => { navigate(`/solo/piece/${p.slug}`); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+                  style={{ cursor: 'pointer' }}
                 >
-                  <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.45)', fontFamily: 'DM Sans', marginBottom: 8 }}>{p.code}</div>
-                  <div style={{ fontSize: 17, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', marginBottom: 6 }}>{p.name}</div>
-                  <div style={{ fontSize: 13, color: '#C9A96E', fontFamily: 'DM Sans' }}>{formatPrice(p.price, p.price_egp)}</div>
-                </div>
+                  <div style={{ aspectRatio: '3/4', overflow: 'hidden', background: '#211C17', marginBottom: 14 }}>
+                    {p.image_url ? (
+                      <img
+                        src={p.image_url} alt={p.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center', display: 'block', transition: 'transform 0.65s ease' }}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+                        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                      />
+                    ) : (
+                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <span style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 20, color: 'rgba(201,169,110,0.1)' }}>SS</span>
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ fontSize: 9, letterSpacing: 2.5, color: 'rgba(201,169,110,0.4)', fontFamily: 'DM Sans', marginBottom: 4 }}>
+                    {p.cat?.toUpperCase()}
+                  </div>
+                  <div style={{ fontSize: 17, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: '#FAF8F5', marginBottom: 4, lineHeight: 1.2 }}>
+                    {p.name}
+                  </div>
+                  <div style={{ fontSize: 12, color: '#C9A96E', fontFamily: 'DM Sans' }}>
+                    {formatPrice(p.price, p.price_egp)}
+                  </div>
+                </motion.div>
               ))}
             </div>
           </section>
         )}
+
         <SoloFooter />
       </div>
     </div>
