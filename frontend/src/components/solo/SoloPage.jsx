@@ -391,254 +391,6 @@ function CollectionSlider({ products, lang, t, mobile }) {
   )
 }
 
-/* ── Luxury oval mirror ── */
-function MirrorVideo({ video, loop, onEnded, mobile }) {
-  // Fixed design space — SVG viewBox handles scaling
-  const CX = 210, CY = 320, RX = 122, RY = 188
-  const SW = 420, SH = 640
-
-  const renderW = mobile ? 300 : 400
-  const sc = renderW / SW
-  const renderH = SH * sc
-
-  // Video clip positions in rendered pixels
-  const vx = (CX - RX) * sc, vy = (CY - RY) * sc
-  const vw = RX * 2 * sc,    vh = RY * 2 * sc
-
-  const goldFt  = 'rgba(201,169,110,0.6)'
-  const goldDim = 'rgba(201,169,110,0.35)'
-
-  const draw = (delay, dur = 0.85) => ({
-    initial: { pathLength: 0, opacity: 0 },
-    animate: { pathLength: 1, opacity: 1 },
-    transition: { pathLength: { duration: dur, ease: 'easeInOut', delay }, opacity: { duration: 0.3, delay } },
-  })
-
-  // Beaded pearl ring — precise, evenly spaced beads (the hallmark of a fine frame)
-  const BEADS = 84
-  const beadR_x = RX - 9, beadR_y = RY - 9
-  const beads = Array.from({ length: BEADS }, (_, i) => {
-    const a = (i / BEADS) * Math.PI * 2 - Math.PI / 2
-    return { x: CX + beadR_x * Math.cos(a), y: CY + beadR_y * Math.sin(a) }
-  })
-  const beadTraceStart = 1.0, beadTraceDur = 1.8
-
-  // Orbiting light path (rendered px) for the travelling highlight
-  const orx = (RX + 6) * sc, ory = (RY + 6) * sc
-  const ocx = CX * sc, ocy = CY * sc
-  const orbitPath = `M ${ocx - orx},${ocy} a ${orx},${ory} 0 1,1 ${orx * 2},0 a ${orx},${ory} 0 1,1 ${-orx * 2},0`
-
-  return (
-    <div style={{ position: 'relative', width: renderW, height: renderH, flexShrink: 0 }}>
-
-      {/* Breathing glow behind the oval */}
-      <motion.div
-        animate={{ opacity: [0.35, 0.75, 0.35] }}
-        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-        style={{
-          position: 'absolute',
-          left: vx - 24, top: vy - 24, width: vw + 48, height: vh + 48,
-          background: 'radial-gradient(ellipse, rgba(201,169,110,0.22) 20%, transparent 72%)',
-          filter: 'blur(32px)', borderRadius: '50%', pointerEvents: 'none',
-        }}
-      />
-
-      {/* Travelling light — a luminous bead orbiting the frame (the "hollow light") */}
-      {[0, 0.5].map((phase, i) => (
-        <motion.div key={i}
-          initial={{ offsetDistance: `${phase * 100}%`, opacity: 0 }}
-          animate={{ offsetDistance: `${phase * 100 + 100}%`, opacity: [0, 0.9, 0.9, 0] }}
-          transition={{
-            offsetDistance: { duration: 7, repeat: Infinity, ease: 'linear', delay: 2.4 },
-            opacity: { duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 2.4, times: [0, 0.1, 0.9, 1] },
-          }}
-          style={{
-            position: 'absolute', left: 0, top: 0,
-            width: 16, height: 16, marginLeft: -8, marginTop: -8,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(255,244,214,0.95) 0%, rgba(201,169,110,0.5) 40%, transparent 70%)',
-            filter: 'blur(2px)', pointerEvents: 'none', zIndex: 4,
-            offsetPath: `path('${orbitPath}')`,
-            offsetRotate: '0deg',
-          }}
-        />
-      ))}
-
-      {/* Video clipped to oval */}
-      <div style={{
-        position: 'absolute', left: vx, top: vy, width: vw, height: vh,
-        clipPath: `ellipse(${RX * sc}px ${RY * sc}px at 50% 50%)`,
-        overflow: 'hidden', background: '#1C1812',
-      }}>
-        {video.url ? (
-          <video key={video.id} autoPlay muted playsInline loop={loop} onEnded={onEnded}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-            src={video.url}
-          />
-        ) : (
-          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'radial-gradient(ellipse at 50% 40%, #2A2218 0%, #131009 100%)' }}>
-            <span style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 48, color: 'rgba(201,169,110,0.08)', letterSpacing: 6 }}>SS</span>
-          </div>
-        )}
-        {/* Mirror edge vignette */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse at 50% 50%, transparent 52%, rgba(10,8,5,0.72) 100%)' }} />
-      </div>
-
-      {/* ── SVG baroque frame — all paths animate in sequence ── */}
-      <svg viewBox={`0 0 ${SW} ${SH}`} width={renderW} height={renderH}
-        style={{ position: 'absolute', top: 0, left: 0, overflow: 'visible', pointerEvents: 'none' }}>
-
-        <defs>
-          <linearGradient id="mirrorGold" x1="0" y1="0" x2="0.3" y2="1">
-            <stop offset="0%" stopColor="#F4E4B8" />
-            <stop offset="42%" stopColor="#C9A96E" />
-            <stop offset="100%" stopColor="#8A6B3C" />
-          </linearGradient>
-          <radialGradient id="beadGold" cx="38%" cy="32%" r="70%">
-            <stop offset="0%" stopColor="#FCF3D6" />
-            <stop offset="50%" stopColor="#D8BA7C" />
-            <stop offset="100%" stopColor="#9A7A45" />
-          </radialGradient>
-        </defs>
-
-        {/* === OVAL BORDER === */}
-        {/* Outer hollow-light corona — thick blurred, draws then pulses */}
-        <motion.ellipse cx={CX} cy={CY} rx={RX + 13} ry={RY + 13}
-          fill="none" stroke="rgba(201,169,110,0.3)" strokeWidth={20}
-          style={{ filter: 'blur(13px)' }}
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1, opacity: [null, 0.5, 1, 0.5] }}
-          transition={{ pathLength: { duration: 2, delay: 0, ease: 'easeOut' }, opacity: { duration: 4, repeat: Infinity, delay: 2.3, ease: 'easeInOut' } }}
-        />
-        {/* Secondary softer glow */}
-        <motion.ellipse cx={CX} cy={CY} rx={RX + 4} ry={RY + 4}
-          fill="none" stroke="rgba(201,169,110,0.16)" strokeWidth={8}
-          style={{ filter: 'blur(4px)' }}
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ duration: 1.9, delay: 0.1, ease: 'easeOut' }}
-        />
-        {/* Main border — outer rim (thicker, metallic) */}
-        <motion.ellipse cx={CX} cy={CY} rx={RX} ry={RY}
-          fill="none" stroke="url(#mirrorGold)" strokeWidth={2.4}
-          {...draw(0.15, 1.9)} animate={{ pathLength: 1, opacity: 0.9 }}
-        />
-
-        {/* === BEADED PEARL RING === */}
-        {/* Sandwich rings around the beads */}
-        <motion.ellipse cx={CX} cy={CY} rx={beadR_x + 5} ry={beadR_y + 5}
-          fill="none" stroke={goldDim} strokeWidth={0.6}
-          {...draw(0.55, 1.6)} animate={{ pathLength: 1, opacity: 0.7 }}
-        />
-        <motion.ellipse cx={CX} cy={CY} rx={beadR_x - 5} ry={beadR_y - 5}
-          fill="none" stroke={goldDim} strokeWidth={0.6}
-          {...draw(0.7, 1.6)} animate={{ pathLength: 1, opacity: 0.7 }}
-        />
-        {/* The pearls — each lights up in sequence, tracing the oval */}
-        {beads.map((b, i) => (
-          <motion.circle key={i} cx={b.x} cy={b.y} r={2.2}
-            fill="url(#beadGold)"
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.35, delay: beadTraceStart + (i / BEADS) * beadTraceDur, ease: 'easeOut' }}
-            style={{ transformOrigin: `${b.x}px ${b.y}px` }}
-          />
-        ))}
-        {/* Innermost fine ring (mirror bezel edge) */}
-        <motion.ellipse cx={CX} cy={CY} rx={RX - 16} ry={RY - 16}
-          fill="none" stroke="url(#mirrorGold)" strokeWidth={0.9}
-          {...draw(0.85, 1.7)} animate={{ pathLength: 1, opacity: 0.7 }}
-        />
-
-        {/* === TOP CREST === */}
-        {/* stem to cartouche */}
-        <motion.path d="M 210,132 L 210,120" fill="none" stroke={goldFt} strokeWidth={1} {...draw(1.7, 0.22)} />
-        {/* cartouche */}
-        <motion.ellipse cx={210} cy={104} rx={12} ry={14}
-          fill="rgba(201,169,110,0.05)" stroke="url(#mirrorGold)" strokeWidth={1}
-          {...draw(1.85, 0.45)} animate={{ pathLength: 1, opacity: 0.82 }}
-        />
-        <motion.ellipse cx={210} cy={104} rx={6} ry={7.5}
-          fill="none" stroke={goldDim} strokeWidth={0.55}
-          {...draw(2.05, 0.35)} animate={{ pathLength: 1, opacity: 0.6 }}
-        />
-        {/* palmette fan finial */}
-        <motion.path d="M 190,88 Q 210,97 230,88" fill="none" stroke="url(#mirrorGold)" strokeWidth={0.9}
-          {...draw(1.95, 0.4)} animate={{ pathLength: 1, opacity: 0.78 }} />
-        {[
-          'M 210,55 C 210,68 210,80 210,90',
-          'M 210,55 C 202,66 198,78 199,90',
-          'M 210,55 C 218,66 222,78 221,90',
-          'M 210,56 C 196,65 189,77 191,88',
-          'M 210,56 C 224,65 231,77 229,88',
-        ].map((d, i) => (
-          <motion.path key={i} d={d} fill="none" stroke="url(#mirrorGold)" strokeWidth={0.85}
-            {...draw(2.1 + i * 0.05, 0.4)} animate={{ pathLength: 1, opacity: 0.7 }} />
-        ))}
-        {/* finial tip */}
-        <motion.path d="M 210,55 C 206,49 206,43 210,39 C 214,43 214,49 210,55"
-          fill="rgba(201,169,110,0.08)" stroke="url(#mirrorGold)" strokeWidth={0.8}
-          {...draw(2.35, 0.35)} animate={{ pathLength: 1, opacity: 0.7 }} />
-
-        {/* graceful C-scrolls from cartouche sides */}
-        <motion.path d="M 198,104 C 174,98 150,86 150,66 C 150,52 168,52 170,66 C 171,76 162,78 158,72"
-          fill="none" stroke="url(#mirrorGold)" strokeWidth={1.05}
-          {...draw(2.1, 0.85)} animate={{ pathLength: 1, opacity: 0.78 }} />
-        <motion.path d="M 222,104 C 246,98 270,86 270,66 C 270,52 252,52 250,66 C 249,76 258,78 262,72"
-          fill="none" stroke="url(#mirrorGold)" strokeWidth={1.05}
-          {...draw(2.1, 0.85)} animate={{ pathLength: 1, opacity: 0.78 }} />
-        {/* small leaf accents under scrolls */}
-        <motion.path d="M 170,92 C 156,92 148,102 153,112 C 158,120 168,114 168,106"
-          fill="none" stroke={goldDim} strokeWidth={0.75}
-          {...draw(2.55, 0.4)} animate={{ pathLength: 1, opacity: 0.6 }} />
-        <motion.path d="M 250,92 C 264,92 272,102 267,112 C 262,120 252,114 252,106"
-          fill="none" stroke={goldDim} strokeWidth={0.75}
-          {...draw(2.55, 0.4)} animate={{ pathLength: 1, opacity: 0.6 }} />
-
-        {/* === SIDE SCROLLS === */}
-        {[
-          'M 90,300 C 72,292 60,272 70,256 C 78,244 92,250 88,264 C 85,274 74,272 72,264',
-          'M 90,340 C 72,348 60,368 70,384 C 78,396 92,390 88,376 C 85,366 74,368 72,376',
-          'M 330,300 C 348,292 360,272 350,256 C 342,244 328,250 332,264 C 335,274 346,272 348,264',
-          'M 330,340 C 348,348 360,368 350,384 C 342,396 328,390 332,376 C 335,366 346,368 348,376',
-        ].map((d, i) => (
-          <motion.path key={i} d={d} fill="none" stroke="url(#mirrorGold)" strokeWidth={0.9}
-            {...draw(2.4 + (i % 2) * 0.1, 0.7)} animate={{ pathLength: 1, opacity: 0.68 }} />
-        ))}
-
-        {/* === BOTTOM === */}
-        {/* stem + medallion */}
-        <motion.path d="M 210,508 L 210,524" fill="none" stroke={goldFt} strokeWidth={1} {...draw(2.6, 0.22)} />
-        <motion.ellipse cx={210} cy={542} rx={14} ry={14}
-          fill="rgba(201,169,110,0.05)" stroke="url(#mirrorGold)" strokeWidth={1}
-          {...draw(2.75, 0.45)} animate={{ pathLength: 1, opacity: 0.8 }} />
-        <motion.ellipse cx={210} cy={542} rx={7} ry={7}
-          fill="none" stroke={goldDim} strokeWidth={0.55}
-          {...draw(2.95, 0.35)} animate={{ pathLength: 1, opacity: 0.6 }} />
-        {/* flanking scrolls */}
-        <motion.path d="M 196,538 C 174,534 154,544 158,564 C 161,578 178,576 176,562"
-          fill="none" stroke="url(#mirrorGold)" strokeWidth={0.95}
-          {...draw(2.8, 0.75)} animate={{ pathLength: 1, opacity: 0.72 }} />
-        <motion.path d="M 224,538 C 246,534 266,544 262,564 C 259,578 242,576 244,562"
-          fill="none" stroke="url(#mirrorGold)" strokeWidth={0.95}
-          {...draw(2.8, 0.75)} animate={{ pathLength: 1, opacity: 0.72 }} />
-        {/* outer curls */}
-        <motion.path d="M 158,564 C 142,566 132,578 138,590 C 143,599 154,594 154,584"
-          fill="none" stroke={goldFt} strokeWidth={0.8}
-          {...draw(3.1, 0.45)} animate={{ pathLength: 1, opacity: 0.62 }} />
-        <motion.path d="M 262,564 C 278,566 288,578 282,590 C 277,599 266,594 266,584"
-          fill="none" stroke={goldFt} strokeWidth={0.8}
-          {...draw(3.1, 0.45)} animate={{ pathLength: 1, opacity: 0.62 }} />
-        {/* pendant */}
-        <motion.path d="M 210,556 L 210,568" fill="none" stroke={goldFt} strokeWidth={0.85} {...draw(3.2, 0.2)} />
-        <motion.path d="M 210,568 C 202,578 199,594 210,604 C 221,594 218,578 210,568"
-          fill="rgba(201,169,110,0.07)" stroke="url(#mirrorGold)" strokeWidth={0.9}
-          {...draw(3.3, 0.45)} animate={{ pathLength: 1, opacity: 0.7 }} />
-        <motion.path d="M 210,604 L 210,618" fill="none" stroke={goldDim} strokeWidth={0.7} {...draw(3.55, 0.18)} />
-      </svg>
-    </div>
-  )
-}
-
 export default function SoloPage() {
   const navigate = useNavigate()
   const [inviteEmail, setInviteEmail] = useState('')
@@ -734,26 +486,148 @@ export default function SoloPage() {
           </div>
         </motion.div>
 
-        {/* Right: luxury mirror video */}
+        {/* Right: portrait video or decorative card */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, delay: 0.15 }}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? '0 24px 40px' : '40px 60px 40px 20px' }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? '0 24px 40px' : '80px 80px 80px 40px', position: 'relative' }}
         >
           {videos.length > 0 ? (
-            <MirrorVideo
-              video={videos[currentVideo % videos.length]}
-              loop={videos.length === 1}
-              onEnded={videos.length > 1 ? () => setCurrentVideo(c => (c + 1) % videos.length) : undefined}
-              mobile={mobile}
-            />
+            <div style={{ position: 'relative', width: '100%', maxWidth: 340, zIndex: 1 }}>
+              {/* Breathing atmospheric glow */}
+              <motion.div
+                animate={{ opacity: [0.3, 0.75, 0.3] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+                style={{
+                  position: 'absolute', inset: -40,
+                  background: 'radial-gradient(ellipse at 50% 45%, rgba(201,169,110,0.16) 0%, transparent 65%)',
+                  filter: 'blur(28px)', pointerEvents: 'none', zIndex: 0,
+                }}
+              />
+
+              {/* Vertical label — left */}
+              <div style={{
+                position: 'absolute', left: -26, top: '50%',
+                transform: 'translateY(-50%) rotate(-90deg)',
+                fontSize: 8, letterSpacing: 4, fontFamily: 'DM Sans', fontWeight: 600,
+                color: 'rgba(201,169,110,0.35)', whiteSpace: 'nowrap', userSelect: 'none', zIndex: 3,
+              }}>SOLO · SARTO</div>
+
+              {/* Vertical label — right */}
+              <div style={{
+                position: 'absolute', right: -22, top: '50%',
+                transform: 'translateY(-50%) rotate(90deg)',
+                fontSize: 8, letterSpacing: 4, fontFamily: 'DM Sans',
+                color: 'rgba(201,169,110,0.22)', whiteSpace: 'nowrap', userSelect: 'none', zIndex: 3,
+              }}>AW · 26</div>
+
+              {/* Frame shell */}
+              <div style={{ position: 'relative', aspectRatio: '9/16', zIndex: 1 }}>
+
+                {/* Video clip */}
+                <div style={{
+                  position: 'absolute', inset: 0, borderRadius: 4, overflow: 'hidden',
+                  boxShadow: '0 28px 72px rgba(0,0,0,0.6)',
+                }}>
+                  <video
+                    key={videos[currentVideo % videos.length].id}
+                    autoPlay muted playsInline
+                    loop={videos.length === 1}
+                    onEnded={videos.length > 1 ? () => setCurrentVideo(c => (c + 1) % videos.length) : undefined}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    src={videos[currentVideo % videos.length].url}
+                  />
+                  {/* Shimmer sweep */}
+                  <motion.div
+                    animate={{ x: [-360, 460] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: 'linear', repeatDelay: 5 }}
+                    style={{
+                      position: 'absolute', top: 0, bottom: 0, left: 0, width: 100,
+                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.03) 30%, rgba(201,169,110,0.07) 50%, rgba(255,255,255,0.03) 70%, transparent)',
+                      pointerEvents: 'none', zIndex: 2,
+                    }}
+                  />
+                  {/* Slow scan line */}
+                  <motion.div
+                    animate={{ top: ['-2%', '102%'] }}
+                    transition={{ duration: 10, repeat: Infinity, ease: 'linear', repeatDelay: 3 }}
+                    style={{
+                      position: 'absolute', left: 0, right: 0, height: 1,
+                      background: 'linear-gradient(90deg, transparent, rgba(201,169,110,0.18) 15%, rgba(201,169,110,0.38) 50%, rgba(201,169,110,0.18) 85%, transparent)',
+                      pointerEvents: 'none', zIndex: 3,
+                    }}
+                  />
+                </div>
+
+                {/* Frame edge lines — draw in clockwise */}
+                <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                  transition={{ duration: 0.9, delay: 0.25, ease: 'easeOut' }}
+                  style={{ position: 'absolute', top: 0, left: 22, right: 22, height: 1, background: 'rgba(201,169,110,0.42)', transformOrigin: 'left', zIndex: 5, pointerEvents: 'none' }} />
+                <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }}
+                  transition={{ duration: 0.9, delay: 0.4, ease: 'easeOut' }}
+                  style={{ position: 'absolute', right: 0, top: 22, bottom: 22, width: 1, background: 'rgba(201,169,110,0.42)', transformOrigin: 'top', zIndex: 5, pointerEvents: 'none' }} />
+                <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                  transition={{ duration: 0.9, delay: 0.55, ease: 'easeOut' }}
+                  style={{ position: 'absolute', bottom: 0, left: 22, right: 22, height: 1, background: 'rgba(201,169,110,0.42)', transformOrigin: 'right', zIndex: 5, pointerEvents: 'none' }} />
+                <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }}
+                  transition={{ duration: 0.9, delay: 0.7, ease: 'easeOut' }}
+                  style={{ position: 'absolute', left: 0, top: 22, bottom: 22, width: 1, background: 'rgba(201,169,110,0.42)', transformOrigin: 'bottom', zIndex: 5, pointerEvents: 'none' }} />
+
+                {/* Diamond corner ornaments */}
+                {[
+                  { pos: { top: -8, left: -8 },
+                    diamond: 'M8,3 L13,8 L8,13 L3,8 Z', arms: 'M13,8 L30,8 M8,13 L8,30' },
+                  { pos: { top: -8, right: -8 },
+                    diamond: 'M32,3 L37,8 L32,13 L27,8 Z', arms: 'M27,8 L10,8 M32,13 L32,30' },
+                  { pos: { bottom: -8, left: -8 },
+                    diamond: 'M8,27 L13,32 L8,37 L3,32 Z', arms: 'M13,32 L30,32 M8,10 L8,27' },
+                  { pos: { bottom: -8, right: -8 },
+                    diamond: 'M32,27 L37,32 L32,37 L27,32 Z', arms: 'M27,32 L10,32 M32,10 L32,27' },
+                ].map((c, i) => (
+                  <motion.svg key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.15 + i * 0.1 }}
+                    width={40} height={40} viewBox="0 0 40 40"
+                    style={{ position: 'absolute', ...c.pos, zIndex: 6, pointerEvents: 'none' }}>
+                    <path d={c.diamond} fill="rgba(201,169,110,0.18)" stroke="#C9A96E" strokeWidth="1.2" strokeLinejoin="round" opacity="0.7" />
+                    <path d={c.arms} fill="none" stroke="#C9A96E" strokeWidth="1" opacity="0.55" />
+                  </motion.svg>
+                ))}
+              </div>
+
+              {/* Bottom label */}
+              <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                <div style={{ height: 1, width: 36, background: 'linear-gradient(90deg, transparent, rgba(201,169,110,0.3))' }} />
+                <span style={{ fontSize: 9, letterSpacing: 3, fontFamily: 'DM Sans', color: 'rgba(201,169,110,0.38)' }}>AW/26 · ATELIER</span>
+                <div style={{ height: 1, width: 36, background: 'linear-gradient(90deg, rgba(201,169,110,0.3), transparent)' }} />
+              </div>
+            </div>
           ) : (
-            <MirrorVideo
-              video={{ id: 'placeholder', url: '' }}
-              loop={false}
-              mobile={mobile}
-            />
+            <div style={{
+              background: 'linear-gradient(135deg, #302A24 0%, #201C18 100%)',
+              border: '1px solid rgba(201,169,110,0.15)',
+              borderRadius: 4, padding: '48px 40px', width: '100%', maxWidth: 440,
+              position: 'relative', overflow: 'hidden'
+            }}>
+              <div style={{
+                position: 'absolute', width: 300, height: 300, top: -80, right: -60,
+                background: 'radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%)',
+                filter: 'blur(40px)', pointerEvents: 'none'
+              }} />
+              <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 32 }}>LOOK 01</div>
+              <div style={{
+                background: 'rgba(201,169,110,0.06)', border: '1px solid rgba(201,169,110,0.12)',
+                padding: '16px 20px', borderRadius: 2, marginBottom: 24
+              }}>
+                <p style={{ fontSize: 13, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: 'rgba(250,248,245,0.7)', lineHeight: 1.7, marginBottom: 8 }}>
+                  "{get('solo.home.mid_quote', 'Each piece begins as a conversation.')}"
+                </p>
+                <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>{get('solo.home.mid_attr', '— MAISON NOTES')}</div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <NeedleMotif />
+              </div>
+            </div>
           )}
         </motion.div>
         </div>{/* end content grid */}
