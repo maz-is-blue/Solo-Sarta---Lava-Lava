@@ -394,13 +394,13 @@ function CollectionSlider({ products, lang, t, mobile }) {
 /* ── Luxury oval mirror for the hero video ── */
 function MirrorVideo({ video, loop, onEnded, mobile }) {
   // Dimensions
-  const MX = mobile ? 220 : 260   // mirror oval width
-  const MY = mobile ? 356 : 420   // mirror oval height
+  const MX = mobile ? 252 : 312   // mirror oval width
+  const MY = mobile ? 408 : 500   // mirror oval height
   const RX = MX / 2               // horizontal radius
   const RY = MY / 2               // vertical radius
-  const TOP = 70                  // room for crown above
-  const SIDE = 54                 // room for glow on sides
-  const BOT = 54                  // room for pendant below
+  const TOP = 96                  // room for crown above
+  const SIDE = 56                 // room for glow on sides
+  const BOT = 90                  // room for pendant below
   const SW = MX + SIDE * 2        // SVG total width
   const SH = MY + TOP + BOT       // SVG total height
   const CX = SW / 2               // ellipse center X
@@ -502,87 +502,149 @@ function MirrorVideo({ video, loop, onEnded, mobile }) {
         />
 
         {/* ── Crown ornament (top) ── */}
-        {/* Vertical stem connecting crown base to oval top */}
-        <motion.line
-          x1={CX} y1={CY - RY - 1} x2={CX} y2={CY - RY - 18}
-          stroke="rgba(201,169,110,0.55)" strokeWidth={0.8}
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ duration: 0.4, delay: 2.1 }}
-        />
-        {/* Horizontal cross-bar */}
-        <motion.line
-          x1={CX - 30} y1={CY - RY - 22} x2={CX + 30} y2={CY - RY - 22}
-          stroke="rgba(201,169,110,0.45)" strokeWidth={0.8}
-          initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-          style={{ transformOrigin: `${CX}px ${CY - RY - 22}px` }}
-          transition={{ duration: 0.5, delay: 2.25, ease: 'easeOut' }}
-        />
-        {/* Left arm down */}
-        <motion.line
-          x1={CX - 30} y1={CY - RY - 22} x2={CX - 30} y2={CY - RY - 10}
-          stroke="rgba(201,169,110,0.35)" strokeWidth={0.7}
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ duration: 0.3, delay: 2.5 }}
-        />
-        {/* Right arm down */}
-        <motion.line
-          x1={CX + 30} y1={CY - RY - 22} x2={CX + 30} y2={CY - RY - 10}
-          stroke="rgba(201,169,110,0.35)" strokeWidth={0.7}
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ duration: 0.3, delay: 2.5 }}
-        />
-        {/* Center upward spire */}
-        <motion.path
-          d={`M ${CX} ${CY - RY - 45} L ${CX - 8} ${CY - RY - 22} L ${CX + 8} ${CY - RY - 22} Z`}
-          fill="rgba(201,169,110,0.08)" stroke="#C9A96E" strokeWidth={0.9} strokeLinejoin="round"
-          initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 0.7, scale: 1 }}
-          style={{ transformOrigin: `${CX}px ${CY - RY - 33}px` }}
-          transition={{ duration: 0.45, delay: 2.35 }}
-        />
-        {/* Left mini diamond */}
-        <motion.path
-          d={`M ${CX - 30} ${CY - RY - 28} L ${CX - 24} ${CY - RY - 22} L ${CX - 30} ${CY - RY - 16} L ${CX - 36} ${CY - RY - 22} Z`}
-          fill="rgba(201,169,110,0.1)" stroke="#C9A96E" strokeWidth={0.8}
-          initial={{ opacity: 0 }} animate={{ opacity: 0.65 }}
-          transition={{ duration: 0.35, delay: 2.6 }}
-        />
-        {/* Right mini diamond */}
-        <motion.path
-          d={`M ${CX + 30} ${CY - RY - 28} L ${CX + 36} ${CY - RY - 22} L ${CX + 30} ${CY - RY - 16} L ${CX + 24} ${CY - RY - 22} Z`}
-          fill="rgba(201,169,110,0.1)" stroke="#C9A96E" strokeWidth={0.8}
-          initial={{ opacity: 0 }} animate={{ opacity: 0.65 }}
-          transition={{ duration: 0.35, delay: 2.6 }}
-        />
-
-        {/* ── Pendant (bottom) ── */}
-        <motion.line
-          x1={CX} y1={CY + RY + 1} x2={CX} y2={CY + RY + 14}
-          stroke="rgba(201,169,110,0.45)" strokeWidth={0.8}
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ duration: 0.3, delay: 2.1 }}
-        />
-        <motion.path
-          d={`M ${CX} ${CY + RY + 14} L ${CX - 7} ${CY + RY + 24} L ${CX} ${CY + RY + 34} L ${CX + 7} ${CY + RY + 24} Z`}
-          fill="rgba(201,169,110,0.08)" stroke="#C9A96E" strokeWidth={0.9} strokeLinejoin="round"
-          initial={{ opacity: 0, scale: 0.4 }} animate={{ opacity: 0.6, scale: 1 }}
-          style={{ transformOrigin: `${CX}px ${CY + RY + 24}px` }}
-          transition={{ duration: 0.4, delay: 2.4 }}
-        />
-
-        {/* ── Side diamonds at equator ── */}
-        {[[-1, 'L'], [1, 'R']].map(([dir, id]) => {
-          const ex = CX + dir * (RX + 1)
-          const ey = CY
-          const arm = 9
+        {(() => {
+          const topY = CY - RY            // oval apex
           return (
-            <motion.path key={id}
-              d={`M ${ex} ${ey - arm} L ${ex + dir * arm} ${ey} L ${ex} ${ey + arm} L ${ex - dir * arm} ${ey} Z`}
-              fill="rgba(201,169,110,0.06)" stroke="#C9A96E" strokeWidth={0.8}
-              initial={{ opacity: 0 }} animate={{ opacity: 0.55 }}
-              transition={{ duration: 0.35, delay: 2.7 }}
-            />
+            <>
+              {/* Stem from oval to crossbar */}
+              <motion.line
+                x1={CX} y1={topY - 1} x2={CX} y2={topY - 20}
+                stroke="rgba(201,169,110,0.55)" strokeWidth={0.8}
+                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+                transition={{ duration: 0.4, delay: 2.1 }}
+              />
+              {/* Horizontal cross-bar */}
+              <motion.line
+                x1={CX - 38} y1={topY - 24} x2={CX + 38} y2={topY - 24}
+                stroke="rgba(201,169,110,0.45)" strokeWidth={0.8}
+                initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                style={{ transformOrigin: `${CX}px ${topY - 24}px` }}
+                transition={{ duration: 0.5, delay: 2.25, ease: 'easeOut' }}
+              />
+              {/* Symmetric S-scroll curls off the cross-bar ends */}
+              {[-1, 1].map(dir => (
+                <motion.path key={dir}
+                  d={`M ${CX + dir * 38} ${topY - 24}
+                      C ${CX + dir * 54} ${topY - 24} ${CX + dir * 58} ${topY - 40} ${CX + dir * 46} ${topY - 44}
+                      C ${CX + dir * 38} ${topY - 47} ${CX + dir * 37} ${topY - 38} ${CX + dir * 44} ${topY - 37}`}
+                  fill="none" stroke="#C9A96E" strokeWidth={0.85}
+                  initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 0.62 }}
+                  transition={{ duration: 0.6, delay: 2.55 }}
+                />
+              ))}
+              {/* Arms down from cross-bar ends */}
+              {[-1, 1].map(dir => (
+                <motion.line key={`arm${dir}`}
+                  x1={CX + dir * 38} y1={topY - 24} x2={CX + dir * 38} y2={topY - 11}
+                  stroke="rgba(201,169,110,0.35)" strokeWidth={0.7}
+                  initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+                  transition={{ duration: 0.3, delay: 2.5 }}
+                />
+              ))}
+              {/* Center upward spire */}
+              <motion.path
+                d={`M ${CX} ${topY - 58} L ${CX - 9} ${topY - 24} L ${CX + 9} ${topY - 24} Z`}
+                fill="rgba(201,169,110,0.08)" stroke="#C9A96E" strokeWidth={0.9} strokeLinejoin="round"
+                initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 0.7, scale: 1 }}
+                style={{ transformOrigin: `${CX}px ${topY - 40}px` }}
+                transition={{ duration: 0.45, delay: 2.35 }}
+              />
+              {/* Crowning dot above the spire */}
+              <motion.circle
+                cx={CX} cy={topY - 64} r={2.6}
+                fill="rgba(201,169,110,0.18)" stroke="#C9A96E" strokeWidth={0.8}
+                initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 0.75, scale: 1 }}
+                style={{ transformOrigin: `${CX}px ${topY - 64}px` }}
+                transition={{ duration: 0.4, delay: 2.7 }}
+              />
+              {/* Mini diamonds flanking the spire base */}
+              {[-1, 1].map(dir => {
+                const dx = CX + dir * 19, dy = topY - 30
+                return (
+                  <motion.path key={`d${dir}`}
+                    d={`M ${dx} ${dy - 6} L ${dx + 6} ${dy} L ${dx} ${dy + 6} L ${dx - 6} ${dy} Z`}
+                    fill="rgba(201,169,110,0.1)" stroke="#C9A96E" strokeWidth={0.8}
+                    initial={{ opacity: 0 }} animate={{ opacity: 0.65 }}
+                    transition={{ duration: 0.35, delay: 2.6 }}
+                  />
+                )
+              })}
+              {/* Outer-end diamonds on the scroll tips */}
+              {[-1, 1].map(dir => {
+                const dx = CX + dir * 46, dy = topY - 44
+                return (
+                  <motion.path key={`dt${dir}`}
+                    d={`M ${dx} ${dy - 4} L ${dx + 4} ${dy} L ${dx} ${dy + 4} L ${dx - 4} ${dy} Z`}
+                    fill="rgba(201,169,110,0.1)" stroke="#C9A96E" strokeWidth={0.7}
+                    initial={{ opacity: 0 }} animate={{ opacity: 0.55 }}
+                    transition={{ duration: 0.35, delay: 2.85 }}
+                  />
+                )
+              })}
+            </>
           )
-        })}
+        })()}
+
+        {/* ── Pendant ornament (bottom) ── */}
+        {(() => {
+          const botY = CY + RY            // oval base
+          return (
+            <>
+              {/* Stem to the cluster */}
+              <motion.line
+                x1={CX} y1={botY + 1} x2={CX} y2={botY + 14}
+                stroke="rgba(201,169,110,0.45)" strokeWidth={0.8}
+                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+                transition={{ duration: 0.3, delay: 2.1 }}
+              />
+              {/* Symmetric scroll curls sweeping outward then down */}
+              {[-1, 1].map(dir => (
+                <motion.path key={dir}
+                  d={`M ${CX} ${botY + 14}
+                      C ${CX + dir * 20} ${botY + 14} ${CX + dir * 30} ${botY + 26} ${CX + dir * 24} ${botY + 38}
+                      C ${CX + dir * 19} ${botY + 47} ${CX + dir * 9} ${botY + 42} ${CX + dir * 12} ${botY + 33}`}
+                  fill="none" stroke="#C9A96E" strokeWidth={0.85}
+                  initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 0.6 }}
+                  transition={{ duration: 0.6, delay: 2.45 }}
+                />
+              ))}
+              {/* Central teardrop pendant */}
+              <motion.path
+                d={`M ${CX} ${botY + 14} L ${CX - 8} ${botY + 26} L ${CX} ${botY + 40} L ${CX + 8} ${botY + 26} Z`}
+                fill="rgba(201,169,110,0.08)" stroke="#C9A96E" strokeWidth={0.9} strokeLinejoin="round"
+                initial={{ opacity: 0, scale: 0.4 }} animate={{ opacity: 0.62, scale: 1 }}
+                style={{ transformOrigin: `${CX}px ${botY + 27}px` }}
+                transition={{ duration: 0.4, delay: 2.4 }}
+              />
+              {/* Small drop beneath the teardrop */}
+              <motion.line
+                x1={CX} y1={botY + 40} x2={CX} y2={botY + 52}
+                stroke="rgba(201,169,110,0.4)" strokeWidth={0.7}
+                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+                transition={{ duration: 0.3, delay: 2.7 }}
+              />
+              <motion.circle
+                cx={CX} cy={botY + 57} r={3}
+                fill="rgba(201,169,110,0.14)" stroke="#C9A96E" strokeWidth={0.8}
+                initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 0.7, scale: 1 }}
+                style={{ transformOrigin: `${CX}px ${botY + 57}px` }}
+                transition={{ duration: 0.4, delay: 2.8 }}
+              />
+              {/* Diamond finials on the scroll tips */}
+              {[-1, 1].map(dir => {
+                const dx = CX + dir * 24, dy = botY + 38
+                return (
+                  <motion.path key={`pd${dir}`}
+                    d={`M ${dx} ${dy - 4} L ${dx + 4} ${dy} L ${dx} ${dy + 4} L ${dx - 4} ${dy} Z`}
+                    fill="rgba(201,169,110,0.1)" stroke="#C9A96E" strokeWidth={0.7}
+                    initial={{ opacity: 0 }} animate={{ opacity: 0.55 }}
+                    transition={{ duration: 0.35, delay: 2.75 }}
+                  />
+                )
+              })}
+            </>
+          )
+        })()}
       </svg>
     </div>
   )
