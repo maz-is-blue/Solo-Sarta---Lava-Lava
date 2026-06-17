@@ -391,6 +391,203 @@ function CollectionSlider({ products, lang, t, mobile }) {
   )
 }
 
+/* ── Luxury oval mirror for the hero video ── */
+function MirrorVideo({ video, loop, onEnded, mobile }) {
+  // Dimensions
+  const MX = mobile ? 220 : 260   // mirror oval width
+  const MY = mobile ? 356 : 420   // mirror oval height
+  const RX = MX / 2               // horizontal radius
+  const RY = MY / 2               // vertical radius
+  const TOP = 70                  // room for crown above
+  const SIDE = 54                 // room for glow on sides
+  const BOT = 54                  // room for pendant below
+  const SW = MX + SIDE * 2        // SVG total width
+  const SH = MY + TOP + BOT       // SVG total height
+  const CX = SW / 2               // ellipse center X
+  const CY = TOP + RY             // ellipse center Y
+
+  return (
+    <div style={{ position: 'relative', width: SW, maxWidth: '100%' }}>
+
+      {/* Breathing corona glow — behind everything */}
+      <motion.div
+        animate={{ opacity: [0.45, 0.9, 0.45], scale: [1, 1.03, 1] }}
+        transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          position: 'absolute',
+          left: SIDE - 20, top: TOP - 20,
+          width: MX + 40, height: MY + 40,
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(201,169,110,0.18) 30%, transparent 75%)',
+          filter: 'blur(28px)',
+          pointerEvents: 'none',
+          borderRadius: '50%',
+        }}
+      />
+
+      {/* Video / placeholder clipped to oval via CSS clip-path */}
+      <div style={{
+        position: 'absolute',
+        left: SIDE, top: TOP,
+        width: MX, height: MY,
+        clipPath: `ellipse(${RX}px ${RY}px at 50% 50%)`,
+        overflow: 'hidden',
+        background: '#1C1812',
+      }}>
+        {video.url ? (
+          <video
+            key={video.id}
+            autoPlay muted playsInline
+            loop={loop}
+            onEnded={onEnded}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            src={video.url}
+          />
+        ) : (
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'radial-gradient(ellipse at 50% 40%, #2A2218 0%, #131009 100%)' }}>
+            <span style={{ fontFamily: 'Cormorant Garamond', fontStyle: 'italic', fontSize: 52, color: 'rgba(201,169,110,0.1)', letterSpacing: 6 }}>SS</span>
+          </div>
+        )}
+        {/* Mirror inner vignette — darkens edges of the oval */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(15,12,9,0.6) 100%)',
+        }} />
+      </div>
+
+      {/* SVG frame — animated draw-in + crown + pendant */}
+      <svg
+        width={SW} height={SH}
+        viewBox={`0 0 ${SW} ${SH}`}
+        style={{ position: 'relative', display: 'block', pointerEvents: 'none', overflow: 'visible' }}
+      >
+        {/* Outer hollow-light glow ring — thick blurred stroke, pulses after draw */}
+        <motion.ellipse
+          cx={CX} cy={CY} rx={RX + 10} ry={RY + 10}
+          fill="none" stroke="rgba(201,169,110,0.28)" strokeWidth={18}
+          style={{ filter: 'blur(10px)' }}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1, opacity: [null, 0.55, 0.9, 0.55] }}
+          transition={{
+            pathLength: { duration: 2.2, ease: 'easeOut', delay: 0 },
+            opacity:    { duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 2.2 },
+          }}
+        />
+
+        {/* Secondary glow ring — slightly smaller, brighter */}
+        <motion.ellipse
+          cx={CX} cy={CY} rx={RX + 3} ry={RY + 3}
+          fill="none" stroke="rgba(201,169,110,0.22)" strokeWidth={8}
+          style={{ filter: 'blur(4px)' }}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 2, ease: 'easeOut', delay: 0.15 }}
+        />
+
+        {/* Main border — crisp thin gold oval, draws clockwise */}
+        <motion.ellipse
+          cx={CX} cy={CY} rx={RX} ry={RY}
+          fill="none" stroke="#C9A96E" strokeWidth={1.1}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: 0.75 }}
+          transition={{ duration: 2, ease: 'easeOut', delay: 0.2 }}
+        />
+
+        {/* Inner fine ring — draws after main border */}
+        <motion.ellipse
+          cx={CX} cy={CY} rx={RX - 7} ry={RY - 7}
+          fill="none" stroke="rgba(201,169,110,0.22)" strokeWidth={0.6}
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: 1 }}
+          transition={{ duration: 2.2, ease: 'easeOut', delay: 0.45 }}
+        />
+
+        {/* ── Crown ornament (top) ── */}
+        {/* Vertical stem connecting crown base to oval top */}
+        <motion.line
+          x1={CX} y1={CY - RY - 1} x2={CX} y2={CY - RY - 18}
+          stroke="rgba(201,169,110,0.55)" strokeWidth={0.8}
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 0.4, delay: 2.1 }}
+        />
+        {/* Horizontal cross-bar */}
+        <motion.line
+          x1={CX - 30} y1={CY - RY - 22} x2={CX + 30} y2={CY - RY - 22}
+          stroke="rgba(201,169,110,0.45)" strokeWidth={0.8}
+          initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+          style={{ transformOrigin: `${CX}px ${CY - RY - 22}px` }}
+          transition={{ duration: 0.5, delay: 2.25, ease: 'easeOut' }}
+        />
+        {/* Left arm down */}
+        <motion.line
+          x1={CX - 30} y1={CY - RY - 22} x2={CX - 30} y2={CY - RY - 10}
+          stroke="rgba(201,169,110,0.35)" strokeWidth={0.7}
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 0.3, delay: 2.5 }}
+        />
+        {/* Right arm down */}
+        <motion.line
+          x1={CX + 30} y1={CY - RY - 22} x2={CX + 30} y2={CY - RY - 10}
+          stroke="rgba(201,169,110,0.35)" strokeWidth={0.7}
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 0.3, delay: 2.5 }}
+        />
+        {/* Center upward spire */}
+        <motion.path
+          d={`M ${CX} ${CY - RY - 45} L ${CX - 8} ${CY - RY - 22} L ${CX + 8} ${CY - RY - 22} Z`}
+          fill="rgba(201,169,110,0.08)" stroke="#C9A96E" strokeWidth={0.9} strokeLinejoin="round"
+          initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 0.7, scale: 1 }}
+          style={{ transformOrigin: `${CX}px ${CY - RY - 33}px` }}
+          transition={{ duration: 0.45, delay: 2.35 }}
+        />
+        {/* Left mini diamond */}
+        <motion.path
+          d={`M ${CX - 30} ${CY - RY - 28} L ${CX - 24} ${CY - RY - 22} L ${CX - 30} ${CY - RY - 16} L ${CX - 36} ${CY - RY - 22} Z`}
+          fill="rgba(201,169,110,0.1)" stroke="#C9A96E" strokeWidth={0.8}
+          initial={{ opacity: 0 }} animate={{ opacity: 0.65 }}
+          transition={{ duration: 0.35, delay: 2.6 }}
+        />
+        {/* Right mini diamond */}
+        <motion.path
+          d={`M ${CX + 30} ${CY - RY - 28} L ${CX + 36} ${CY - RY - 22} L ${CX + 30} ${CY - RY - 16} L ${CX + 24} ${CY - RY - 22} Z`}
+          fill="rgba(201,169,110,0.1)" stroke="#C9A96E" strokeWidth={0.8}
+          initial={{ opacity: 0 }} animate={{ opacity: 0.65 }}
+          transition={{ duration: 0.35, delay: 2.6 }}
+        />
+
+        {/* ── Pendant (bottom) ── */}
+        <motion.line
+          x1={CX} y1={CY + RY + 1} x2={CX} y2={CY + RY + 14}
+          stroke="rgba(201,169,110,0.45)" strokeWidth={0.8}
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 0.3, delay: 2.1 }}
+        />
+        <motion.path
+          d={`M ${CX} ${CY + RY + 14} L ${CX - 7} ${CY + RY + 24} L ${CX} ${CY + RY + 34} L ${CX + 7} ${CY + RY + 24} Z`}
+          fill="rgba(201,169,110,0.08)" stroke="#C9A96E" strokeWidth={0.9} strokeLinejoin="round"
+          initial={{ opacity: 0, scale: 0.4 }} animate={{ opacity: 0.6, scale: 1 }}
+          style={{ transformOrigin: `${CX}px ${CY + RY + 24}px` }}
+          transition={{ duration: 0.4, delay: 2.4 }}
+        />
+
+        {/* ── Side diamonds at equator ── */}
+        {[[-1, 'L'], [1, 'R']].map(([dir, id]) => {
+          const ex = CX + dir * (RX + 1)
+          const ey = CY
+          const arm = 9
+          return (
+            <motion.path key={id}
+              d={`M ${ex} ${ey - arm} L ${ex + dir * arm} ${ey} L ${ex} ${ey + arm} L ${ex - dir * arm} ${ey} Z`}
+              fill="rgba(201,169,110,0.06)" stroke="#C9A96E" strokeWidth={0.8}
+              initial={{ opacity: 0 }} animate={{ opacity: 0.55 }}
+              transition={{ duration: 0.35, delay: 2.7 }}
+            />
+          )
+        })}
+      </svg>
+    </div>
+  )
+}
+
 export default function SoloPage() {
   const navigate = useNavigate()
   const [inviteEmail, setInviteEmail] = useState('')
@@ -486,148 +683,26 @@ export default function SoloPage() {
           </div>
         </motion.div>
 
-        {/* Right: portrait video or decorative card */}
+        {/* Right: luxury mirror video */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, delay: 0.15 }}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? '0 24px 40px' : '80px 80px 80px 40px', position: 'relative' }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? '0 24px 40px' : '40px 60px 40px 20px' }}
         >
           {videos.length > 0 ? (
-            <div style={{ position: 'relative', width: '100%', maxWidth: 340, zIndex: 1 }}>
-              {/* Breathing atmospheric glow */}
-              <motion.div
-                animate={{ opacity: [0.3, 0.75, 0.3] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-                style={{
-                  position: 'absolute', inset: -40,
-                  background: 'radial-gradient(ellipse at 50% 45%, rgba(201,169,110,0.16) 0%, transparent 65%)',
-                  filter: 'blur(28px)', pointerEvents: 'none', zIndex: 0,
-                }}
-              />
-
-              {/* Vertical label — left */}
-              <div style={{
-                position: 'absolute', left: -26, top: '50%',
-                transform: 'translateY(-50%) rotate(-90deg)',
-                fontSize: 8, letterSpacing: 4, fontFamily: 'DM Sans', fontWeight: 600,
-                color: 'rgba(201,169,110,0.35)', whiteSpace: 'nowrap', userSelect: 'none', zIndex: 3,
-              }}>SOLO · SARTO</div>
-
-              {/* Vertical label — right */}
-              <div style={{
-                position: 'absolute', right: -22, top: '50%',
-                transform: 'translateY(-50%) rotate(90deg)',
-                fontSize: 8, letterSpacing: 4, fontFamily: 'DM Sans',
-                color: 'rgba(201,169,110,0.22)', whiteSpace: 'nowrap', userSelect: 'none', zIndex: 3,
-              }}>AW · 26</div>
-
-              {/* Frame shell */}
-              <div style={{ position: 'relative', aspectRatio: '9/16', zIndex: 1 }}>
-
-                {/* Video clip */}
-                <div style={{
-                  position: 'absolute', inset: 0, borderRadius: 4, overflow: 'hidden',
-                  boxShadow: '0 28px 72px rgba(0,0,0,0.6)',
-                }}>
-                  <video
-                    key={videos[currentVideo % videos.length].id}
-                    autoPlay muted playsInline
-                    loop={videos.length === 1}
-                    onEnded={videos.length > 1 ? () => setCurrentVideo(c => (c + 1) % videos.length) : undefined}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                    src={videos[currentVideo % videos.length].url}
-                  />
-                  {/* Shimmer sweep */}
-                  <motion.div
-                    animate={{ x: [-360, 460] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: 'linear', repeatDelay: 5 }}
-                    style={{
-                      position: 'absolute', top: 0, bottom: 0, left: 0, width: 100,
-                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.03) 30%, rgba(201,169,110,0.07) 50%, rgba(255,255,255,0.03) 70%, transparent)',
-                      pointerEvents: 'none', zIndex: 2,
-                    }}
-                  />
-                  {/* Slow scan line */}
-                  <motion.div
-                    animate={{ top: ['-2%', '102%'] }}
-                    transition={{ duration: 10, repeat: Infinity, ease: 'linear', repeatDelay: 3 }}
-                    style={{
-                      position: 'absolute', left: 0, right: 0, height: 1,
-                      background: 'linear-gradient(90deg, transparent, rgba(201,169,110,0.18) 15%, rgba(201,169,110,0.38) 50%, rgba(201,169,110,0.18) 85%, transparent)',
-                      pointerEvents: 'none', zIndex: 3,
-                    }}
-                  />
-                </div>
-
-                {/* Frame edge lines — draw in clockwise */}
-                <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.9, delay: 0.25, ease: 'easeOut' }}
-                  style={{ position: 'absolute', top: 0, left: 22, right: 22, height: 1, background: 'rgba(201,169,110,0.42)', transformOrigin: 'left', zIndex: 5, pointerEvents: 'none' }} />
-                <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }}
-                  transition={{ duration: 0.9, delay: 0.4, ease: 'easeOut' }}
-                  style={{ position: 'absolute', right: 0, top: 22, bottom: 22, width: 1, background: 'rgba(201,169,110,0.42)', transformOrigin: 'top', zIndex: 5, pointerEvents: 'none' }} />
-                <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.9, delay: 0.55, ease: 'easeOut' }}
-                  style={{ position: 'absolute', bottom: 0, left: 22, right: 22, height: 1, background: 'rgba(201,169,110,0.42)', transformOrigin: 'right', zIndex: 5, pointerEvents: 'none' }} />
-                <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }}
-                  transition={{ duration: 0.9, delay: 0.7, ease: 'easeOut' }}
-                  style={{ position: 'absolute', left: 0, top: 22, bottom: 22, width: 1, background: 'rgba(201,169,110,0.42)', transformOrigin: 'bottom', zIndex: 5, pointerEvents: 'none' }} />
-
-                {/* Diamond corner ornaments */}
-                {[
-                  { pos: { top: -8, left: -8 },
-                    diamond: 'M8,3 L13,8 L8,13 L3,8 Z', arms: 'M13,8 L30,8 M8,13 L8,30' },
-                  { pos: { top: -8, right: -8 },
-                    diamond: 'M32,3 L37,8 L32,13 L27,8 Z', arms: 'M27,8 L10,8 M32,13 L32,30' },
-                  { pos: { bottom: -8, left: -8 },
-                    diamond: 'M8,27 L13,32 L8,37 L3,32 Z', arms: 'M13,32 L30,32 M8,10 L8,27' },
-                  { pos: { bottom: -8, right: -8 },
-                    diamond: 'M32,27 L37,32 L32,37 L27,32 Z', arms: 'M27,32 L10,32 M32,10 L32,27' },
-                ].map((c, i) => (
-                  <motion.svg key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.15 + i * 0.1 }}
-                    width={40} height={40} viewBox="0 0 40 40"
-                    style={{ position: 'absolute', ...c.pos, zIndex: 6, pointerEvents: 'none' }}>
-                    <path d={c.diamond} fill="rgba(201,169,110,0.18)" stroke="#C9A96E" strokeWidth="1.2" strokeLinejoin="round" opacity="0.7" />
-                    <path d={c.arms} fill="none" stroke="#C9A96E" strokeWidth="1" opacity="0.55" />
-                  </motion.svg>
-                ))}
-              </div>
-
-              {/* Bottom label */}
-              <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-                <div style={{ height: 1, width: 36, background: 'linear-gradient(90deg, transparent, rgba(201,169,110,0.3))' }} />
-                <span style={{ fontSize: 9, letterSpacing: 3, fontFamily: 'DM Sans', color: 'rgba(201,169,110,0.38)' }}>AW/26 · ATELIER</span>
-                <div style={{ height: 1, width: 36, background: 'linear-gradient(90deg, rgba(201,169,110,0.3), transparent)' }} />
-              </div>
-            </div>
+            <MirrorVideo
+              video={videos[currentVideo % videos.length]}
+              loop={videos.length === 1}
+              onEnded={videos.length > 1 ? () => setCurrentVideo(c => (c + 1) % videos.length) : undefined}
+              mobile={mobile}
+            />
           ) : (
-            <div style={{
-              background: 'linear-gradient(135deg, #302A24 0%, #201C18 100%)',
-              border: '1px solid rgba(201,169,110,0.15)',
-              borderRadius: 4, padding: '48px 40px', width: '100%', maxWidth: 440,
-              position: 'relative', overflow: 'hidden'
-            }}>
-              <div style={{
-                position: 'absolute', width: 300, height: 300, top: -80, right: -60,
-                background: 'radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%)',
-                filter: 'blur(40px)', pointerEvents: 'none'
-              }} />
-              <div style={{ fontSize: 10, letterSpacing: 3, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans', marginBottom: 32 }}>LOOK 01</div>
-              <div style={{
-                background: 'rgba(201,169,110,0.06)', border: '1px solid rgba(201,169,110,0.12)',
-                padding: '16px 20px', borderRadius: 2, marginBottom: 24
-              }}>
-                <p style={{ fontSize: 13, fontFamily: 'Cormorant Garamond', fontStyle: 'italic', color: 'rgba(250,248,245,0.7)', lineHeight: 1.7, marginBottom: 8 }}>
-                  "{get('solo.home.mid_quote', 'Each piece begins as a conversation.')}"
-                </p>
-                <div style={{ fontSize: 10, letterSpacing: 2, color: 'rgba(201,169,110,0.5)', fontFamily: 'DM Sans' }}>{get('solo.home.mid_attr', '— MAISON NOTES')}</div>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <NeedleMotif />
-              </div>
-            </div>
+            <MirrorVideo
+              video={{ id: 'placeholder', url: '' }}
+              loop={false}
+              mobile={mobile}
+            />
           )}
         </motion.div>
         </div>{/* end content grid */}
