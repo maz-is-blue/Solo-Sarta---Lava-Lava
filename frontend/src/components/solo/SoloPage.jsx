@@ -750,7 +750,7 @@ export default function SoloPage() {
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, delay: 0.15 }}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? '0 24px 40px' : '40px 60px 40px 20px' }}
+          style={{ display: 'flex', alignItems: mobile ? 'center' : 'flex-start', justifyContent: 'center', padding: mobile ? '0 24px 40px' : '12px 60px 24px 20px' }}
         >
           {videos.length > 0 ? (
             <MirrorVideo
