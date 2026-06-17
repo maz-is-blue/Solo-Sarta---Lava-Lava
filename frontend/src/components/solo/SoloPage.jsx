@@ -391,11 +391,11 @@ function CollectionSlider({ products, lang, t, mobile }) {
   )
 }
 
-/* ── Baroque oval mirror ── */
+/* ── Luxury oval mirror ── */
 function MirrorVideo({ video, loop, onEnded, mobile }) {
   // Fixed design space — SVG viewBox handles scaling
-  const CX = 210, CY = 320, RX = 120, RY = 190
-  const SW = 420, SH = 630
+  const CX = 210, CY = 320, RX = 122, RY = 188
+  const SW = 420, SH = 640
 
   const renderW = mobile ? 300 : 400
   const sc = renderW / SW
@@ -405,16 +405,28 @@ function MirrorVideo({ video, loop, onEnded, mobile }) {
   const vx = (CX - RX) * sc, vy = (CY - RY) * sc
   const vw = RX * 2 * sc,    vh = RY * 2 * sc
 
-  // Stroke style helpers
-  const gold    = '#C9A96E'
-  const goldFt  = 'rgba(201,169,110,0.55)'
-  const goldDim = 'rgba(201,169,110,0.32)'
+  const goldFt  = 'rgba(201,169,110,0.6)'
+  const goldDim = 'rgba(201,169,110,0.35)'
 
   const draw = (delay, dur = 0.85) => ({
     initial: { pathLength: 0, opacity: 0 },
     animate: { pathLength: 1, opacity: 1 },
     transition: { pathLength: { duration: dur, ease: 'easeInOut', delay }, opacity: { duration: 0.3, delay } },
   })
+
+  // Beaded pearl ring — precise, evenly spaced beads (the hallmark of a fine frame)
+  const BEADS = 84
+  const beadR_x = RX - 9, beadR_y = RY - 9
+  const beads = Array.from({ length: BEADS }, (_, i) => {
+    const a = (i / BEADS) * Math.PI * 2 - Math.PI / 2
+    return { x: CX + beadR_x * Math.cos(a), y: CY + beadR_y * Math.sin(a) }
+  })
+  const beadTraceStart = 1.0, beadTraceDur = 1.8
+
+  // Orbiting light path (rendered px) for the travelling highlight
+  const orx = (RX + 6) * sc, ory = (RY + 6) * sc
+  const ocx = CX * sc, ocy = CY * sc
+  const orbitPath = `M ${ocx - orx},${ocy} a ${orx},${ory} 0 1,1 ${orx * 2},0 a ${orx},${ory} 0 1,1 ${-orx * 2},0`
 
   return (
     <div style={{ position: 'relative', width: renderW, height: renderH, flexShrink: 0 }}>
@@ -430,6 +442,27 @@ function MirrorVideo({ video, loop, onEnded, mobile }) {
           filter: 'blur(32px)', borderRadius: '50%', pointerEvents: 'none',
         }}
       />
+
+      {/* Travelling light — a luminous bead orbiting the frame (the "hollow light") */}
+      {[0, 0.5].map((phase, i) => (
+        <motion.div key={i}
+          initial={{ offsetDistance: `${phase * 100}%`, opacity: 0 }}
+          animate={{ offsetDistance: `${phase * 100 + 100}%`, opacity: [0, 0.9, 0.9, 0] }}
+          transition={{
+            offsetDistance: { duration: 7, repeat: Infinity, ease: 'linear', delay: 2.4 },
+            opacity: { duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 2.4, times: [0, 0.1, 0.9, 1] },
+          }}
+          style={{
+            position: 'absolute', left: 0, top: 0,
+            width: 16, height: 16, marginLeft: -8, marginTop: -8,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(255,244,214,0.95) 0%, rgba(201,169,110,0.5) 40%, transparent 70%)',
+            filter: 'blur(2px)', pointerEvents: 'none', zIndex: 4,
+            offsetPath: `path('${orbitPath}')`,
+            offsetRotate: '0deg',
+          }}
+        />
+      ))}
 
       {/* Video clipped to oval */}
       <div style={{
@@ -455,238 +488,152 @@ function MirrorVideo({ video, loop, onEnded, mobile }) {
       <svg viewBox={`0 0 ${SW} ${SH}`} width={renderW} height={renderH}
         style={{ position: 'absolute', top: 0, left: 0, overflow: 'visible', pointerEvents: 'none' }}>
 
+        <defs>
+          <linearGradient id="mirrorGold" x1="0" y1="0" x2="0.3" y2="1">
+            <stop offset="0%" stopColor="#F4E4B8" />
+            <stop offset="42%" stopColor="#C9A96E" />
+            <stop offset="100%" stopColor="#8A6B3C" />
+          </linearGradient>
+          <radialGradient id="beadGold" cx="38%" cy="32%" r="70%">
+            <stop offset="0%" stopColor="#FCF3D6" />
+            <stop offset="50%" stopColor="#D8BA7C" />
+            <stop offset="100%" stopColor="#9A7A45" />
+          </radialGradient>
+        </defs>
+
         {/* === OVAL BORDER === */}
         {/* Outer hollow-light corona — thick blurred, draws then pulses */}
-        <motion.ellipse cx={CX} cy={CY} rx={RX + 12} ry={RY + 12}
-          fill="none" stroke="rgba(201,169,110,0.3)" strokeWidth={22}
-          style={{ filter: 'blur(12px)' }}
+        <motion.ellipse cx={CX} cy={CY} rx={RX + 13} ry={RY + 13}
+          fill="none" stroke="rgba(201,169,110,0.3)" strokeWidth={20}
+          style={{ filter: 'blur(13px)' }}
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1, opacity: [null, 0.5, 1, 0.5] }}
-          transition={{ pathLength: { duration: 2, delay: 0, ease: 'easeOut' }, opacity: { duration: 3.5, repeat: Infinity, delay: 2.3, ease: 'easeInOut' } }}
+          transition={{ pathLength: { duration: 2, delay: 0, ease: 'easeOut' }, opacity: { duration: 4, repeat: Infinity, delay: 2.3, ease: 'easeInOut' } }}
         />
         {/* Secondary softer glow */}
         <motion.ellipse cx={CX} cy={CY} rx={RX + 4} ry={RY + 4}
-          fill="none" stroke="rgba(201,169,110,0.18)" strokeWidth={9}
+          fill="none" stroke="rgba(201,169,110,0.16)" strokeWidth={8}
           style={{ filter: 'blur(4px)' }}
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
           transition={{ duration: 1.9, delay: 0.1, ease: 'easeOut' }}
         />
-        {/* Main crisp gold border */}
+        {/* Main border — outer rim (thicker, metallic) */}
         <motion.ellipse cx={CX} cy={CY} rx={RX} ry={RY}
-          fill="none" stroke={gold} strokeWidth={1.3}
-          {...draw(0.15, 1.9)} animate={{ pathLength: 1, opacity: 0.82 }}
+          fill="none" stroke="url(#mirrorGold)" strokeWidth={2.4}
+          {...draw(0.15, 1.9)} animate={{ pathLength: 1, opacity: 0.9 }}
         />
-        {/* Inner fine ring */}
-        <motion.ellipse cx={CX} cy={CY} rx={RX - 8} ry={RY - 8}
+
+        {/* === BEADED PEARL RING === */}
+        {/* Sandwich rings around the beads */}
+        <motion.ellipse cx={CX} cy={CY} rx={beadR_x + 5} ry={beadR_y + 5}
           fill="none" stroke={goldDim} strokeWidth={0.6}
-          {...draw(0.4, 1.8)} animate={{ pathLength: 1, opacity: 1 }}
+          {...draw(0.55, 1.6)} animate={{ pathLength: 1, opacity: 0.7 }}
         />
-
-        {/* === TOP CROWN === */}
-        {/* Stem: oval top → cartouche */}
-        <motion.path d="M 210,130 L 210,118" fill="none" stroke={goldFt} strokeWidth={0.9} {...draw(1.8, 0.25)} />
-
-        {/* Center cartouche oval */}
-        <motion.ellipse cx={210} cy={100} rx={17} ry={18}
-          fill="rgba(201,169,110,0.05)" stroke={gold} strokeWidth={0.9}
-          {...draw(1.95, 0.5)} animate={{ pathLength: 1, opacity: 0.75 }}
-        />
-
-        {/* Top finial above cartouche: elegant upward acanthus petal */}
-        <motion.path d="M 210,82 L 210,68" fill="none" stroke={goldFt} strokeWidth={0.8} {...draw(2.35, 0.2)} />
-        <motion.path
-          d="M 210,68 C 205,60 199,50 203,42 C 207,34 213,34 217,42 C 221,50 215,60 210,68"
-          fill="rgba(201,169,110,0.06)" stroke={gold} strokeWidth={0.85}
-          {...draw(2.5, 0.45)} animate={{ pathLength: 1, opacity: 0.7 }}
-        />
-        {/* Small lateral leaves on finial */}
-        <motion.path d="M 205,52 C 196,50 190,44 193,40 C 196,36 202,40 204,47" fill="none" stroke={goldDim} strokeWidth={0.7} {...draw(2.7, 0.35)} />
-        <motion.path d="M 215,52 C 224,50 230,44 227,40 C 224,36 218,40 216,47" fill="none" stroke={goldDim} strokeWidth={0.7} {...draw(2.7, 0.35)} />
-
-        {/* LEFT inner S-scroll from cartouche */}
-        <motion.path
-          d="M 193,100 C 178,95 160,80 148,90 C 136,100 130,118 140,127 C 150,136 165,128 162,116"
-          fill="none" stroke={gold} strokeWidth={1.0}
-          {...draw(2.2, 0.8)} animate={{ pathLength: 1, opacity: 0.75 }}
-        />
-        {/* LEFT outer big sweep + coil */}
-        <motion.path
-          d="M 148,90 C 130,77 113,52 121,34 C 129,16 151,20 150,38 C 149,56 135,59 125,50"
-          fill="none" stroke={gold} strokeWidth={1.0}
-          {...draw(2.6, 0.85)} animate={{ pathLength: 1, opacity: 0.72 }}
-        />
-        {/* LEFT outer coil tight end */}
-        <motion.path
-          d="M 125,50 C 118,43 116,34 121,30 C 126,26 132,30 131,37"
-          fill="none" stroke={goldFt} strokeWidth={0.8}
-          {...draw(3.1, 0.35)} animate={{ pathLength: 1, opacity: 0.65 }}
-        />
-        {/* LEFT scroll tail droop */}
-        <motion.path
-          d="M 162,116 C 161,128 153,136 145,130"
-          fill="none" stroke={goldDim} strokeWidth={0.75}
-          {...draw(3.0, 0.3)} animate={{ pathLength: 1, opacity: 0.6 }}
-        />
-        {/* LEFT lower decorative leaf off the S */}
-        <motion.path
-          d="M 140,112 C 128,110 118,118 122,126 C 126,134 136,130 138,122"
-          fill="none" stroke={goldDim} strokeWidth={0.7}
-          {...draw(3.15, 0.35)} animate={{ pathLength: 1, opacity: 0.55 }}
-        />
-
-        {/* RIGHT inner S-scroll (mirror) */}
-        <motion.path
-          d="M 227,100 C 242,95 260,80 272,90 C 284,100 290,118 280,127 C 270,136 255,128 258,116"
-          fill="none" stroke={gold} strokeWidth={1.0}
-          {...draw(2.2, 0.8)} animate={{ pathLength: 1, opacity: 0.75 }}
-        />
-        {/* RIGHT outer big sweep + coil */}
-        <motion.path
-          d="M 272,90 C 290,77 307,52 299,34 C 291,16 269,20 270,38 C 271,56 285,59 295,50"
-          fill="none" stroke={gold} strokeWidth={1.0}
-          {...draw(2.6, 0.85)} animate={{ pathLength: 1, opacity: 0.72 }}
-        />
-        {/* RIGHT outer coil tight end */}
-        <motion.path
-          d="M 295,50 C 302,43 304,34 299,30 C 294,26 288,30 289,37"
-          fill="none" stroke={goldFt} strokeWidth={0.8}
-          {...draw(3.1, 0.35)} animate={{ pathLength: 1, opacity: 0.65 }}
-        />
-        {/* RIGHT scroll tail droop */}
-        <motion.path
-          d="M 258,116 C 259,128 267,136 275,130"
-          fill="none" stroke={goldDim} strokeWidth={0.75}
-          {...draw(3.0, 0.3)} animate={{ pathLength: 1, opacity: 0.6 }}
-        />
-        {/* RIGHT lower decorative leaf */}
-        <motion.path
-          d="M 280,112 C 292,110 302,118 298,126 C 294,134 284,130 282,122"
-          fill="none" stroke={goldDim} strokeWidth={0.7}
-          {...draw(3.15, 0.35)} animate={{ pathLength: 1, opacity: 0.55 }}
-        />
-
-        {/* === LEFT SIDE VOLUTES === */}
-        {/* Upper-left volute */}
-        <motion.path
-          d="M 90,308 C 70,295 54,268 63,249 C 72,230 92,234 90,252 C 88,270 74,272 68,262"
-          fill="none" stroke={gold} strokeWidth={0.95}
-          {...draw(2.95, 0.75)} animate={{ pathLength: 1, opacity: 0.7 }}
-        />
-        {/* Upper-left coil end */}
-        <motion.path
-          d="M 68,262 C 64,255 65,247 70,245 C 75,243 79,249 76,255"
-          fill="none" stroke={goldFt} strokeWidth={0.75}
-          {...draw(3.45, 0.3)} animate={{ pathLength: 1, opacity: 0.6 }}
-        />
-        {/* Lower-left volute */}
-        <motion.path
-          d="M 90,332 C 70,345 54,372 63,391 C 72,410 92,406 90,388 C 88,370 74,368 68,378"
-          fill="none" stroke={gold} strokeWidth={0.95}
-          {...draw(3.05, 0.75)} animate={{ pathLength: 1, opacity: 0.7 }}
-        />
-        {/* Lower-left coil end */}
-        <motion.path
-          d="M 68,378 C 64,385 65,393 70,395 C 75,397 79,391 76,385"
-          fill="none" stroke={goldFt} strokeWidth={0.75}
-          {...draw(3.55, 0.3)} animate={{ pathLength: 1, opacity: 0.6 }}
-        />
-        {/* Left side leaf cluster between volutes */}
-        <motion.path
-          d="M 78,318 C 66,316 58,322 62,330 C 66,338 76,334 78,326"
-          fill="none" stroke={goldDim} strokeWidth={0.7}
-          {...draw(3.6, 0.3)} animate={{ pathLength: 1, opacity: 0.5 }}
-        />
-
-        {/* === RIGHT SIDE VOLUTES (mirror) === */}
-        <motion.path
-          d="M 330,308 C 350,295 366,268 357,249 C 348,230 328,234 330,252 C 332,270 346,272 352,262"
-          fill="none" stroke={gold} strokeWidth={0.95}
-          {...draw(2.95, 0.75)} animate={{ pathLength: 1, opacity: 0.7 }}
-        />
-        <motion.path
-          d="M 352,262 C 356,255 355,247 350,245 C 345,243 341,249 344,255"
-          fill="none" stroke={goldFt} strokeWidth={0.75}
-          {...draw(3.45, 0.3)} animate={{ pathLength: 1, opacity: 0.6 }}
-        />
-        <motion.path
-          d="M 330,332 C 350,345 366,372 357,391 C 348,410 328,406 330,388 C 332,370 346,368 352,378"
-          fill="none" stroke={gold} strokeWidth={0.95}
-          {...draw(3.05, 0.75)} animate={{ pathLength: 1, opacity: 0.7 }}
-        />
-        <motion.path
-          d="M 352,378 C 356,385 355,393 350,395 C 345,397 341,391 344,385"
-          fill="none" stroke={goldFt} strokeWidth={0.75}
-          {...draw(3.55, 0.3)} animate={{ pathLength: 1, opacity: 0.6 }}
-        />
-        <motion.path
-          d="M 342,318 C 354,316 362,322 358,330 C 354,338 344,334 342,326"
-          fill="none" stroke={goldDim} strokeWidth={0.7}
-          {...draw(3.6, 0.3)} animate={{ pathLength: 1, opacity: 0.5 }}
-        />
-
-        {/* === BOTTOM MEDALLION === */}
-        {/* Stem from oval bottom */}
-        <motion.path d="M 210,510 L 210,526" fill="none" stroke={goldFt} strokeWidth={0.9} {...draw(3.2, 0.25)} />
-        {/* Medallion outer circle */}
-        <motion.ellipse cx={210} cy={545} rx={19} ry={19}
-          fill="rgba(201,169,110,0.05)" stroke={gold} strokeWidth={0.9}
-          {...draw(3.35, 0.5)} animate={{ pathLength: 1, opacity: 0.72 }}
-        />
-        {/* Medallion inner ring */}
-        <motion.ellipse cx={210} cy={545} rx={11} ry={11}
+        <motion.ellipse cx={CX} cy={CY} rx={beadR_x - 5} ry={beadR_y - 5}
           fill="none" stroke={goldDim} strokeWidth={0.6}
-          {...draw(3.65, 0.4)} animate={{ pathLength: 1, opacity: 0.6 }}
+          {...draw(0.7, 1.6)} animate={{ pathLength: 1, opacity: 0.7 }}
+        />
+        {/* The pearls — each lights up in sequence, tracing the oval */}
+        {beads.map((b, i) => (
+          <motion.circle key={i} cx={b.x} cy={b.y} r={2.2}
+            fill="url(#beadGold)"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.35, delay: beadTraceStart + (i / BEADS) * beadTraceDur, ease: 'easeOut' }}
+            style={{ transformOrigin: `${b.x}px ${b.y}px` }}
+          />
+        ))}
+        {/* Innermost fine ring (mirror bezel edge) */}
+        <motion.ellipse cx={CX} cy={CY} rx={RX - 16} ry={RY - 16}
+          fill="none" stroke="url(#mirrorGold)" strokeWidth={0.9}
+          {...draw(0.85, 1.7)} animate={{ pathLength: 1, opacity: 0.7 }}
         />
 
-        {/* Left bottom scroll */}
-        <motion.path
-          d="M 191,545 C 170,543 150,528 143,547 C 136,566 149,580 167,573 C 185,566 181,550 167,547"
-          fill="none" stroke={gold} strokeWidth={0.95}
-          {...draw(3.5, 0.75)} animate={{ pathLength: 1, opacity: 0.7 }}
+        {/* === TOP CREST === */}
+        {/* stem to cartouche */}
+        <motion.path d="M 210,132 L 210,120" fill="none" stroke={goldFt} strokeWidth={1} {...draw(1.7, 0.22)} />
+        {/* cartouche */}
+        <motion.ellipse cx={210} cy={104} rx={12} ry={14}
+          fill="rgba(201,169,110,0.05)" stroke="url(#mirrorGold)" strokeWidth={1}
+          {...draw(1.85, 0.45)} animate={{ pathLength: 1, opacity: 0.82 }}
         />
-        {/* Left bottom outer curl */}
-        <motion.path
-          d="M 143,547 C 125,547 110,561 115,576 C 120,591 136,588 138,574"
+        <motion.ellipse cx={210} cy={104} rx={6} ry={7.5}
+          fill="none" stroke={goldDim} strokeWidth={0.55}
+          {...draw(2.05, 0.35)} animate={{ pathLength: 1, opacity: 0.6 }}
+        />
+        {/* palmette fan finial */}
+        <motion.path d="M 190,88 Q 210,97 230,88" fill="none" stroke="url(#mirrorGold)" strokeWidth={0.9}
+          {...draw(1.95, 0.4)} animate={{ pathLength: 1, opacity: 0.78 }} />
+        {[
+          'M 210,55 C 210,68 210,80 210,90',
+          'M 210,55 C 202,66 198,78 199,90',
+          'M 210,55 C 218,66 222,78 221,90',
+          'M 210,56 C 196,65 189,77 191,88',
+          'M 210,56 C 224,65 231,77 229,88',
+        ].map((d, i) => (
+          <motion.path key={i} d={d} fill="none" stroke="url(#mirrorGold)" strokeWidth={0.85}
+            {...draw(2.1 + i * 0.05, 0.4)} animate={{ pathLength: 1, opacity: 0.7 }} />
+        ))}
+        {/* finial tip */}
+        <motion.path d="M 210,55 C 206,49 206,43 210,39 C 214,43 214,49 210,55"
+          fill="rgba(201,169,110,0.08)" stroke="url(#mirrorGold)" strokeWidth={0.8}
+          {...draw(2.35, 0.35)} animate={{ pathLength: 1, opacity: 0.7 }} />
+
+        {/* graceful C-scrolls from cartouche sides */}
+        <motion.path d="M 198,104 C 174,98 150,86 150,66 C 150,52 168,52 170,66 C 171,76 162,78 158,72"
+          fill="none" stroke="url(#mirrorGold)" strokeWidth={1.05}
+          {...draw(2.1, 0.85)} animate={{ pathLength: 1, opacity: 0.78 }} />
+        <motion.path d="M 222,104 C 246,98 270,86 270,66 C 270,52 252,52 250,66 C 249,76 258,78 262,72"
+          fill="none" stroke="url(#mirrorGold)" strokeWidth={1.05}
+          {...draw(2.1, 0.85)} animate={{ pathLength: 1, opacity: 0.78 }} />
+        {/* small leaf accents under scrolls */}
+        <motion.path d="M 170,92 C 156,92 148,102 153,112 C 158,120 168,114 168,106"
+          fill="none" stroke={goldDim} strokeWidth={0.75}
+          {...draw(2.55, 0.4)} animate={{ pathLength: 1, opacity: 0.6 }} />
+        <motion.path d="M 250,92 C 264,92 272,102 267,112 C 262,120 252,114 252,106"
+          fill="none" stroke={goldDim} strokeWidth={0.75}
+          {...draw(2.55, 0.4)} animate={{ pathLength: 1, opacity: 0.6 }} />
+
+        {/* === SIDE SCROLLS === */}
+        {[
+          'M 90,300 C 72,292 60,272 70,256 C 78,244 92,250 88,264 C 85,274 74,272 72,264',
+          'M 90,340 C 72,348 60,368 70,384 C 78,396 92,390 88,376 C 85,366 74,368 72,376',
+          'M 330,300 C 348,292 360,272 350,256 C 342,244 328,250 332,264 C 335,274 346,272 348,264',
+          'M 330,340 C 348,348 360,368 350,384 C 342,396 328,390 332,376 C 335,366 346,368 348,376',
+        ].map((d, i) => (
+          <motion.path key={i} d={d} fill="none" stroke="url(#mirrorGold)" strokeWidth={0.9}
+            {...draw(2.4 + (i % 2) * 0.1, 0.7)} animate={{ pathLength: 1, opacity: 0.68 }} />
+        ))}
+
+        {/* === BOTTOM === */}
+        {/* stem + medallion */}
+        <motion.path d="M 210,508 L 210,524" fill="none" stroke={goldFt} strokeWidth={1} {...draw(2.6, 0.22)} />
+        <motion.ellipse cx={210} cy={542} rx={14} ry={14}
+          fill="rgba(201,169,110,0.05)" stroke="url(#mirrorGold)" strokeWidth={1}
+          {...draw(2.75, 0.45)} animate={{ pathLength: 1, opacity: 0.8 }} />
+        <motion.ellipse cx={210} cy={542} rx={7} ry={7}
+          fill="none" stroke={goldDim} strokeWidth={0.55}
+          {...draw(2.95, 0.35)} animate={{ pathLength: 1, opacity: 0.6 }} />
+        {/* flanking scrolls */}
+        <motion.path d="M 196,538 C 174,534 154,544 158,564 C 161,578 178,576 176,562"
+          fill="none" stroke="url(#mirrorGold)" strokeWidth={0.95}
+          {...draw(2.8, 0.75)} animate={{ pathLength: 1, opacity: 0.72 }} />
+        <motion.path d="M 224,538 C 246,534 266,544 262,564 C 259,578 242,576 244,562"
+          fill="none" stroke="url(#mirrorGold)" strokeWidth={0.95}
+          {...draw(2.8, 0.75)} animate={{ pathLength: 1, opacity: 0.72 }} />
+        {/* outer curls */}
+        <motion.path d="M 158,564 C 142,566 132,578 138,590 C 143,599 154,594 154,584"
           fill="none" stroke={goldFt} strokeWidth={0.8}
-          {...draw(3.85, 0.5)} animate={{ pathLength: 1, opacity: 0.62 }}
-        />
-        {/* Left bottom curl end */}
-        <motion.path
-          d="M 115,576 C 112,583 114,591 119,592 C 124,593 127,587 124,582"
-          fill="none" stroke={goldDim} strokeWidth={0.7}
-          {...draw(4.1, 0.3)} animate={{ pathLength: 1, opacity: 0.52 }}
-        />
-
-        {/* Right bottom scroll (mirror) */}
-        <motion.path
-          d="M 229,545 C 250,543 270,528 277,547 C 284,566 271,580 253,573 C 235,566 239,550 253,547"
-          fill="none" stroke={gold} strokeWidth={0.95}
-          {...draw(3.5, 0.75)} animate={{ pathLength: 1, opacity: 0.7 }}
-        />
-        {/* Right bottom outer curl */}
-        <motion.path
-          d="M 277,547 C 295,547 310,561 305,576 C 300,591 284,588 282,574"
+          {...draw(3.1, 0.45)} animate={{ pathLength: 1, opacity: 0.62 }} />
+        <motion.path d="M 262,564 C 278,566 288,578 282,590 C 277,599 266,594 266,584"
           fill="none" stroke={goldFt} strokeWidth={0.8}
-          {...draw(3.85, 0.5)} animate={{ pathLength: 1, opacity: 0.62 }}
-        />
-        {/* Right bottom curl end */}
-        <motion.path
-          d="M 305,576 C 308,583 306,591 301,592 C 296,593 293,587 296,582"
-          fill="none" stroke={goldDim} strokeWidth={0.7}
-          {...draw(4.1, 0.3)} animate={{ pathLength: 1, opacity: 0.52 }}
-        />
-
-        {/* === BOTTOM PENDANT === */}
-        <motion.path d="M 210,564 L 210,580" fill="none" stroke={goldFt} strokeWidth={0.85} {...draw(3.9, 0.22)} />
-        {/* Teardrop pendant */}
-        <motion.path
-          d="M 210,580 C 204,588 201,600 210,607 C 219,614 216,600 210,580"
-          fill="rgba(201,169,110,0.07)" stroke={gold} strokeWidth={0.9}
-          {...draw(3.95, 0.45)} animate={{ pathLength: 1, opacity: 0.68 }}
-        />
-        {/* Tiny drop below */}
-        <motion.path d="M 210,607 L 210,618" fill="none" stroke={goldDim} strokeWidth={0.7} {...draw(4.2, 0.18)} />
+          {...draw(3.1, 0.45)} animate={{ pathLength: 1, opacity: 0.62 }} />
+        {/* pendant */}
+        <motion.path d="M 210,556 L 210,568" fill="none" stroke={goldFt} strokeWidth={0.85} {...draw(3.2, 0.2)} />
+        <motion.path d="M 210,568 C 202,578 199,594 210,604 C 221,594 218,578 210,568"
+          fill="rgba(201,169,110,0.07)" stroke="url(#mirrorGold)" strokeWidth={0.9}
+          {...draw(3.3, 0.45)} animate={{ pathLength: 1, opacity: 0.7 }} />
+        <motion.path d="M 210,604 L 210,618" fill="none" stroke={goldDim} strokeWidth={0.7} {...draw(3.55, 0.18)} />
       </svg>
     </div>
   )
