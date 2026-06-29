@@ -1,6 +1,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; color-scheme: only light; }
-html { scroll-behavior: smooth; color-scheme: only light; }
-body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fff; overflow-x: hidden; color-scheme: only light; }
+html { scroll-behavior: smooth; color-scheme: only light; overflow-x: clip; max-width: 100%; }
+body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fff; overflow-x: clip; max-width: 100%; color-scheme: only light; }
+#root { overflow-x: clip; max-width: 100%; }
 .lang-ar, .lang-ar * { font-family: 'Cairo', 'DM Sans', sans-serif !important; }
 .font-lock { font-family: 'Cormorant Garamond', Georgia, serif !important; font-style: italic !important; }
 :root {

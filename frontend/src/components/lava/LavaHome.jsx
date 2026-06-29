@@ -179,7 +179,7 @@ export default function LavaHome() {
 
         {/* RIGHT: hero product showcase */}
         <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <HeroShowcase products={products} navigate={navigate} t={t} lang={lang} addItem={addItem} />
+          <HeroShowcase products={products} navigate={navigate} t={t} lang={lang} addItem={addItem} mobile={mobile} />
         </div>
       </section>
 
@@ -505,7 +505,7 @@ function parsePal(raw) {
   return null
 }
 
-function HeroShowcase({ products, navigate, t, lang, addItem }) {
+function HeroShowcase({ products, navigate, t, lang, addItem, mobile }) {
   const safeProducts = products
     .map(p => { const pal = parsePal(p.palette); return pal ? { ...p, palette: [pal[0]||'#E8906A', pal[1]||'#D96A8A', pal[2]||'#8B6FB8'] } : null })
     .filter(Boolean)
@@ -525,17 +525,20 @@ function HeroShowcase({ products, navigate, t, lang, addItem }) {
   }, [go, total])
 
   const activeProduct = safeProducts[active % Math.max(total, 1)] || null
-  const STEP = 155
+  const STEP = mobile ? 110 : 155
 
   /* ── empty / loading state — show animated brand cards ── */
   if (!activeProduct) {
+    const sp = mobile ? 100 : 148   // horizontal spread of side cards
     const MOCK = [
       { pal: ['#E8906A','#D96A8A','#8B6FB8'], type: 'wrap',  x: 0,    y: 0,   rot: -4, scale: 1,    z: 3, dur: '3.6s', delay: '0s'   },
-      { pal: ['#D96A8A','#F2A07B','#C060A8'], type: 'slip',  x: 148,  y: 55,  rot:  7, scale: 0.82, z: 2, dur: '4.2s', delay: '0.5s' },
-      { pal: ['#8B6FB8','#A88AD4','#D96A8A'], type: 'midi',  x: -142, y: 70,  rot: -9, scale: 0.74, z: 1, dur: '3.9s', delay: '1s'   },
+      { pal: ['#D96A8A','#F2A07B','#C060A8'], type: 'slip',  x: sp,   y: 55,  rot:  7, scale: 0.82, z: 2, dur: '4.2s', delay: '0.5s' },
+      { pal: ['#8B6FB8','#A88AD4','#D96A8A'], type: 'midi',  x: -sp,  y: 70,  rot: -9, scale: 0.74, z: 1, dur: '3.9s', delay: '1s'   },
     ]
+    const cardW = mobile ? 150 : 190
+    const cardH = mobile ? 238 : 300
     return (
-      <div style={{ position: 'relative', width: 460, height: 500 }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: 460, height: mobile ? 430 : 500, margin: '0 auto' }}>
         <style>{`@keyframes lavaFloatPh{0%,100%{transform:translateY(-9px)}50%{transform:translateY(9px)}}`}</style>
         {/* Glow */}
         <motion.div
@@ -557,7 +560,7 @@ function HeroShowcase({ products, navigate, t, lang, addItem }) {
             zIndex: c.z,
           }}>
             <div style={{
-              width: 190, height: 300, borderRadius: 24, overflow: 'hidden',
+              width: cardW, height: cardH, borderRadius: 24, overflow: 'hidden',
               background: `linear-gradient(148deg, ${c.pal[0]}, ${c.pal[1]}, ${c.pal[2]})`,
               border: `2px solid rgba(255,255,255,${i === 0 ? 0.65 : 0.38})`,
               boxShadow: i === 0
@@ -593,7 +596,7 @@ function HeroShowcase({ products, navigate, t, lang, addItem }) {
 
   return (
     <div
-      style={{ position: 'relative', width: 520, height: 480, userSelect: 'none' }}
+      style={{ position: 'relative', width: '100%', maxWidth: 520, height: mobile ? 430 : 480, margin: '0 auto', userSelect: 'none' }}
       onMouseEnter={() => { paused.current = true }}
       onMouseLeave={() => { paused.current = false }}
       onTouchStart={e => { touchStart.current = e.touches[0].clientX }}

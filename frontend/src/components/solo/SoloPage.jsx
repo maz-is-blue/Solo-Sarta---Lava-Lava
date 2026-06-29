@@ -394,12 +394,12 @@ function CollectionSlider({ products, lang, t, mobile }) {
 /* ── Luxury oval mirror for the hero video ── */
 function MirrorVideo({ video, loop, onEnded, mobile }) {
   // Dimensions
-  const MX = mobile ? 252 : 312   // mirror oval width
-  const MY = mobile ? 408 : 500   // mirror oval height
+  const MX = mobile ? 208 : 312   // mirror oval width
+  const MY = mobile ? 336 : 500   // mirror oval height
   const RX = MX / 2               // horizontal radius
   const RY = MY / 2               // vertical radius
   const TOP = 96                  // room for crown above
-  const SIDE = 56                 // room for glow on sides
+  const SIDE = mobile ? 44 : 56   // room for glow on sides
   const BOT = 90                  // room for pendant below
   const SW = MX + SIDE * 2        // SVG total width
   const SH = MY + TOP + BOT       // SVG total height
